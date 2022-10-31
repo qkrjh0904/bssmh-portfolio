@@ -1,0 +1,10 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: on
+      multiline: true

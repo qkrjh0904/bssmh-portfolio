@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: ${bssmh-portfolio.spring.datasource.url}
+    username: ${bssmh-portfolio.spring.datasource.username}
+    password: ${bssmh-portfolio.spring.datasource.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: off
