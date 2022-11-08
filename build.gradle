@@ -27,16 +27,17 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-
 	// querydsl
 	implementation 'com.querydsl:querydsl-jpa'
 	implementation 'com.querydsl:querydsl-apt'
-
 	// mysql
 	implementation 'mysql:mysql-connector-java'
-
 	// p6spy
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
+	// google oauth2
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+
 
 
 	compileOnly 'org.projectlombok:lombok'

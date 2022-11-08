@@ -4,8 +4,19 @@ spring:
     username: ${bssmh-portfolio.spring.datasource.username}
     password: ${bssmh-portfolio.spring.datasource.password}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${oauth2.google.id}
+            client-secret: ${oauth2.google.secret}
+            scope:
+              - profile
+              - email
 
 decorator:
   datasource:
     p6spy:
       enable-logging: off
+
