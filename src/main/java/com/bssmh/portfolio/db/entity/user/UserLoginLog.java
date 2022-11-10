@@ -28,25 +28,21 @@ public class UserLoginLog extends BaseCreateTimeEntity {
 
     private String name;
 
-    private String locale;
-
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private UserLoginLog(String email, String name, String locale, User user) {
+    private UserLoginLog(String email, String name, User user) {
         this.email = email;
         this.name = name;
-        this.locale = locale;
         this.user = user;
     }
 
-    public static UserLoginLog of(String email, String name, String locale, User user) {
+    public static UserLoginLog of(String email, String name, User user) {
         return UserLoginLog.builder()
                 .email(email)
                 .name(name)
-                .locale(locale)
                 .user(user)
                 .build();
     }

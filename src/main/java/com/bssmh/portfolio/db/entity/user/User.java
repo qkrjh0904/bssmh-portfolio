@@ -30,16 +30,6 @@ public class User extends BaseTimeEntity {
 
     private String name;
 
-    private String sub;
-
-    private String givenName;
-
-    private String familyName;
-
-    private Boolean emailVerified;
-
-    private String locale;
-
     private String registrationId;
 
     private String clientId;
@@ -50,37 +40,35 @@ public class User extends BaseTimeEntity {
     private UserRoleType userRoleType;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private User(String email, String name, String sub, String givenName, String familyName, Boolean emailVerified,
-                 String locale, String registrationId, String clientId, String clientSecret,
+    private User(String email, String name, String registrationId, String clientId, String clientSecret,
                  UserRoleType userRoleType) {
         this.email = email;
         this.name = name;
-        this.sub = sub;
-        this.givenName = givenName;
-        this.familyName = familyName;
-        this.emailVerified = emailVerified;
-        this.locale = locale;
         this.registrationId = registrationId;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.userRoleType = userRoleType;
     }
 
-    public static User of(String email, String name, String sub, String givenName, String familyName,
-                          Boolean emailVerified, String locale, String registrationId, String clientId,
-                          String clientSecret, UserRoleType userRoleType) {
+    public static User ofNormal(String email, String name, String registrationId, String clientId, String clientSecret) {
         return User.builder()
                 .email(email)
                 .name(name)
-                .sub(sub)
-                .givenName(givenName)
-                .familyName(familyName)
-                .emailVerified(emailVerified)
-                .locale(locale)
                 .registrationId(registrationId)
                 .clientId(clientId)
                 .clientSecret(clientSecret)
-                .userRoleType(userRoleType)
+                .userRoleType(UserRoleType.NORMAL)
+                .build();
+    }
+
+    public static User ofAdmin(String email, String name, String registrationId, String clientId, String clientSecret) {
+        return User.builder()
+                .email(email)
+                .name(name)
+                .registrationId(registrationId)
+                .clientId(clientId)
+                .clientSecret(clientSecret)
+                .userRoleType(UserRoleType.ADMIN)
                 .build();
     }
 }
