@@ -1,12 +1,12 @@
 package com.bssmh.portfolio.web.security;
 
-import com.bssmh.portfolio.db.entity.user.User;
-import com.bssmh.portfolio.db.entity.user.UserLoginLog;
-import com.bssmh.portfolio.db.entity.user.UserSignUpLog;
-import com.bssmh.portfolio.web.user.repository.UserLoginLogRepository;
-import com.bssmh.portfolio.web.user.repository.UserSignUpLogRepository;
-import com.bssmh.portfolio.web.user.repository.UserRepository;
-import com.bssmh.portfolio.web.user.service.FindUserService;
+import com.bssmh.portfolio.db.entity.member.Member;
+import com.bssmh.portfolio.db.entity.member.MemberLoginLog;
+import com.bssmh.portfolio.db.entity.member.MemberSignUpLog;
+import com.bssmh.portfolio.web.domain.member.repository.MemberLoginLogRepository;
+import com.bssmh.portfolio.web.domain.member.repository.MemberSignUpLogRepository;
+import com.bssmh.portfolio.web.domain.member.repository.MemberRepository;
+import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -26,12 +26,12 @@ import java.util.Objects;
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
     // repository
-    private final UserLoginLogRepository userLoginLogRepository;
-    private final UserSignUpLogRepository userSignUpLogRepository;
-    private final UserRepository userRepository;
+    private final MemberLoginLogRepository memberLoginLogRepository;
+    private final MemberSignUpLogRepository memberSignUpLogRepository;
+    private final MemberRepository memberRepository;
 
     // service
-    private final FindUserService findUserService;
+    private final FindMemberService findMemberService;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -39,62 +39,62 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> attributes = oAuth2User.getAttributes();
         ClientRegistration clientRegistration = userRequest.getClientRegistration();
-        User user = this.login(attributes, clientRegistration);
-        return new PrincipalDetails(user, attributes);
+        Member member = this.login(attributes, clientRegistration);
+        return new PrincipalDetails(member, attributes);
     }
     
-    private User login(Map<String, Object> attributes, ClientRegistration clientRegistration) {
+    private Member login(Map<String, Object> attributes, ClientRegistration clientRegistration) {
         String registrationId = clientRegistration.getRegistrationId();
-        User user = null;
+        Member member = null;
         if(ClientType.NAVER.equals(registrationId)){
-            user = this.getNaverUserOrSignUp(attributes, clientRegistration);
+            member = this.getNaverUserOrSignUp(attributes, clientRegistration);
         } else if (ClientType.GOOGLE.equals(registrationId)){
-            user = this.getGoogleUserOrSignUp(attributes, clientRegistration);
+            member = this.getGoogleUserOrSignUp(attributes, clientRegistration);
         }
         
         // 로그인 로그
-        this.saveLoginLog(user);
-        return user;
+        this.saveLoginLog(member);
+        return member;
     }
     
-    private void saveLoginLog(User user) {
-        UserLoginLog userLoginLog = UserLoginLog.of(user.getEmail(), user.getName(), user);
-        userLoginLogRepository.save(userLoginLog);
+    private void saveLoginLog(Member member) {
+        MemberLoginLog memberLoginLog = MemberLoginLog.of(member.getEmail(), member.getName(), member);
+        memberLoginLogRepository.save(memberLoginLog);
     }
 
-    private User getGoogleUserOrSignUp(Map<String, Object> attributes, ClientRegistration clientRegistration) {
+    private Member getGoogleUserOrSignUp(Map<String, Object> attributes, ClientRegistration clientRegistration) {
         String email = (String) attributes.get(PrincipalConstants.EMAIL);
         String name = (String) attributes.get(PrincipalConstants.NAME);
-        User user = findUserService.findByEmail(email);
-        if(Objects.isNull(user)){
-            user = this.signUpUserAndSaveLog(email, name, clientRegistration);
+        Member member = findMemberService.findByEmail(email);
+        if(Objects.isNull(member)){
+            member = this.signUpUserAndSaveLog(email, name, clientRegistration);
         }
-        return user;
+        return member;
     }
 
-    private User getNaverUserOrSignUp(Map<String, Object> attributes, ClientRegistration clientRegistration) {
+    private Member getNaverUserOrSignUp(Map<String, Object> attributes, ClientRegistration clientRegistration) {
         Map<String, Object> response = (Map<String, Object>) attributes.get(PrincipalConstants.RESPONSE);
         String email = (String) response.get(PrincipalConstants.EMAIL);
         String name = (String) response.get(PrincipalConstants.NAME);
-        User user = findUserService.findByEmail(email);
-        if(Objects.isNull(user)){
-            user = this.signUpUserAndSaveLog(email, name, clientRegistration);
+        Member member = findMemberService.findByEmail(email);
+        if(Objects.isNull(member)){
+            member = this.signUpUserAndSaveLog(email, name, clientRegistration);
         }
-        return user;
+        return member;
     }
 
-    private User signUpUserAndSaveLog(String email, String name, ClientRegistration clientRegistration) {
+    private Member signUpUserAndSaveLog(String email, String name, ClientRegistration clientRegistration) {
         String registrationId = clientRegistration.getRegistrationId();
         String clientId = clientRegistration.getClientId();
         String clientSecret = clientRegistration.getClientSecret();
 
         // 유저 등록(회원가입)
-        User user = User.ofNormal(email, name, registrationId, clientId, clientSecret);
-        userRepository.save(user);
+        Member member = Member.ofNormal(email, name, registrationId, clientId, clientSecret);
+        memberRepository.save(member);
 
         // 회원가입 로그
-        UserSignUpLog userSignUpLog = UserSignUpLog.of(email, name, user);
-        userSignUpLogRepository.save(userSignUpLog);
-        return user;
+        MemberSignUpLog memberSignUpLog = MemberSignUpLog.of(email, name, member);
+        memberSignUpLogRepository.save(memberSignUpLog);
+        return member;
     }
 }

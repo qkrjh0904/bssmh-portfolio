@@ -1,4 +1,4 @@
-package com.bssmh.portfolio.db.entity.user;
+package com.bssmh.portfolio.db.entity.member;
 
 import com.bssmh.portfolio.db.entity.common.BaseCreateTimeEntity;
 import lombok.AccessLevel;
@@ -17,11 +17,11 @@ import javax.persistence.OneToOne;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserSignUpLog extends BaseCreateTimeEntity {
+public class MemberSignUpLog extends BaseCreateTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_sign_up_id")
+    @Column(name = "member_sign_up_id")
     private Long id;
 
     private String email;
@@ -30,20 +30,20 @@ public class UserSignUpLog extends BaseCreateTimeEntity {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private Member member;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private UserSignUpLog(String email, String name, User user) {
+    private MemberSignUpLog(String email, String name, Member member) {
         this.email = email;
         this.name = name;
-        this.user = user;
+        this.member = member;
     }
 
-    public static UserSignUpLog of(String email, String name, User user) {
-        return UserSignUpLog.builder()
+    public static MemberSignUpLog of(String email, String name, Member member) {
+        return MemberSignUpLog.builder()
                 .email(email)
                 .name(name)
-                .user(user)
+                .member(member)
                 .build();
     }
 

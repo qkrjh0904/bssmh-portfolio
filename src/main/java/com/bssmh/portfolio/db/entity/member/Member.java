@@ -1,7 +1,7 @@
-package com.bssmh.portfolio.db.entity.user;
+package com.bssmh.portfolio.db.entity.member;
 
 import com.bssmh.portfolio.db.entity.common.BaseTimeEntity;
-import com.bssmh.portfolio.db.enums.UserRoleType;
+import com.bssmh.portfolio.db.enums.MemberRoleType;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,17 +18,19 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseTimeEntity {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "member_id")
     private Long id;
 
     @Column(nullable = false, unique = true)
     private String email;
 
     private String name;
+
+    private String nickName;
 
     private String registrationId;
 
@@ -37,38 +39,47 @@ public class User extends BaseTimeEntity {
     private String clientSecret;
 
     @Enumerated(EnumType.STRING)
-    private UserRoleType userRoleType;
+    private MemberRoleType memberRoleType;
+
+    private String profileImageUid;
+
+    private String description;
+
+    private String phone;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private User(String email, String name, String registrationId, String clientId, String clientSecret,
-                 UserRoleType userRoleType) {
+    private Member(String email, String name, String nickName, String registrationId, String clientId,
+                   String clientSecret, MemberRoleType memberRoleType) {
         this.email = email;
         this.name = name;
+        this.nickName = nickName;
         this.registrationId = registrationId;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
-        this.userRoleType = userRoleType;
+        this.memberRoleType = memberRoleType;
     }
 
-    public static User ofNormal(String email, String name, String registrationId, String clientId, String clientSecret) {
-        return User.builder()
+    public static Member ofNormal(String email, String name, String registrationId, String clientId, String clientSecret) {
+        return Member.builder()
                 .email(email)
                 .name(name)
+                .nickName(name)
                 .registrationId(registrationId)
                 .clientId(clientId)
                 .clientSecret(clientSecret)
-                .userRoleType(UserRoleType.NORMAL)
+                .memberRoleType(MemberRoleType.NORMAL)
                 .build();
     }
 
-    public static User ofAdmin(String email, String name, String registrationId, String clientId, String clientSecret) {
-        return User.builder()
+    public static Member ofAdmin(String email, String name, String registrationId, String clientId, String clientSecret) {
+        return Member.builder()
                 .email(email)
                 .name(name)
+                .nickName(name)
                 .registrationId(registrationId)
                 .clientId(clientId)
                 .clientSecret(clientSecret)
-                .userRoleType(UserRoleType.ADMIN)
+                .memberRoleType(MemberRoleType.ADMIN)
                 .build();
     }
 }

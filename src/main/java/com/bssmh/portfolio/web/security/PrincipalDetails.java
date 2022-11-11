@@ -1,6 +1,6 @@
 package com.bssmh.portfolio.web.security;
 
-import com.bssmh.portfolio.db.entity.user.User;
+import com.bssmh.portfolio.db.entity.member.Member;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -11,11 +11,11 @@ import java.util.Map;
 @Data
 public class PrincipalDetails implements OAuth2User {
 
-    private User user;
+    private Member member;
     private Map<String, Object> attributes;
 
-    public PrincipalDetails(User user, Map<String, Object> attributes) {
-        this.user = user;
+    public PrincipalDetails(Member member, Map<String, Object> attributes) {
+        this.member = member;
         this.attributes = attributes;
     }
 
@@ -31,6 +31,6 @@ public class PrincipalDetails implements OAuth2User {
 
     @Override
     public String getName() {
-        return user.getName();
+        return member.getName();
     }
 }
