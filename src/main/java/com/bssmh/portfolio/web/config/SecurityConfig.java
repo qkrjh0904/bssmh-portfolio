@@ -1,5 +1,6 @@
 package com.bssmh.portfolio.web.config;
 
+import com.bssmh.portfolio.db.enums.MemberRoleType;
 import com.bssmh.portfolio.web.security.PrincipalOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -38,6 +39,14 @@ public class SecurityConfig {
 		http.headers()
 				.frameOptions()
 				.disable();
+
+//		http.authorizeRequests()
+//						.antMatchers("/", "/css/**", "/images/**", "/js/**").permitAll()
+//						.antMatchers("/api/**").hasAnyRole()
+//						.anyRequest().authenticated();
+
+		http.logout()
+				.logoutSuccessUrl("/");
 
 		http.oauth2Login()
 				.userInfoEndpoint()
