@@ -1,6 +1,9 @@
 package com.bssmh.portfolio.db.entity.member;
 
+import com.bssmh.portfolio.db.entity.comment.Comment;
 import com.bssmh.portfolio.db.entity.common.BaseTimeEntity;
+import com.bssmh.portfolio.db.entity.contributor.Contributor;
+import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.db.enums.MemberRoleType;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,6 +17,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -42,6 +48,12 @@ public class Member extends BaseTimeEntity {
     private String description;
 
     private String phone;
+
+    @OneToMany(mappedBy = "member")
+    private List<Portfolio> portfolioList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Comment> commentList = new ArrayList<>();
 
     @Builder(access = AccessLevel.PRIVATE)
     private Member(String email, String name, String nickName, String registrationId,
