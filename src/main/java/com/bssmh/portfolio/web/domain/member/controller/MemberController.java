@@ -21,9 +21,9 @@ public class MemberController {
     private final FindMemberService findMemberService;
 
     @PutMapping(ApiPath.MEMBER)
-    public UpdateMemberRs updateUser(@AuthenticationPrincipal OAuth2User oAuth2User,
-                                     @Validated @RequestBody UpdateMemberRq rq) {
-        return memberService.updateUser(oAuth2User.getName(), rq);
+    public UpdateMemberRs updateMember(@AuthenticationPrincipal OAuth2User oAuth2User,
+                                       @Validated @RequestBody UpdateMemberRq rq) {
+        return memberService.updateMember(oAuth2User.getName(), rq);
     }
 
 }

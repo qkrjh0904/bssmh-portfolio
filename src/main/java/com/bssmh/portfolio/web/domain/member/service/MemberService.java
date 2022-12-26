@@ -14,7 +14,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public UpdateMemberRs updateUser(String name, UpdateMemberRq rq) {
+    public UpdateMemberRs updateMember(String name, UpdateMemberRq rq) {
 
         return null;
     }

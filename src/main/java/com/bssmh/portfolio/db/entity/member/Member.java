@@ -32,54 +32,41 @@ public class Member extends BaseTimeEntity {
 
     private String nickName;
 
+    private String profileImage;
+
     private String registrationId;
-
-    private String clientId;
-
-    private String clientSecret;
 
     @Enumerated(EnumType.STRING)
     private MemberRoleType memberRoleType;
-
-    private String profileImageUid;
 
     private String description;
 
     private String phone;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Member(String email, String name, String nickName, String registrationId, String clientId,
-                   String clientSecret, MemberRoleType memberRoleType) {
+    private Member(String email, String name, String nickName, String registrationId,
+                   String profileImage, MemberRoleType memberRoleType) {
         this.email = email;
         this.name = name;
         this.nickName = nickName;
         this.registrationId = registrationId;
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
+        this.profileImage = profileImage;
         this.memberRoleType = memberRoleType;
     }
 
-    public static Member ofNormal(String email, String name, String registrationId, String clientId, String clientSecret) {
+    public static Member ofNormal(String email, String name, String picture, String registrationId) {
         return Member.builder()
                 .email(email)
                 .name(name)
                 .nickName(name)
+                .profileImage(picture)
                 .registrationId(registrationId)
-                .clientId(clientId)
-                .clientSecret(clientSecret)
                 .memberRoleType(MemberRoleType.NORMAL)
                 .build();
     }
 
-    public static Member ofAdmin(String email, String name, String registrationId, String clientId, String clientSecret) {
-        return Member.builder()
-                .email(email)
-                .name(name)
-                .nickName(name)
-                .registrationId(registrationId)
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .memberRoleType(MemberRoleType.ADMIN)
-                .build();
+    public void update(String name, String picture) {
+        this.name = name;
+        this.profileImage = picture;
     }
 }
