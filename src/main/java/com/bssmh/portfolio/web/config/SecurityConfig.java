@@ -1,6 +1,5 @@
 package com.bssmh.portfolio.web.config;
 
-import com.bssmh.portfolio.db.enums.MemberRoleType;
 import com.bssmh.portfolio.web.security.PrincipalOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
