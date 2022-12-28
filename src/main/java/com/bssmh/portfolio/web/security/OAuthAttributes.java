@@ -7,6 +7,9 @@ import lombok.Getter;
 
 import java.util.Map;
 
+import static com.bssmh.portfolio.web.security.ClientType.GOOGLE;
+import static com.bssmh.portfolio.web.security.ClientType.NAVER;
+
 @Getter
 public class OAuthAttributes {
     private Map<String, Object> attributes;
@@ -18,7 +21,7 @@ public class OAuthAttributes {
 
     @Builder(access = AccessLevel.PRIVATE)
     private OAuthAttributes(String registrationId, Map<String, Object> attributes, String nameAttributeKey, String name,
-                           String email, String picture) {
+                            String email, String picture) {
         this.registrationId = registrationId;
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
@@ -29,18 +32,20 @@ public class OAuthAttributes {
 
     public static OAuthAttributes of(String registrationId, String userNameAttributeName,
                                      Map<String, Object> attributes) {
-        if(ClientType.NAVER.equals(registrationId)){
+        if (NAVER.getClientId().equals(registrationId)) {
             return ofNaver(userNameAttributeName, attributes);
-        }else if (ClientType.GOOGLE.equals(registrationId)){
+        } else if (GOOGLE.getClientId().equals(registrationId)) {
             return ofGoogle(userNameAttributeName, attributes);
         }
-        return ofGoogle(userNameAttributeName, attributes);
+
+        // TODO: 2022-12-27 BSM Oauth2.0 추가 예정
+        return null;
     }
 
     private static OAuthAttributes ofNaver(String userNameAttributeName, Map<String, Object> attributes) {
         Map<String, Object> response = (Map<String, Object>) attributes.get(userNameAttributeName);
         return OAuthAttributes.builder()
-                .registrationId(ClientType.NAVER.getClientId())
+                .registrationId(NAVER.getClientId())
                 .name((String) response.get(PrincipalConstants.NAME))
                 .email((String) response.get(PrincipalConstants.EMAIL))
                 .picture((String) response.get(PrincipalConstants.PROFILE_IMAGE))
@@ -51,7 +56,7 @@ public class OAuthAttributes {
 
     private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
         return OAuthAttributes.builder()
-                .registrationId(ClientType.GOOGLE.getClientId())
+                .registrationId(GOOGLE.getClientId())
                 .name((String) attributes.get(PrincipalConstants.NAME))
                 .email((String) attributes.get(PrincipalConstants.EMAIL))
                 .picture((String) attributes.get(PrincipalConstants.PICTURE))

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,13 +46,13 @@ public class PortfolioController {
     }
 
     @Operation(summary = "포트폴리오 상세 조회")
-    @GetMapping(ApiPath.PORTFOLIO)
-    public FindPortfolioRs findPortfolio() {
-        return portfolioService.findPortfolio();
+    @GetMapping(ApiPath.PORTFOLIO_ID)
+    public FindPortfolioRs findPortfolio(@PathVariable("portfolio-id") Long portfolioId) {
+        return portfolioService.findPortfolio(portfolioId);
     }
 
     @Operation(summary = "포트폴리오 목록 조회")
-    @GetMapping(ApiPath.PORTFOLIO)
+    @GetMapping(ApiPath.PORTFOLIO_LIST)
     public PagedResponse<FindPortfolioRs> findPortfolioList() {
         return portfolioService.findPortfolioList();
     }

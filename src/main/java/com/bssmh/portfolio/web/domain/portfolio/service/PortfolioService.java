@@ -27,7 +27,7 @@ public class PortfolioService {
 
     }
 
-    public FindPortfolioRs findPortfolio() {
+    public FindPortfolioRs findPortfolio(Long portfolioId) {
         return null;
     }
 

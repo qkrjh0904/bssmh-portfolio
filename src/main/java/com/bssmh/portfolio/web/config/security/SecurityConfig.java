@@ -1,4 +1,4 @@
-package com.bssmh.portfolio.web.config;
+package com.bssmh.portfolio.web.config.security;
 
 import com.bssmh.portfolio.web.security.PrincipalOauth2UserService;
 import lombok.RequiredArgsConstructor;
