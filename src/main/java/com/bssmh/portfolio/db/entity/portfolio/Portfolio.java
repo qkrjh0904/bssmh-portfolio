@@ -6,6 +6,7 @@ import com.bssmh.portfolio.db.entity.common.BaseTimeEntity;
 import com.bssmh.portfolio.db.entity.contributor.Contributor;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.enums.PortfolioScope;
+import com.bssmh.portfolio.db.enums.PortfolioType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,8 +40,13 @@ public class Portfolio extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PortfolioType portfolioType;
+
+    @Column(nullable = false)
     private String title;
 
+    @Column(columnDefinition = "text")
     private String description;
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -49,12 +55,17 @@ public class Portfolio extends BaseTimeEntity {
     @OneToOne(fetch = FetchType.EAGER)
     private AttachFile thumbnail;
 
-    private String url;
+    @Column(columnDefinition = "text")
+    private String portfolioUrl;
 
-    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "text")
+    private String gitUrl;
+
     @Column(nullable = false)
-    private PortfolioScope scope;
+    @Enumerated(EnumType.STRING)
+    private PortfolioScope portfolioScope;
 
+    @Column(nullable = false)
     private Long views;
 
     @ManyToOne(fetch = LAZY)

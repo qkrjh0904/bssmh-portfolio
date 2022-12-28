@@ -10,11 +10,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+        indexes = @Index(name = "idx_file_uid", columnList = "fileUid")
+)
 public class AttachFile extends BaseTimeEntity {
 
     @Id
@@ -31,6 +36,7 @@ public class AttachFile extends BaseTimeEntity {
     @Column(nullable = false)
     private String fileName;
 
+    @Column(nullable = false)
     private Long fileSize;
 
 }

@@ -1,4 +1,4 @@
-package com.bssmh.portfolio.web.domain.endpoint;
+package com.bssmh.portfolio.web.endpoint;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,8 @@ import org.springframework.data.domain.Page;
 @AllArgsConstructor
 @Builder
 public class Pagination {
-    private Integer page;
-    private Integer size;
+    private Integer page = 1;
+    private Integer size = 10;
     private Long totalCount;
     private Integer totalPages;
 

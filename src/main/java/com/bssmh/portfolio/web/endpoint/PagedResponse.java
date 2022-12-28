@@ -1,17 +1,13 @@
-package com.bssmh.portfolio.web.domain.endpoint;
+package com.bssmh.portfolio.web.endpoint;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@JsonSerialize
+@Data
+@Builder
 public class PagedResponse<T> {
 
     private Pagination pagination;

@@ -5,10 +5,9 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum PortfolioScope {
-    PUBLIC("전체 공개"),
-    PRIVATE("일부 공개"),
-    PROTECTED("비공개");
+public enum PortfolioType {
+    VIDEO("영상"),
+    URL("홈페이지 URL");
 
     private final String name;
 
