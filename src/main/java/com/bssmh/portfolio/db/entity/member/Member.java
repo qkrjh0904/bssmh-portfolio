@@ -2,15 +2,12 @@ package com.bssmh.portfolio.db.entity.member;
 
 import com.bssmh.portfolio.db.entity.comment.Comment;
 import com.bssmh.portfolio.db.entity.common.BaseTimeEntity;
-import com.bssmh.portfolio.db.entity.contributor.Contributor;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.db.enums.MemberRoleType;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,14 +18,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends BaseTimeEntity implements OAuth2User {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,13 +37,15 @@ public class Member extends BaseTimeEntity implements OAuth2User {
 
     private String nickName;
 
-    private String profileImage;
+    @Column(columnDefinition = "text")
+    private String profileImageUrl;
 
     private String registrationId;
 
     @Enumerated(EnumType.STRING)
     private MemberRoleType memberRoleType;
 
+    @Column(columnDefinition = "text")
     private String description;
 
     private String phone;
@@ -61,38 +58,29 @@ public class Member extends BaseTimeEntity implements OAuth2User {
 
     @Builder(access = AccessLevel.PRIVATE)
     private Member(String email, String name, String nickName, String registrationId,
-                   String profileImage, MemberRoleType memberRoleType) {
+                   String profileImageUrl, MemberRoleType memberRoleType) {
         this.email = email;
         this.name = name;
         this.nickName = nickName;
         this.registrationId = registrationId;
-        this.profileImage = profileImage;
+        this.profileImageUrl = profileImageUrl;
         this.memberRoleType = memberRoleType;
     }
 
-    public static Member ofNormal(String email, String name, String picture, String registrationId) {
+    public static Member ofNormal(String email, String name, String profileImageUrl, String registrationId) {
         return Member.builder()
                 .email(email)
                 .name(name)
                 .nickName(name)
-                .profileImage(picture)
+                .profileImageUrl(profileImageUrl)
                 .registrationId(registrationId)
                 .memberRoleType(MemberRoleType.NORMAL)
                 .build();
     }
 
-    public void update(String name, String picture) {
+    public void update(String name, String profileImageUrl) {
         this.name = name;
-        this.profileImage = picture;
+        this.profileImageUrl = profileImageUrl;
     }
 
-    @Override
-    public Map<String, Object> getAttributes() {
-        return null;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
 }

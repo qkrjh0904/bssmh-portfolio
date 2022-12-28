@@ -1,19 +1,16 @@
 package com.bssmh.portfolio.web.domain.portfolio.controller;
 
-import com.bssmh.portfolio.web.domain.endpoint.PagedResponse;
-import com.bssmh.portfolio.web.domain.path.ApiPath;
+import com.bssmh.portfolio.web.domain.portfolio.controller.rq.BookmarkPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.DeletePortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.SavePortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpdatePortfolioRq;
-import com.bssmh.portfolio.web.domain.portfolio.controller.rs.FindPortfolioRs;
 import com.bssmh.portfolio.web.domain.portfolio.service.PortfolioService;
+import com.bssmh.portfolio.web.path.ApiPath;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,16 +42,10 @@ public class PortfolioController {
         portfolioService.updatePortfolio(rq);
     }
 
-    @Operation(summary = "포트폴리오 상세 조회")
-    @GetMapping(ApiPath.PORTFOLIO_ID)
-    public FindPortfolioRs findPortfolio(@PathVariable("portfolio-id") Long portfolioId) {
-        return portfolioService.findPortfolio(portfolioId);
-    }
-
-    @Operation(summary = "포트폴리오 목록 조회")
-    @GetMapping(ApiPath.PORTFOLIO_LIST)
-    public PagedResponse<FindPortfolioRs> findPortfolioList() {
-        return portfolioService.findPortfolioList();
+    @Operation(summary = "포트폴리오 좋아요",
+            description = "toggle 방식")
+    @PutMapping(ApiPath.PORTFOLIO_BOOKMARK)
+    public void bookmarkPortfolio(@Validated @RequestBody BookmarkPortfolioRq rq) {
     }
 
 }

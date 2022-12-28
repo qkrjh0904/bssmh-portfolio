@@ -27,7 +27,8 @@ public class Comment extends BaseTimeEntity {
     @Column(name = "comment_id")
     private Long id;
 
-    private String contents;
+    @Column(columnDefinition = "text")
+    private String content;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "portfolio_id")

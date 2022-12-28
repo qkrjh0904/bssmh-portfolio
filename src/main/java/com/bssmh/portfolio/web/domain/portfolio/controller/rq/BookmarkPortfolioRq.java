@@ -6,7 +6,7 @@ import lombok.Getter;
 import javax.validation.constraints.NotNull;
 
 @Getter
-public class DeletePortfolioRq {
+public class BookmarkPortfolioRq {
 
     @NotNull
     @Schema(description = "포트폴리오 id")

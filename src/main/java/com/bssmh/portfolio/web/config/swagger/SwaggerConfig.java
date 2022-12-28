@@ -1,6 +1,6 @@
 package com.bssmh.portfolio.web.config.swagger;
 
-import com.bssmh.portfolio.web.domain.path.ApiPath;
+import com.bssmh.portfolio.web.path.ApiPath;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;

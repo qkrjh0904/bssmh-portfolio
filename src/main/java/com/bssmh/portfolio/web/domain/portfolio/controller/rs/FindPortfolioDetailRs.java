@@ -1,20 +1,25 @@
-package com.bssmh.portfolio.web.domain.portfolio.controller.rq;
+package com.bssmh.portfolio.web.domain.portfolio.controller.rs;
 
 import com.bssmh.portfolio.db.enums.PortfolioScope;
 import com.bssmh.portfolio.db.enums.PortfolioType;
 import com.bssmh.portfolio.web.domain.dto.AttachFileDto;
+import com.bssmh.portfolio.web.domain.dto.MemberDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
-public class UpdatePortfolioRq {
+public class FindPortfolioDetailRs {
 
-    @NotNull
     @Schema(description = "포트폴리오 id")
     private Long portfolioId;
+
+    @Schema(description = "작성자")
+    private MemberDto writer;
+
+    @Schema(description = "포트폴리오 타입")
+    private PortfolioType portfolioType;
 
     @Schema(description = "제목")
     private String title;
@@ -28,16 +33,11 @@ public class UpdatePortfolioRq {
     @Schema(description = "포트폴리오 url")
     private String portfolioUrl;
 
-    @Schema(description = "포트폴리오 썸네일")
+    @Schema(description = "포트폴리오 영상 파일")
     private AttachFileDto thumbnail;
 
-    @NotNull
     @Schema(description = "공개 범위")
-    private PortfolioScope portfolioScope;
-
-    @NotNull
-    @Schema(description = "포트폴리오 게시 타입")
-    private PortfolioType portfolioType;
+    private PortfolioScope scope;
 
     @Schema(description = "포트폴리오 git url")
     private String gitUrl;
@@ -45,7 +45,18 @@ public class UpdatePortfolioRq {
     @Schema(description = "기술스택 리스트")
     private List<String> skillList;
 
-    @Schema(description = "참여자 멤버 id")
-    private List<Long> contributorIdList;
+    @Schema(description = "참여자 멤버 리스트")
+    private List<MemberDto> contributorList;
 
+    @Schema(description = "좋아요수")
+    private Long bookmarks;
+
+    @Schema(description = "조회수")
+    private Long views;
+
+    @Schema(description = "댓글수")
+    private Long comments;
+
+    @Schema(description = "생성일", pattern = "yyyy-MM-dd")
+    private String createdDate;
 }
