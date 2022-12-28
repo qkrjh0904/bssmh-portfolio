@@ -29,7 +29,7 @@ public class MemberLoginLog extends BaseCreateTimeEntity {
     private String name;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Builder(access = AccessLevel.PRIVATE)

@@ -1,4 +1,4 @@
-package com.bssmh.portfolio.web.config;
+package com.bssmh.portfolio.web.config.p6spy;
 
 import com.p6spy.engine.common.ConnectionInformation;
 import com.p6spy.engine.event.JdbcEventListener;

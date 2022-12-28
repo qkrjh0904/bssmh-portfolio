@@ -14,7 +14,4 @@ public enum ClientType {
         this.clientId = clientId;
     }
 
-    public Boolean equals(String clientId){
-        return this.clientId.equals(clientId);
-    }
 }
