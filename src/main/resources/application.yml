@@ -1,9 +1,9 @@
 spring:
   datasource:
     hikari:
-      jdbc-url: ${bssmh-portfolio.spring.datasource.url}
-      username: ${bssmh-portfolio.spring.datasource.username}
-      password: ${bssmh-portfolio.spring.datasource.password}
+      jdbc-url: jdbc:mysql://bssmh-dv.cnvz4bcel8w5.ap-northeast-2.rds.amazonaws.com:3306
+      username: qkrjh0904
+      password: akdlektm3#
       driver-class-name: com.mysql.cj.jdbc.Driver
 
   servlet:
@@ -19,21 +19,21 @@ spring:
       client:
         registration:
           google:
-            client-id: ${oauth2.google.id}
-            client-secret: ${oauth2.google.secret}
+            client-id: id
+            client-secret: secret
             scope:
               - profile
               - email
               -
           naver:
-            client-id: ${oauth2.naver.id}
-            client-secret: ${oauth2.naver.secret}
+            client-id: id
+            client-secret: secret
             scope:
               - profile
               - email
             client-name: Naver
             authorization-grant-type: authorization_code
-            redirect-uri: ${oauth2.naver.redirect-uri}
+            redirect-uri: uri
         provider:
           naver:
             authorization-uri: https://nid.naver.com/oauth2.0/authorize
