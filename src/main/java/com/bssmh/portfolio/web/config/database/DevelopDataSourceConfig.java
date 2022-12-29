@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 public class DevelopDataSourceConfig {
 
     @Value("${spring.datasource.hikari.jdbc-url}")
-    private String url;
+    private String jdbcUrl;
     @Value("${spring.datasource.hikari.username}")
     private String username;
     @Value("${spring.datasource.hikari.password}")
@@ -31,7 +31,7 @@ public class DevelopDataSourceConfig {
 
     private HikariConfig getHikariConfig() {
         HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl(url);
+        hikariConfig.setJdbcUrl(jdbcUrl);
         hikariConfig.setUsername(username);
         hikariConfig.setPassword(password);
         hikariConfig.setMaximumPoolSize(40);
