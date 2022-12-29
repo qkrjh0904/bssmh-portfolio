@@ -2,4 +2,6 @@ spring:
   config:
     activate:
       on-profile: dv
-
+  jpa:
+    hibernate:
+      ddl-auto: none
