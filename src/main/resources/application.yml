@@ -1,16 +1,8 @@
 spring:
-  datasource:
-    hikari:
-      jdbc-url: ${bssmh-portfolio.spring.datasource.url}
-      username: ${bssmh-portfolio.spring.datasource.username}
-      password: ${bssmh-portfolio.spring.datasource.password}
-      driver-class-name: com.mysql.cj.jdbc.Driver
-
   servlet:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
-
   jpa:
     open-in-view: false
 

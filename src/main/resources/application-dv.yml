@@ -1,4 +1,5 @@
 spring:
   config:
     activate:
-      on-profile: kr-production
+      on-profile: dv
+

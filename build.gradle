@@ -32,6 +32,8 @@ dependencies {
 	implementation 'com.querydsl:querydsl-apt'
 	// mysql
 	implementation 'mysql:mysql-connector-java'
+	// mariadb
+	implementation 'org.mariadb.jdbc:mariadb-java-client'
 	// p6spy
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
 	// oauth2

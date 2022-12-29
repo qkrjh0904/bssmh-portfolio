@@ -31,7 +31,6 @@ public class EntityManagerConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         Map<String, Object> properties = new HashMap<>();
         properties.put(AvailableSettings.HBM2DDL_AUTO, "update");
-        properties.put(AvailableSettings.DEFAULT_CATALOG, "bssmh");
         properties.put(AvailableSettings.PHYSICAL_NAMING_STRATEGY, "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy");
         properties.put(AvailableSettings.DEFAULT_BATCH_FETCH_SIZE, 500);
         properties.put(AvailableSettings.DIALECT, MariaDBDialect.class);
