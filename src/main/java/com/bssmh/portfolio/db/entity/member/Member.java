@@ -74,7 +74,7 @@ public class Member extends BaseTimeEntity {
                 .nickName(name)
                 .profileImageUrl(profileImageUrl)
                 .registrationId(registrationId)
-                .memberRoleType(MemberRoleType.NORMAL)
+                .memberRoleType(MemberRoleType.ROLE_NORMAL)
                 .build();
     }
 

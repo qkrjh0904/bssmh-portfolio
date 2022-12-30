@@ -4,14 +4,17 @@ import com.bssmh.portfolio.db.entity.member.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import java.util.Collection;
 import java.util.Map;
 
 import static com.bssmh.portfolio.web.security.ClientType.GOOGLE;
 import static com.bssmh.portfolio.web.security.ClientType.NAVER;
 
 @Getter
-public class OAuthAttributes {
+public class OAuthAttributes implements OAuth2User {
     private Map<String, Object> attributes;
     private String registrationId;
     private String nameAttributeKey;
@@ -30,11 +33,15 @@ public class OAuthAttributes {
         this.picture = picture;
     }
 
-    public static OAuthAttributes of(String registrationId, String userNameAttributeName,
+    public static OAuthAttributes of(String registrationId,
+                                     String userNameAttributeName,
                                      Map<String, Object> attributes) {
+
         if (NAVER.getClientId().equals(registrationId)) {
             return ofNaver(userNameAttributeName, attributes);
-        } else if (GOOGLE.getClientId().equals(registrationId)) {
+        }
+
+        if (GOOGLE.getClientId().equals(registrationId)) {
             return ofGoogle(userNameAttributeName, attributes);
         }
 
@@ -67,5 +74,10 @@ public class OAuthAttributes {
 
     public Member toEntity() {
         return Member.ofNormal(email, name, picture, registrationId);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
     }
 }

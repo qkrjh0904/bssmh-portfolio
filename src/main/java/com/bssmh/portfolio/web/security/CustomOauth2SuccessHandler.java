@@ -3,28 +3,30 @@ package com.bssmh.portfolio.web.security;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.member.MemberLoginLog;
 import com.bssmh.portfolio.db.entity.member.MemberSignUpLog;
+import com.bssmh.portfolio.web.config.security.jwt.JwtTokenService;
+import com.bssmh.portfolio.web.domain.dto.JwtTokenDto;
 import com.bssmh.portfolio.web.domain.member.repository.MemberLoginLogRepository;
 import com.bssmh.portfolio.web.domain.member.repository.MemberRepository;
 import com.bssmh.portfolio.web.domain.member.repository.MemberSignUpLogRepository;
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
-import java.util.Collections;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Objects;
 
-@Service
+@Component
 @RequiredArgsConstructor
-@Transactional
-public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
+public class CustomOauth2SuccessHandler implements AuthenticationSuccessHandler {
+
+    private final ObjectMapper objectMapper;
 
     // repository
     private final MemberLoginLogRepository memberLoginLogRepository;
@@ -33,27 +35,34 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
     // service
     private final FindMemberService findMemberService;
+    private final JwtTokenService jwtTokenService;
+
 
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User oAuth2User = super.loadUser(userRequest);
-        ClientRegistration clientRegistration = userRequest.getClientRegistration();
-        String userNameAttributeName = clientRegistration.getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
-        String registrationId = clientRegistration.getRegistrationId();
-
-        OAuthAttributes oAuthAttributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        OAuthAttributes oAuthAttributes = (OAuthAttributes) authentication.getPrincipal();
         Member member = this.saveOrUpdate(oAuthAttributes);
         this.saveLoginLog(member);
 
-        return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority(member.getMemberRoleType().getRoleName())),
-                oAuthAttributes.getAttributes(),
-                oAuthAttributes.getNameAttributeKey());
+        JwtTokenDto jwtTokenDto = jwtTokenService.generateJwtToken(member);
+        writeTokenResponse(response, jwtTokenDto);
     }
-    
+
+    private void writeTokenResponse(HttpServletResponse response, JwtTokenDto jwtTokenDto) throws IOException {
+        response.setContentType("text/html;charset=UTF-8");
+
+        response.addHeader("token", jwtTokenDto.getToken());
+        response.addHeader("validity", jwtTokenDto.getValidity());
+        response.setContentType("application/json;charset=UTF-8");
+
+        PrintWriter printWriter = response.getWriter();
+        printWriter.println(objectMapper.writeValueAsString(jwtTokenDto));
+        printWriter.flush();
+    }
+
     private Member saveOrUpdate(OAuthAttributes oAuthAttributes) {
         Member member = findMemberService.findByEmail(oAuthAttributes.getEmail());
-        if(Objects.isNull(member)){
+        if (Objects.isNull(member)) {
             member = oAuthAttributes.toEntity();
             memberRepository.save(member);
             this.saveSignUpLog(member);
