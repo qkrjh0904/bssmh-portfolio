@@ -39,6 +39,7 @@ public class SecurityConfig {
 
 
 		http.authorizeRequests()
+				.antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
 				.anyRequest().authenticated();
 
 		http.oauth2Login()
