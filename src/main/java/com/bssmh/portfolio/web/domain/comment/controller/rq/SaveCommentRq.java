@@ -9,6 +9,10 @@ import javax.validation.constraints.NotNull;
 public class SaveCommentRq {
 
     @NotNull
+    @Schema(description = "포트폴리오 id")
+    private Long portfolioId;
+
+    @NotNull
     @Schema(description = "댓글 내용")
     private String content;
 
