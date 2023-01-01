@@ -50,7 +50,6 @@ public class CustomOauth2SuccessHandler implements AuthenticationSuccessHandler 
 
     private void writeTokenResponse(HttpServletResponse response, JwtTokenDto jwtTokenDto) throws IOException {
         response.setContentType("text/html;charset=UTF-8");
-
         response.addHeader("token", jwtTokenDto.getToken());
         response.addHeader("validity", jwtTokenDto.getValidity());
         response.setContentType("application/json;charset=UTF-8");
