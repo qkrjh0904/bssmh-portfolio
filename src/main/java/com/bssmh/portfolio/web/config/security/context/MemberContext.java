@@ -1,4 +1,4 @@
-package com.bssmh.portfolio.web.config.security;
+package com.bssmh.portfolio.web.config.security.context;
 
 import lombok.Getter;
 
@@ -12,7 +12,7 @@ public class MemberContext {
         this.role = role;
     }
 
-    public static MemberContext of(String email, String role){
+    public static MemberContext of(String email, String role) {
         return new MemberContext(email, role);
     }
 }

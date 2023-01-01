@@ -1,6 +1,7 @@
 package com.bssmh.portfolio.web.config.security;
 
-import com.bssmh.portfolio.web.security.PrincipalOauth2UserService;
+import com.bssmh.portfolio.web.security.CustomOauth2SuccessHandler;
+import com.bssmh.portfolio.web.security.CustomOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +18,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableGlobalMethodSecurity(prePostEnabled = true)	// 권한 인증 미리 체크
 public class SecurityConfig {
 
-	private final PrincipalOauth2UserService principalOauth2UserService;
+	private final CustomOauth2UserService customOauth2UserService;
+	private final CustomOauth2SuccessHandler customOauth2SuccessHandler;
 
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer(){
@@ -27,29 +29,22 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
+		// rest api security 설정
+		http.httpBasic().disable();
+		http.csrf().disable();
 		http.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-		http.csrf()
-				.disable();
-
 		http.cors();
 
-		http.headers()
-				.frameOptions()
-				.disable();
 
-//		http.authorizeRequests()
-//						.antMatchers("/", "/css/**", "/images/**", "/js/**").permitAll()
-//						.antMatchers("/api/**").hasAnyRole()
-//						.anyRequest().authenticated();
-
-		http.logout()
-				.logoutSuccessUrl("/");
+		http.authorizeRequests()
+				.anyRequest().authenticated();
 
 		http.oauth2Login()
+				.successHandler(customOauth2SuccessHandler)
 				.userInfoEndpoint()
-				.userService(principalOauth2UserService);
+				.userService(customOauth2UserService);
 
 		return http.build();
 	}
