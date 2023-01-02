@@ -1,5 +1,6 @@
 package com.bssmh.portfolio.web.domain.file.controller;
 
+import com.bssmh.portfolio.web.domain.file.service.FileService;
 import com.bssmh.portfolio.web.domain.file.controller.rs.UploadFileRs;
 import com.bssmh.portfolio.web.path.ApiPath;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,11 +19,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class FileController {
 
+    private final FileService fileService;
 
     @Operation(summary = "파일 업로드")
     @PostMapping(ApiPath.FILE_UPLOAD)
     public UploadFileRs uploadFile(@RequestPart MultipartFile file) {
-        return null;
+        return fileService.uploadFile(file);
     }
 
     @Operation(summary = "파일  다운로드")
