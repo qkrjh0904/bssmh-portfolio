@@ -1,9 +1,8 @@
 package com.bssmh.portfolio.web.domain.file.service;
 
-import com.bssmh.portfolio.aws.AwsS3Dto;
-import com.bssmh.portfolio.aws.AwsS3Utils;
+import com.bssmh.portfolio.web.domain.dto.AttachFileDto;
 import com.bssmh.portfolio.web.domain.file.controller.rs.UploadFileRs;
-import com.bssmh.portfolio.web.domain.file.exception.AwsS3FileUploadException;
+import com.bssmh.portfolio.web.exception.AwsS3FileUploadException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,23 +12,27 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class FileService {
 
+    private final AwsS3Service awsS3Service;
+    private final AttachFileService attachFileService;
+
     public UploadFileRs uploadFile(MultipartFile file) {
-        AwsS3Dto awsS3Dto;
+        AttachFileDto attachFileDto;
 
         try {
-            awsS3Dto = AwsS3Utils.upload(file);
+            attachFileDto = awsS3Service.upload(file);
         } catch (IOException e) {
             throw new AwsS3FileUploadException();
         }
 
-        if (Objects.isNull(awsS3Dto)) {
+        if (Objects.isNull(attachFileDto)) {
             throw new AwsS3FileUploadException();
         }
 
-        return UploadFileRs.create(awsS3Dto.getFileUid(), awsS3Dto.getFilePath());
+        attachFileService.save(attachFileDto);
+        return UploadFileRs.create(attachFileDto.getFileUid(), attachFileDto.getFilePath());
     }
 }

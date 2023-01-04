@@ -27,4 +27,12 @@ cloud:
 
 bssmh:
   s3:
-    bucket-name: bssmh-s3-dv-attachfile
+    bucket-name: ${bssmh-portfolio.aws.s3.bucket-name}
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
+

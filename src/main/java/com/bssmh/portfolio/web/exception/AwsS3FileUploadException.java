@@ -1,6 +1,5 @@
-package com.bssmh.portfolio.web.domain.file.exception;
+package com.bssmh.portfolio.web.exception;
 
-import com.bssmh.portfolio.web.exception.GeneralHttpException;
 import org.springframework.http.HttpStatus;
 
 public class AwsS3FileUploadException extends GeneralHttpException {
