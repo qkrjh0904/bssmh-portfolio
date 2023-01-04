@@ -39,4 +39,12 @@ public class AttachFile extends BaseTimeEntity {
     @Column(nullable = false)
     private Long fileSize;
 
+    public static AttachFile create(String fileUid, String filePath, String fileName, Long fileSize) {
+        AttachFile attachFile = new AttachFile();
+        attachFile.fileUid = fileUid;
+        attachFile.filePath = filePath;
+        attachFile.fileName = fileName;
+        attachFile.fileSize = fileSize;
+        return attachFile;
+    }
 }
