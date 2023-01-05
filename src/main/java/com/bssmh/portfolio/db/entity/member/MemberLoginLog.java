@@ -39,7 +39,7 @@ public class MemberLoginLog extends BaseCreateTimeEntity {
         this.member = member;
     }
 
-    public static MemberLoginLog of(String email, String name, Member member) {
+    public static MemberLoginLog create(String email, String name, Member member) {
         return MemberLoginLog.builder()
                 .email(email)
                 .name(name)

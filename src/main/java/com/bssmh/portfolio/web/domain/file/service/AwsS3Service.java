@@ -67,12 +67,7 @@ public class AwsS3Service {
         waitForCompletion(upload);
         tm.shutdownNow();
 
-        return AttachFileDto.builder()
-                .fileUid(fileUid)
-                .filePath(filePath)
-                .fileName(originalFilename)
-                .fileSize(fileSize)
-                .build();
+        return AttachFileDto.create(originalFilename, filePath, fileUid, fileSize);
     }
 
     private ObjectMetadata getObjectMetadata(MultipartFile file) {

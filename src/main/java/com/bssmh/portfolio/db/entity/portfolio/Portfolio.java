@@ -1,6 +1,7 @@
 package com.bssmh.portfolio.db.entity.portfolio;
 
 import com.bssmh.portfolio.db.entity.attachfile.AttachFile;
+import com.bssmh.portfolio.db.entity.bookmark.Bookmark;
 import com.bssmh.portfolio.db.entity.comment.Comment;
 import com.bssmh.portfolio.db.entity.common.BaseTimeEntity;
 import com.bssmh.portfolio.db.entity.contributor.Contributor;
@@ -23,7 +24,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,4 +80,24 @@ public class Portfolio extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "portfolio")
     private List<PortfolioSkill> portfolioSkillList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "portfolio")
+    private List<Bookmark> bookmarkList = new ArrayList<>();
+
+    public static Portfolio create(PortfolioType portfolioType, String title, String description,
+                                   AttachFile video, AttachFile thumbnail, String portfolioUrl, String gitUrl,
+                                   PortfolioScope portfolioScope, Member member) {
+        Portfolio portfolio = new Portfolio();
+        portfolio.portfolioType = portfolioType;
+        portfolio.title = title;
+        portfolio.description = description;
+        portfolio.video = video;
+        portfolio.thumbnail = thumbnail;
+        portfolio.portfolioUrl = portfolioUrl;
+        portfolio.gitUrl = gitUrl;
+        portfolio.portfolioScope = portfolioScope;
+        portfolio.views = 0L;
+        portfolio.member = member;
+        return portfolio;
+    }
 }

@@ -56,7 +56,7 @@ public class JwtTokenService {
             throw new ExpiredJwtException();
         }
 
-        return MemberContext.of(email, role);
+        return MemberContext.create(email, role);
     }
 
     private DecodedJWT verifyToken(String token) {

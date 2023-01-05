@@ -72,12 +72,12 @@ public class CustomOauth2SuccessHandler implements AuthenticationSuccessHandler 
     }
 
     private void saveLoginLog(Member member) {
-        MemberLoginLog memberLoginLog = MemberLoginLog.of(member.getEmail(), member.getName(), member);
+        MemberLoginLog memberLoginLog = MemberLoginLog.create(member.getEmail(), member.getName(), member);
         memberLoginLogRepository.save(memberLoginLog);
     }
 
     private void saveSignUpLog(Member member) {
-        MemberSignUpLog memberSignUpLog = MemberSignUpLog.of(member.getEmail(), member.getName(), member);
+        MemberSignUpLog memberSignUpLog = MemberSignUpLog.create(member.getEmail(), member.getName(), member);
         memberSignUpLogRepository.save(memberSignUpLog);
     }
 

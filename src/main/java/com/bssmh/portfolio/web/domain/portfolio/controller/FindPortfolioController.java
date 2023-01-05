@@ -1,5 +1,6 @@
 package com.bssmh.portfolio.web.domain.portfolio.controller;
 
+import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rs.FindPortfolioDetailRs;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rs.FindPortfolioListRs;
 import com.bssmh.portfolio.web.domain.portfolio.service.FindPortfolioService;
@@ -9,6 +10,7 @@ import com.bssmh.portfolio.web.path.ApiPath;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,14 +34,15 @@ public class FindPortfolioController {
     @GetMapping(ApiPath.PORTFOLIO_SEARCH)
     public PagedResponse<FindPortfolioListRs> searchPortfolioList(@RequestParam(value = "search") String search,
                                                                   Pagination pagination) {
-        return null;
+        return findPortfolioService.searchPortfolioList(pagination, search);
     }
 
     @Operation(summary = "내 포트폴리오 리스트 조회",
             description = "PUBLIC/PRIVATE/PROTECTED 포트폴리오 모두 조회")
-    @GetMapping(ApiPath.PORTFOLIO_MY)
-    public PagedResponse<FindPortfolioListRs> findMyPortfolio(Pagination pagination) {
-        return null;
+    @GetMapping(ApiPath.PORTFOLIO_SELF)
+    public PagedResponse<FindPortfolioListRs> findMyPortfolioSelf(@AuthenticationPrincipal MemberContext memberContext,
+                                                              Pagination pagination) {
+        return findPortfolioService.findMyPortfolioSelf(memberContext, pagination);
     }
 
     @Operation(summary = "다른 멤버 포트폴리오 리스트 조회",
@@ -47,7 +50,7 @@ public class FindPortfolioController {
     @GetMapping(ApiPath.PORTFOLIO_MEMBER_ID)
     public PagedResponse<FindPortfolioListRs> findMemberPortfolio(@PathVariable("member-id") Long memberId,
                                                                   Pagination pagination) {
-        return null;
+        return findPortfolioService.findMemberPortfolio(memberId, pagination);
     }
 
 }

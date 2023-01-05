@@ -21,7 +21,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         String userNameAttributeName = clientRegistration.getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
         String registrationId = clientRegistration.getRegistrationId();
 
-        return OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
+        return OAuthAttributes.create(registrationId, userNameAttributeName, oAuth2User.getAttributes());
     }
 
 }
