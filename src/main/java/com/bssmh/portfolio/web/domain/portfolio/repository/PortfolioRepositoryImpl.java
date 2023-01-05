@@ -26,7 +26,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
                 .where(searchEq(search))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(portfolio.createdDate.desc())
+                .orderBy(portfolio.views.desc(), portfolio.createdDate.desc())
                 .fetch();
 
         JPAQuery<Portfolio> countQuery = jpaQueryFactory

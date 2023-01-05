@@ -34,9 +34,9 @@ public class OAuthAttributes implements OAuth2User {
         this.picture = picture;
     }
 
-    public static OAuthAttributes of(String registrationId,
-                                     String userNameAttributeName,
-                                     Map<String, Object> attributes) {
+    public static OAuthAttributes create(String registrationId,
+                                         String userNameAttributeName,
+                                         Map<String, Object> attributes) {
 
         if (NAVER.isEqualToClientId(registrationId)) {
             return ofNaver(userNameAttributeName, attributes);

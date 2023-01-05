@@ -21,6 +21,15 @@ public class AttachFileDto {
     @Schema(description = "파일 크기")
     private Long fileSize;
 
+    public static AttachFileDto create(String fileName, String filePath, String fileUid, Long fileSize) {
+        AttachFileDto dto = new AttachFileDto();
+        dto.fileName = fileName;
+        dto.filePath = filePath;
+        dto.fileUid = fileUid;
+        dto.fileSize = fileSize;
+        return dto;
+    }
+
     public static AttachFileDto create(AttachFile attachFile) {
         AttachFileDto dto = new AttachFileDto();
         dto.fileName = attachFile.getFileName();

@@ -22,9 +22,15 @@ import java.util.Objects;
 @Transactional
 public class PortfolioService {
 
+    // service
     private final FindMemberService findMemberService;
     private final AttachFileService attachFileService;
+    private final PortfolioSkillService portfolioSkillService;
+    private final ContributorService contributorService;
+
+    // repository
     private final PortfolioRepository portfolioRepository;
+
     public void savePortfolio(MemberContext memberContext, SavePortfolioRq rq) {
         String email = memberContext.getEmail();
         Member member = findMemberService.findByEmail(email);
@@ -46,6 +52,13 @@ public class PortfolioService {
                 rq.getPortfolioScope(),
                 member);
         portfolioRepository.save(portfolio);
+
+        saveRelationShip(rq, portfolio);
+    }
+
+    private void saveRelationShip(SavePortfolioRq rq, Portfolio portfolio) {
+        portfolioSkillService.save(rq.getSkillList(), portfolio);
+        contributorService.save(rq.getContributorIdList(), portfolio);
     }
 
     public void deletePortfolio(DeletePortfolioRq rq) {

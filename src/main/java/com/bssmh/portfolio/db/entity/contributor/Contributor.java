@@ -36,4 +36,10 @@ public class Contributor extends BaseTimeEntity {
     @OneToOne(fetch = FetchType.EAGER)
     private Member member;
 
+    public static Contributor create(Portfolio portfolio, Member member) {
+        Contributor contributor = new Contributor();
+        contributor.portfolio = portfolio;
+        contributor.member = member;
+        return contributor;
+    }
 }

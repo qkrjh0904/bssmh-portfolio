@@ -31,4 +31,11 @@ public class PortfolioSkill extends BaseTimeEntity {
     @JoinColumn(name = "portfolio_id")
     private Portfolio portfolio;
 
+
+    public static PortfolioSkill create(String name, Portfolio portfolio) {
+        PortfolioSkill portfolioSkill = new PortfolioSkill();
+        portfolioSkill.name = name;
+        portfolioSkill.portfolio = portfolio;
+        return portfolioSkill;
+    }
 }

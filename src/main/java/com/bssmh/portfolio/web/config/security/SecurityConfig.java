@@ -15,39 +15,38 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled = true)	// 권한 인증 미리 체크
+@EnableGlobalMethodSecurity(prePostEnabled = true)    // 권한 인증 미리 체크
 public class SecurityConfig {
 
-	private final CustomOauth2UserService customOauth2UserService;
-	private final CustomOauth2SuccessHandler customOauth2SuccessHandler;
+    private final CustomOauth2UserService customOauth2UserService;
+    private final CustomOauth2SuccessHandler customOauth2SuccessHandler;
 
-	@Bean
-	public WebSecurityCustomizer webSecurityCustomizer(){
-		return web -> web.ignoring().antMatchers();
-	}
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().antMatchers();
+    }
 
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-		// rest api security 설정
-		http.httpBasic().disable();
-		http.csrf().disable();
-		http.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        // rest api security 설정
+        http.httpBasic().disable();
+        http.csrf().disable();
+        http.sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-		http.cors();
+        http.cors();
 
 
-		http.authorizeRequests()
-				.antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
-				.anyRequest().permitAll();
+        http.authorizeRequests()
+                .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
+                .anyRequest().authenticated();
 
-		http.oauth2Login()
-				.successHandler(customOauth2SuccessHandler)
-				.userInfoEndpoint()
-				.userService(customOauth2UserService);
+        http.oauth2Login()
+                .successHandler(customOauth2SuccessHandler)
+                .userInfoEndpoint()
+                .userService(customOauth2UserService);
 
-		return http.build();
-	}
-
+        return http.build();
+    }
 }
