@@ -10,8 +10,9 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.util.Collection;
 import java.util.Map;
 
-import static com.bssmh.portfolio.web.security.ClientType.GOOGLE;
-import static com.bssmh.portfolio.web.security.ClientType.NAVER;
+import static com.bssmh.portfolio.web.domain.enums.ClientType.GOOGLE;
+import static com.bssmh.portfolio.web.domain.enums.ClientType.KAKAO;
+import static com.bssmh.portfolio.web.domain.enums.ClientType.NAVER;
 
 @Getter
 public class OAuthAttributes implements OAuth2User {
@@ -37,16 +38,31 @@ public class OAuthAttributes implements OAuth2User {
                                      String userNameAttributeName,
                                      Map<String, Object> attributes) {
 
-        if (NAVER.getClientId().equals(registrationId)) {
+        if (NAVER.isEqualToClientId(registrationId)) {
             return ofNaver(userNameAttributeName, attributes);
         }
 
-        if (GOOGLE.getClientId().equals(registrationId)) {
+        if (GOOGLE.isEqualToClientId(registrationId)) {
             return ofGoogle(userNameAttributeName, attributes);
+        }
+
+        if (KAKAO.isEqualToClientId(registrationId)) {
+            return ofKakao(userNameAttributeName, attributes);
         }
 
         // TODO: 2022-12-27 BSM Oauth2.0 추가 예정
         return null;
+    }
+
+    private static OAuthAttributes ofKakao(String userNameAttributeName, Map<String, Object> attributes) {
+        return OAuthAttributes.builder()
+                .registrationId(KAKAO.getClientId())
+                .name((String) attributes.get(PrincipalConstants.NAME))
+                .email((String) attributes.get(PrincipalConstants.EMAIL))
+                .picture((String) attributes.get(PrincipalConstants.PICTURE))
+                .attributes(attributes)
+                .nameAttributeKey(userNameAttributeName)
+                .build();
     }
 
     private static OAuthAttributes ofNaver(String userNameAttributeName, Map<String, Object> attributes) {

@@ -1,6 +1,5 @@
-package com.bssmh.portfolio.web.config.security.exception;
+package com.bssmh.portfolio.web.exception;
 
-import com.bssmh.portfolio.web.exception.GeneralHttpException;
 import org.springframework.http.HttpStatus;
 
 public class InvalidJwtTokenException extends GeneralHttpException {

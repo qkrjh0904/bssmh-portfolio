@@ -11,7 +11,13 @@ public class UploadFileRs {
     @Schema(description = "파일 UID")
     private String fileUid;
 
-    @Schema(description = "파일 명")
-    private String fileName;
+    @Schema(description = "파일 path")
+    private String filePath;
 
+    public static UploadFileRs create(String fileUid, String filePath) {
+        UploadFileRs rs = new UploadFileRs();
+        rs.fileUid = fileUid;
+        rs.filePath = filePath;
+        return rs;
+    }
 }

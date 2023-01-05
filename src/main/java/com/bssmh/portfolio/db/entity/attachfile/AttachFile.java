@@ -47,5 +47,4 @@ public class AttachFile extends BaseTimeEntity {
         attachFile.fileSize = fileSize;
         return attachFile;
     }
-
 }
