@@ -18,14 +18,14 @@ public class SavePortfolioRq {
     @Schema(description = "설명")
     private String description;
 
-    @Schema(description = "포트폴리오 영상 파일")
-    private AttachFileDto video;
+    @Schema(description = "포트폴리오 영상 파일 uid")
+    private String videoFileUid;
 
     @Schema(description = "포트폴리오 url")
     private String portfolioUrl;
 
-    @Schema(description = "포트폴리오 썸네일")
-    private AttachFileDto thumbnail;
+    @Schema(description = "포트폴리오 썸네일 uid")
+    private String thumbnailFileUid;
 
     @NotNull
     @Schema(description = "공개 범위")

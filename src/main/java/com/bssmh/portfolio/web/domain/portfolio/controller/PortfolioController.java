@@ -1,5 +1,6 @@
 package com.bssmh.portfolio.web.domain.portfolio.controller;
 
+import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.BookmarkPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.DeletePortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.SavePortfolioRq;
@@ -9,6 +10,7 @@ import com.bssmh.portfolio.web.path.ApiPath;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,8 +28,9 @@ public class PortfolioController {
 
     @Operation(summary = "포트폴리오 생성")
     @PostMapping(ApiPath.PORTFOLIO)
-    public void savePortfolio(@Validated @RequestBody SavePortfolioRq rq) {
-        portfolioService.savePortfolio(rq);
+    public void savePortfolio(@AuthenticationPrincipal MemberContext memberContext,
+                              @Validated @RequestBody SavePortfolioRq rq) {
+        portfolioService.savePortfolio(memberContext, rq);
     }
 
     @Operation(summary = "포트폴리오 삭제")

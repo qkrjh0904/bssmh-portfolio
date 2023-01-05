@@ -17,7 +17,4 @@ public class PagedResponse<T> {
         return new PagedResponse<>(pagination, list);
     }
 
-    public static <T> PagedResponse<T> create(Page<T> page) {
-        return new PagedResponse<>(Pagination.create(page), page.getContent());
-    }
 }

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 @Data
 @NoArgsConstructor
@@ -16,11 +17,9 @@ public class Pagination {
     private Long totalCount;
     private Integer totalPages;
 
-    public static Pagination create(Integer page, Integer pageSize) {
-        return Pagination.builder()
-                .page(page + 1)
-                .size(pageSize)
-                .build();
+
+    public PageRequest toPageRequest() {
+        return PageRequest.of(this.page - 1, this.size);
     }
 
     public static Pagination create(Integer page, Integer pageSize, Long totalCount, Integer totalPages) {

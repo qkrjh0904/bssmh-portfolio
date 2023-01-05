@@ -12,7 +12,7 @@ public class ApiPath {
     public static final String PORTFOLIO_ID = "/api/portfolio/{portfolio-id}";
     public static final String PORTFOLIO_SEARCH = "/api/portfolio/search";
     public static final String PORTFOLIO_MEMBER_ID = "/api/portfolio/member/{member-id}";
-    public static final String PORTFOLIO_MY = "/api/portfolio/my";
+    public static final String PORTFOLIO_SELF = "/api/portfolio/self";
 
     // file
     public static final String FILE_UPLOAD = "/api/file/upload";
