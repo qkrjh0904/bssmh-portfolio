@@ -6,12 +6,16 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.transfer.Transfer;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 import com.amazonaws.services.s3.transfer.Upload;
+import com.bssmh.portfolio.db.entity.attachfile.AttachFile;
 import com.bssmh.portfolio.web.domain.dto.AttachFileDto;
+import com.bssmh.portfolio.web.exception.NoSuchS3AttachFileException;
 import com.bssmh.portfolio.web.utils.FileValidateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -23,6 +27,7 @@ import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -37,6 +42,8 @@ public class AwsS3Service {
     private String region;
     @Value("${bssmh.s3.bucket-name}")
     private String bucketName;
+
+    private final String TMP_DIR_PATH = System.getProperty("java.io.tmpdir");
 
     public TransferManager getTransferManger() {
         return TransferManagerBuilder.standard()
@@ -58,7 +65,7 @@ public class AwsS3Service {
         String extension = getExtension(originalFilename);
         FileValidateUtils.validationCheck(extension);
         String filePath = getFilePath();
-        String s3Path = bucketName + filePath;
+        String s3Path = getS3Path(bucketName, filePath);
         String fileUid = getFileUid(extension);
         ObjectMetadata objectMetadata = getObjectMetadata(file);
         TransferManager tm = getTransferManger();
@@ -68,6 +75,10 @@ public class AwsS3Service {
         tm.shutdownNow();
 
         return AttachFileDto.create(originalFilename, filePath, fileUid, fileSize);
+    }
+
+    private String getS3Path(String bucketName, String filePath) {
+        return bucketName + filePath;
     }
 
     private ObjectMetadata getObjectMetadata(MultipartFile file) {
@@ -106,5 +117,19 @@ public class AwsS3Service {
         return UUID.randomUUID() + "." + extension;
     }
 
+    private String getDownloadPath(String fileUid) {
+        return TMP_DIR_PATH + File.separator + fileUid;
+    }
+
+    public S3Object getS3Object(AttachFile attachFile) {
+        String fileUid = attachFile.getFileUid();
+        String s3Path = getS3Path(bucketName, attachFile.getFilePath());
+        AmazonS3 amazonS3 = getAmazonS3();
+        S3Object s3Object = amazonS3.getObject(new GetObjectRequest(s3Path, fileUid));
+        if (Objects.isNull(s3Object)) {
+            throw new NoSuchS3AttachFileException(fileUid);
+        }
+        return s3Object;
+    }
 
 }

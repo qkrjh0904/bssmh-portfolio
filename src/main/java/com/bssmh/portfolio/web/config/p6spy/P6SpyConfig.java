@@ -54,10 +54,6 @@ public class P6SpyConfig extends JdbcEventListener implements MessageFormattingS
 		return sql.startsWith("create") || sql.startsWith("alter") || sql.startsWith("comment");
 	}
 
-
-	/**
-	 * ex) 2022-10-25 17:52:44.946 | Execution Time : 9 ms | Category : statement | Connection Id : 4 | jdbc:mysql://localhost:4306
-	 */
 	private StringBuilder basicInfo(String now, long elapsed, String category, int connectionId, String url, String prepared) {
 		return new StringBuilder()
 				.append(milliSecondToDateTime(now))
