@@ -1,7 +1,7 @@
 package com.bssmh.portfolio.web.domain.file.controller;
 
-import com.bssmh.portfolio.web.domain.file.service.FileService;
 import com.bssmh.portfolio.web.domain.file.controller.rs.UploadFileRs;
+import com.bssmh.portfolio.web.domain.file.service.FileService;
 import com.bssmh.portfolio.web.path.ApiPath;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,7 +30,7 @@ public class FileController {
     @Operation(summary = "파일  다운로드")
     @GetMapping(ApiPath.FILE_DOWNLOAD)
     public ResponseEntity<byte[]> downloadFile(@PathVariable("file-uid") String fileUid) {
-        return null;
+        return fileService.downloadFile(fileUid);
     }
 
 }
