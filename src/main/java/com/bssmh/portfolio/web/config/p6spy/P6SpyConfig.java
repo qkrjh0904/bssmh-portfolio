@@ -14,7 +14,6 @@ import java.util.Locale;
 
 
 @Configuration
-
 public class P6SpyConfig extends JdbcEventListener implements MessageFormattingStrategy {
 
 	private static final String NEW_LINE = System.lineSeparator();
