@@ -15,14 +15,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
                 .allowedMethods("*")
-                .allowedOriginPatterns("http*://*.asdfasdf39asasijb38bc81d");
+                .allowedOriginPatterns("http*://localhost:[*]");
     }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        String staticResourceLocation = "classpath:/static/";
-//        registry.addResourceHandler("/static/**")
-//                .addResourceLocations(staticResourceLocation)
-//                .setCacheControl(CacheControl.maxAge(Duration.ofDays(1)));
-    }
 }

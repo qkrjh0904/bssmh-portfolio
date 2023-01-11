@@ -2,9 +2,37 @@ spring:
   config:
     activate:
       on-profile: local
+  datasource:
+    hikari:
+      jdbc-url: ${bssmh-portfolio.spring.datasource.url}
+      username: ${bssmh-portfolio.spring.datasource.username}
+      password: ${bssmh-portfolio.spring.datasource.password}
+      driver-class-name: com.mysql.cj.jdbc.Driver
 
 decorator:
   datasource:
     p6spy:
       enable-logging: on
       multiline: true
+
+cloud:
+  aws:
+    stack:
+      auto: false
+    region:
+      static: ap-northeast-2
+    credentials:
+      access-key: ${bssmh-portfolio.aws.s3.access-key}
+      secret-key: ${bssmh-portfolio.aws.s3.secret-key}
+
+bssmh:
+  s3:
+    bucket-name: ${bssmh-portfolio.aws.s3.bucket-name}
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
+

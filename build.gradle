@@ -25,19 +25,29 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	// querydsl
 	implementation 'com.querydsl:querydsl-jpa'
 	implementation 'com.querydsl:querydsl-apt'
 	// mysql
 	implementation 'mysql:mysql-connector-java'
+	// mariadb
+	implementation 'org.mariadb.jdbc:mariadb-java-client'
 	// p6spy
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
 	// oauth2
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-
-
-
+	// swagger
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.6'
+	// jwt
+	implementation 'io.jsonwebtoken:jjwt:0.2'
+	implementation 'com.auth0:java-jwt:3.18.2'
+	// s3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	// apache commons io
+	implementation 'commons-io:commons-io:2.7'
 
 	compileOnly 'org.projectlombok:lombok'
 
