@@ -32,41 +32,46 @@ public class Member extends BaseTimeEntity {
 
     private String nickName;
 
-    private String profileImage;
+    @Column(columnDefinition = "text")
+    private String profileImageUrl;
 
     private String registrationId;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private MemberRoleType memberRoleType;
 
+    @Column(columnDefinition = "text")
     private String description;
 
     private String phone;
 
+
     @Builder(access = AccessLevel.PRIVATE)
     private Member(String email, String name, String nickName, String registrationId,
-                   String profileImage, MemberRoleType memberRoleType) {
+                   String profileImageUrl, MemberRoleType memberRoleType) {
         this.email = email;
         this.name = name;
         this.nickName = nickName;
         this.registrationId = registrationId;
-        this.profileImage = profileImage;
+        this.profileImageUrl = profileImageUrl;
         this.memberRoleType = memberRoleType;
     }
 
-    public static Member ofNormal(String email, String name, String picture, String registrationId) {
+    public static Member ofNormal(String email, String name, String profileImageUrl, String registrationId) {
         return Member.builder()
                 .email(email)
                 .name(name)
                 .nickName(name)
-                .profileImage(picture)
+                .profileImageUrl(profileImageUrl)
                 .registrationId(registrationId)
                 .memberRoleType(MemberRoleType.NORMAL)
                 .build();
     }
 
-    public void update(String name, String picture) {
+    public void update(String name, String profileImageUrl) {
         this.name = name;
-        this.profileImage = picture;
+        this.profileImageUrl = profileImageUrl;
     }
+
 }
