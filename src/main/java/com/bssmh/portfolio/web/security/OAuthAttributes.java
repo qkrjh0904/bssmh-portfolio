@@ -52,7 +52,6 @@ public class OAuthAttributes implements OAuth2User {
             return ofBsm(userNameAttributeName, attributes);
         }
 
-        System.out.println("test: null");
         return null;
     }
 
