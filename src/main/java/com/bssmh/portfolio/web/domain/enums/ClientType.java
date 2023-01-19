@@ -10,7 +10,7 @@ public enum ClientType {
     NAVER("naver"),
     GOOGLE("google"),
     KAKAO("kakao"),
-    BSM("BSM"),
+    BSM("bsm"),
     ;
 
     private final String clientId;

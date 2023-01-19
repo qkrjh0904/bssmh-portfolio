@@ -15,7 +15,7 @@ import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
-public class AuthFacade {
+public class BsmAuthFacade {
 
     // repository
     private final MemberLoginLogRepository memberLoginLogRepository;

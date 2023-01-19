@@ -1,7 +1,10 @@
 package com.bssmh.portfolio.web.domain.auth.service;
 
 import com.bssmh.portfolio.db.entity.member.Member;
-import com.bssmh.portfolio.web.domain.auth.facade.AuthFacade;
+import com.bssmh.portfolio.web.config.security.jwt.JwtTokenService;
+import com.bssmh.portfolio.web.domain.auth.controller.rq.BsmOauthRq;
+import com.bssmh.portfolio.web.domain.auth.facade.BsmAuthFacade;
+import com.bssmh.portfolio.web.domain.dto.JwtTokenDto;
 import com.bssmh.portfolio.web.domain.enums.ClientType;
 import com.bssmh.portfolio.web.exception.InvalidBsmOauthClientException;
 import com.bssmh.portfolio.web.exception.NoSuchBsmAuthCodeException;
@@ -27,8 +30,11 @@ import java.util.Map;
 @Transactional
 public class BsmOauthService {
 
+    // service
+    private final JwtTokenService jwtTokenService;
+
     // facade
-    private final AuthFacade authFacade;
+    private final BsmAuthFacade authFacade;
 
     // bsm oauth library
     private final BsmOauth bsmOauth;
@@ -36,16 +42,16 @@ public class BsmOauthService {
     // constant
     private static final String BSM_USER_NAME_ATTRIBUTE_NAME = "code";
 
-    public Member bsmLogin(String authCode) throws IOException {
-        BsmResourceResponse resource = getResource(authCode);
+    public JwtTokenDto bsmLogin(BsmOauthRq rq) throws IOException {
+        BsmResourceResponse resource = getResource(rq.getAuthCode());
 
         Map<String, Object> attributes = toAttributes(resource);
-        OAuthAttributes oAuthAttributes = OAuthAttributes.create(ClientType.BSM.toString(), BSM_USER_NAME_ATTRIBUTE_NAME, attributes);
+        OAuthAttributes oAuthAttributes = OAuthAttributes.create(ClientType.BSM.getClientId(), BSM_USER_NAME_ATTRIBUTE_NAME, attributes);
 
         Member member = authFacade.saveOrUpdate(oAuthAttributes);
         authFacade.saveLoginLog(member);
 
-        return member;
+        return jwtTokenService.generateJwtToken(member);
     }
 
     private BsmResourceResponse getResource(String authCode) throws IOException {
