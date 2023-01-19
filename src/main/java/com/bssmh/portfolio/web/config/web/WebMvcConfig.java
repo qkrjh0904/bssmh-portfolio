@@ -1,4 +1,4 @@
-package com.bssmh.portfolio.web.config;
+package com.bssmh.portfolio.web.config.web;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.CacheControl;
