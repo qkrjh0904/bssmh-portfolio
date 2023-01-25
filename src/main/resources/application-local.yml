@@ -8,6 +8,11 @@ spring:
       username: ${bssmh-portfolio.spring.datasource.username}
       password: ${bssmh-portfolio.spring.datasource.password}
       driver-class-name: com.mysql.cj.jdbc.Driver
+  security:
+    oauth:
+      bsm:
+        client-id: ${oauth.bsm.id}
+        client-secret: ${oauth.bsm.secret}
 
 decorator:
   datasource:
