@@ -24,4 +24,7 @@ public class ApiPath {
     // comment
     public static final String COMMENT = "/api/comment";
     public static final String COMMENT_PORTFOLIO_ID = "/api/comment/{portfolio-id}";
+
+    // skill
+    public static final String SKILL = "/api/skill";
 }

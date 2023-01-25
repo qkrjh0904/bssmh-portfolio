@@ -51,6 +51,8 @@ public class Member extends BaseTimeEntity {
 
     private String phone;
 
+    private String job;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Portfolio> portfolioList = new ArrayList<>();
 
