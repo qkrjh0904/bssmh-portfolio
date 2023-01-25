@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.bssmh.portfolio.db.entity.member.Member;
+import com.bssmh.portfolio.db.enums.MemberRoleType;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.exception.ExpiredJwtException;
 import com.bssmh.portfolio.web.exception.InvalidJwtTokenException;
@@ -48,7 +49,8 @@ public class JwtTokenService {
         DecodedJWT decodedJWT = verifyToken(token);
 
         String email = decodedJWT.getClaim(MEMBER_EMAIL).asString();
-        String role = decodedJWT.getClaim(MEMBER_ROLE_TYPE).asString();
+        String roleString = decodedJWT.getClaim(MEMBER_ROLE_TYPE).asString();
+        MemberRoleType memberRoleType = MemberRoleType.valueOf(roleString);
         String validity = decodedJWT.getClaim(VALIDITY).asString();
 
         LocalDateTime validityToLocalDateTime = LocalDateTime.parse(validity);
@@ -56,7 +58,7 @@ public class JwtTokenService {
             throw new ExpiredJwtException();
         }
 
-        return MemberContext.create(email, role);
+        return MemberContext.create(email, memberRoleType);
     }
 
     private DecodedJWT verifyToken(String token) {

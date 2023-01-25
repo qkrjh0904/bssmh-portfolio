@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class FindMemberRs {
+public class FindOtherMemberRs {
 
     @Schema(description = "멤버 id")
     private Long memberId;
@@ -21,6 +21,6 @@ public class FindMemberRs {
     private String email;
 
     @Schema(description = "소개")
-    private String introduction;
+    private String description;
 
 }

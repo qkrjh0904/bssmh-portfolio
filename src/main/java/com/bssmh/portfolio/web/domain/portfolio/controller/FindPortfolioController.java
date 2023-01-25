@@ -32,8 +32,10 @@ public class FindPortfolioController {
     @Operation(summary = "포트폴리오 검색",
             description = "검색어가 없을 때 전체조회")
     @GetMapping(ApiPath.PORTFOLIO_SEARCH)
-    public PagedResponse<FindPortfolioListRs> searchPortfolioList(@RequestParam(value = "search", required = false) String search,
-                                                                  Pagination pagination) {
+    public PagedResponse<FindPortfolioListRs> searchPortfolioList(
+            @AuthenticationPrincipal MemberContext memberContext,
+            @RequestParam(value = "search", required = false) String search,
+            Pagination pagination) {
         return findPortfolioService.searchPortfolioList(pagination, search);
     }
 
@@ -41,7 +43,7 @@ public class FindPortfolioController {
             description = "PUBLIC/PRIVATE/PROTECTED 포트폴리오 모두 조회")
     @GetMapping(ApiPath.PORTFOLIO_SELF)
     public PagedResponse<FindPortfolioListRs> findMyPortfolioSelf(@AuthenticationPrincipal MemberContext memberContext,
-                                                              Pagination pagination) {
+                                                                  Pagination pagination) {
         return findPortfolioService.findMyPortfolioSelf(memberContext, pagination);
     }
 

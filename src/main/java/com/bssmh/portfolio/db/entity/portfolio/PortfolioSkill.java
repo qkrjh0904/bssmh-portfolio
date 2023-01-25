@@ -25,7 +25,10 @@ public class PortfolioSkill extends BaseTimeEntity {
     @Column(name = "portfolio_skill_id")
     private Long id;
 
-    private String name;
+    private Long skillId;
+
+    @Column(nullable = false)
+    private String skillName;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "portfolio_id")
@@ -34,7 +37,7 @@ public class PortfolioSkill extends BaseTimeEntity {
 
     public static PortfolioSkill create(String name, Portfolio portfolio) {
         PortfolioSkill portfolioSkill = new PortfolioSkill();
-        portfolioSkill.name = name;
+        portfolioSkill.skillName = name;
         portfolioSkill.portfolio = portfolio;
         return portfolioSkill;
     }

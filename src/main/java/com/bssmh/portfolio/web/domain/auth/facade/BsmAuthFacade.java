@@ -26,7 +26,7 @@ public class BsmAuthFacade {
     private final FindMemberService findMemberService;
 
     public Member saveOrUpdate(OAuthAttributes oAuthAttributes) {
-        Member member = findMemberService.findByEmail(oAuthAttributes.getEmail());
+        Member member = findMemberService.findByEmailOrElseNull(oAuthAttributes.getEmail());
         if (Objects.isNull(member)) {
             member = oAuthAttributes.toEntity();
             memberRepository.save(member);

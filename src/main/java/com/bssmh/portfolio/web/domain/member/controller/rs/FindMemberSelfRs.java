@@ -21,8 +21,11 @@ public class FindMemberSelfRs {
     @Schema(description = "이메일")
     private String email;
 
+    @Schema(description = "전화번호")
+    private String phone;
+
     @Schema(description = "소개")
-    private String introduction;
+    private String description;
 
     @Schema(description = "멤버 역할")
     private MemberRoleType memberRoleType;

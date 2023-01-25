@@ -2,6 +2,7 @@ package com.bssmh.portfolio.db.entity.member;
 
 import com.bssmh.portfolio.db.entity.comment.Comment;
 import com.bssmh.portfolio.db.entity.common.BaseTimeEntity;
+import com.bssmh.portfolio.db.entity.follow.Follow;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.db.enums.MemberRoleType;
 import lombok.AccessLevel;
@@ -9,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -50,11 +52,19 @@ public class Member extends BaseTimeEntity {
 
     private String phone;
 
-    @OneToMany(mappedBy = "member")
+    private String job;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Portfolio> portfolioList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "fromMember", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> fromMemberList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "toMember", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> toMemberList = new ArrayList<>();
 
     @Builder(access = AccessLevel.PRIVATE)
     private Member(String email, String name, String nickName, String registrationId,
@@ -83,4 +93,10 @@ public class Member extends BaseTimeEntity {
         this.profileImageUrl = profileImageUrl;
     }
 
+    public void update(String nickName, String description, String phone, String job) {
+        this.nickName = nickName;
+        this.description = description;
+        this.phone = phone;
+        this.job = job;
+    }
 }

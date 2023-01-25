@@ -6,6 +6,7 @@ public class ApiPath {
     public static final String BSM_OAUTH = "/api/oauth/bsm";
 
     // member
+    public static final String MEMBER = "/api/member";
     public static final String MEMBER_SELF = "/api/member/self";
     public static final String MEMBER_ID = "/api/member/{member-id}";
 
@@ -24,4 +25,7 @@ public class ApiPath {
     // comment
     public static final String COMMENT = "/api/comment";
     public static final String COMMENT_PORTFOLIO_ID = "/api/comment/{portfolio-id}";
+
+    // skill
+    public static final String SKILL = "/api/skill";
 }

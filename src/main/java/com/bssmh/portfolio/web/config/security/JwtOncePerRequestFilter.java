@@ -14,7 +14,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtOncePerRequestFilter extends OncePerRequestFilter {
 
-    private final AuthenticationManager authenticationManager;
+    private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private static final String TOKEN_KEY = "token";
 
     @Override
@@ -22,7 +22,7 @@ public class JwtOncePerRequestFilter extends OncePerRequestFilter {
         String token = request.getHeader(TOKEN_KEY);
         if (StringUtils.hasText(token)) {
             JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(token);
-            authenticationManager.authenticate(jwtAuthenticationToken);
+            jwtAuthenticationProvider.authenticate(jwtAuthenticationToken);
         }
 
         filterChain.doFilter(request, response);

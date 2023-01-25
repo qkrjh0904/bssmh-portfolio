@@ -6,25 +6,26 @@ import com.bssmh.portfolio.web.security.CustomOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled = true)    // 권한 인증 미리 체크
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final CustomOauth2UserService customOauth2UserService;
     private final CustomOauth2SuccessHandler customOauth2SuccessHandler;
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().antMatchers();
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class).build();
     }
 
     @Bean
@@ -38,6 +39,8 @@ public class SecurityConfig {
 
         http.cors();
 
+//        http.addFilterBefore(new JwtOncePerRequestFilter(authenticationManager(http)),
+//                UsernamePasswordAuthenticationFilter.class);
 
         http.authorizeRequests()
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
@@ -51,4 +54,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }

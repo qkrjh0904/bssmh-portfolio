@@ -80,7 +80,7 @@ public class FindPortfolioListRs {
 
     private static List<String> getSkillList(List<PortfolioSkill> portfolioSkillList) {
         return portfolioSkillList.stream()
-                .map(PortfolioSkill::getName)
+                .map(PortfolioSkill::getSkillName)
                 .collect(Collectors.toList());
     }
 

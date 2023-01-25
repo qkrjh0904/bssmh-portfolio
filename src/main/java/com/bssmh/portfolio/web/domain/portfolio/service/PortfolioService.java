@@ -33,7 +33,7 @@ public class PortfolioService {
 
     public void savePortfolio(MemberContext memberContext, SavePortfolioRq rq) {
         String email = memberContext.getEmail();
-        Member member = findMemberService.findByEmail(email);
+        Member member = findMemberService.findByEmailOrElseNull(email);
         if(Objects.isNull(member)){
             throw new NoSuchMemberException();
         }

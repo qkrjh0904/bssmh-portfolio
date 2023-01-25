@@ -12,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -72,16 +73,16 @@ public class Portfolio extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "portfolio")
+    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Contributor> contributorList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "portfolio")
+    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "portfolio")
+    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PortfolioSkill> portfolioSkillList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "portfolio")
+    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Bookmark> bookmarkList = new ArrayList<>();
 
     public static Portfolio create(PortfolioType portfolioType, String title, String description,
