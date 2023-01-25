@@ -6,10 +6,11 @@ import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.file.service.AttachFileService;
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
+import com.bssmh.portfolio.web.domain.portfolio.controller.rq.BookmarkPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.DeletePortfolioRq;
-import com.bssmh.portfolio.web.domain.portfolio.controller.rq.SavePortfolioRq;
-import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpdatePortfolioRq;
+import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpsertPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.repository.PortfolioRepository;
+import com.bssmh.portfolio.web.exception.DoNotHavePermissionToModifyPortfolioException;
 import com.bssmh.portfolio.web.exception.NoSuchMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,11 +28,12 @@ public class PortfolioService {
     private final AttachFileService attachFileService;
     private final PortfolioSkillService portfolioSkillService;
     private final ContributorService contributorService;
+    private final FindPortfolioService findPortfolioService;
 
     // repository
     private final PortfolioRepository portfolioRepository;
 
-    public void savePortfolio(MemberContext memberContext, SavePortfolioRq rq) {
+    public void savePortfolio(MemberContext memberContext, UpsertPortfolioRq rq) {
         String email = memberContext.getEmail();
         Member member = findMemberService.findByEmailOrElseNull(email);
         if(Objects.isNull(member)){
@@ -53,19 +55,58 @@ public class PortfolioService {
                 member);
         portfolioRepository.save(portfolio);
 
-        saveRelationShip(rq, portfolio);
+        upsertRelationShip(rq, portfolio);
     }
 
-    private void saveRelationShip(SavePortfolioRq rq, Portfolio portfolio) {
-        portfolioSkillService.save(rq.getSkillList(), portfolio);
-        contributorService.save(rq.getContributorIdList(), portfolio);
+    private void upsertRelationShip(UpsertPortfolioRq rq, Portfolio portfolio) {
+        portfolioSkillService.upsert(rq.getSkillList(), portfolio);
+        contributorService.upsert(rq.getContributorIdList(), portfolio);
     }
 
-    public void deletePortfolio(DeletePortfolioRq rq) {
-
+    public void deletePortfolio(MemberContext memberContext, DeletePortfolioRq rq) {
+        String email = memberContext.getEmail();
+        Member member = findMemberService.findByEmailOrElseThrow(email);
+        Long portfolioId = rq.getPortfolioId();
+        Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(portfolioId);
+        portfolioPermissionCheck(portfolio, member);
+        portfolioRepository.delete(portfolio);
     }
 
-    public void updatePortfolio(UpdatePortfolioRq rq) {
+    public void updatePortfolio(MemberContext memberContext, UpsertPortfolioRq rq) {
+        String email = memberContext.getEmail();
+        Member member = findMemberService.findByEmailOrElseThrow(email);
+        Long portfolioId = rq.getPortfolioId();
+        Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(portfolioId);
+        portfolioPermissionCheck(portfolio, member);
+
+        AttachFile video = attachFileService.findByFileUid(rq.getVideoFileUid());
+        AttachFile thumbnail = attachFileService.findByFileUid(rq.getThumbnailFileUid());
+
+        portfolio.update(
+                rq.getTitle(),
+                rq.getDescription(),
+                video,
+                thumbnail,
+                rq.getPortfolioUrl(),
+                rq.getPortfolioScope(),
+                rq.getPortfolioType(),
+                rq.getGitUrl());
+
+        upsertRelationShip(rq, portfolio);
+    }
+
+    private void portfolioPermissionCheck(Portfolio portfolio, Member member) {
+        Long writerId = portfolio.getMember().getId();
+        Long memberId = member.getId();
+        if(writerId.equals(memberId)){
+            return;
+        }
+
+        throw new DoNotHavePermissionToModifyPortfolioException();
+    }
+
+
+    public void bookmarkPortfolio(MemberContext memberContext, BookmarkPortfolioRq rq) {
 
     }
 }

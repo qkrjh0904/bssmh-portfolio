@@ -47,15 +47,15 @@ public class FindMemberService {
                 .build();
     }
 
-    public Member findById(Long id) {
-        return memberRepository.findById(id)
+    public Member findByIdOrElseThrow(Long memberId) {
+        return memberRepository.findById(memberId)
                 .orElseThrow(NoSuchMemberException::new);
     }
 
     public FindOtherMemberRs findOtherMember(MemberContext memberContext, Long memberId) {
         // TODO: 2023-01-11 권한 인증 필요
 
-        Member member = this.findById(memberId);
+        Member member = this.findByIdOrElseThrow(memberId);
         return FindOtherMemberRs.builder()
                 .memberId(member.getId())
                 .name(member.getName())

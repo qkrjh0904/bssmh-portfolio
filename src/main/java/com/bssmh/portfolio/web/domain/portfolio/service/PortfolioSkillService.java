@@ -2,6 +2,7 @@ package com.bssmh.portfolio.web.domain.portfolio.service;
 
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.db.entity.portfolio.PortfolioSkill;
+import com.bssmh.portfolio.web.domain.dto.PortfolioSkillDto;
 import com.bssmh.portfolio.web.domain.portfolio.repository.PortfolioSkillRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,14 +19,14 @@ public class PortfolioSkillService {
 
     private final PortfolioSkillRepository portfolioSkillRepository;
 
-    public void save(List<String> skillList, Portfolio portfolio) {
-        if (ObjectUtils.isEmpty(skillList)) {
+    public void upsert(List<PortfolioSkillDto> skillDtoList, Portfolio portfolio) {
+        if (ObjectUtils.isEmpty(skillDtoList)) {
             return;
         }
 
-        List<PortfolioSkill> portfolioSkillList = skillList.stream()
+        List<PortfolioSkill> portfolioSkillList = skillDtoList.stream()
                 .map(it -> PortfolioSkill.create(it, portfolio))
                 .collect(Collectors.toList());
-        portfolioSkillRepository.saveAll(portfolioSkillList);
+        portfolio.upsertSkillList(portfolioSkillList);
     }
 }

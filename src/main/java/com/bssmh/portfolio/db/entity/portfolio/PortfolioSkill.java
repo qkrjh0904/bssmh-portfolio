@@ -1,6 +1,7 @@
 package com.bssmh.portfolio.db.entity.portfolio;
 
 import com.bssmh.portfolio.db.entity.common.BaseTimeEntity;
+import com.bssmh.portfolio.web.domain.dto.PortfolioSkillDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,9 +36,10 @@ public class PortfolioSkill extends BaseTimeEntity {
     private Portfolio portfolio;
 
 
-    public static PortfolioSkill create(String name, Portfolio portfolio) {
+    public static PortfolioSkill create(PortfolioSkillDto dto, Portfolio portfolio) {
         PortfolioSkill portfolioSkill = new PortfolioSkill();
-        portfolioSkill.skillName = name;
+        portfolioSkill.skillId = dto.getSkillId();
+        portfolioSkill.skillName = dto.getSkillName();
         portfolioSkill.portfolio = portfolio;
         return portfolioSkill;
     }

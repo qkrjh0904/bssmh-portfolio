@@ -42,9 +42,9 @@ public class FindPortfolioController {
     @Operation(summary = "내 포트폴리오 리스트 조회",
             description = "PUBLIC/PRIVATE/PROTECTED 포트폴리오 모두 조회")
     @GetMapping(ApiPath.PORTFOLIO_SELF)
-    public PagedResponse<FindPortfolioListRs> findMyPortfolioSelf(@AuthenticationPrincipal MemberContext memberContext,
-                                                                  Pagination pagination) {
-        return findPortfolioService.findMyPortfolioSelf(memberContext, pagination);
+    public PagedResponse<FindPortfolioListRs> findMyPortfolio(@AuthenticationPrincipal MemberContext memberContext,
+                                                              Pagination pagination) {
+        return findPortfolioService.findMyPortfolio(memberContext, pagination);
     }
 
     @Operation(summary = "다른 멤버 포트폴리오 리스트 조회",

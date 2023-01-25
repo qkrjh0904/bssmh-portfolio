@@ -101,4 +101,27 @@ public class Portfolio extends BaseTimeEntity {
         portfolio.member = member;
         return portfolio;
     }
+
+    public void update(String title, String description, AttachFile video, AttachFile thumbnail,
+                       String portfolioUrl, PortfolioScope portfolioScope,
+                       PortfolioType portfolioType, String gitUrl) {
+        this.portfolioType = portfolioType;
+        this.title = title;
+        this.description = description;
+        this.video = video;
+        this.thumbnail = thumbnail;
+        this.portfolioUrl = portfolioUrl;
+        this.gitUrl = gitUrl;
+        this.portfolioScope = portfolioScope;
+    }
+
+    public void upsertSkillList(List<PortfolioSkill> portfolioSkillList) {
+        this.portfolioSkillList.clear();
+        this.portfolioSkillList.addAll(portfolioSkillList);
+    }
+
+    public void upsertContributorList(List<Contributor> contributorList) {
+        this.contributorList.clear();
+        this.contributorList.addAll(contributorList);
+    }
 }

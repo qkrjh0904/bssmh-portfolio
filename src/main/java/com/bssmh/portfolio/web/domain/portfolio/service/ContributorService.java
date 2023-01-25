@@ -21,7 +21,7 @@ public class ContributorService {
     private final MemberService memberService;
     private final ContributorRepository contributorRepository;
 
-    public void save(List<Long> contributorIdList, Portfolio portfolio) {
+    public void upsert(List<Long> contributorIdList, Portfolio portfolio) {
         if(ObjectUtils.isEmpty(contributorIdList)){
             return;
         }
@@ -30,6 +30,6 @@ public class ContributorService {
         List<Contributor> contributorList = memberList.stream()
                 .map(member -> Contributor.create(portfolio, member))
                 .collect(Collectors.toList());
-        contributorRepository.saveAll(contributorList);
+        portfolio.upsertContributorList(contributorList);
     }
 }
