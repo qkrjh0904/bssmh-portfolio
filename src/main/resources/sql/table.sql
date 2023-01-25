@@ -152,7 +152,7 @@ create table skill
 (
     skill_id     bigint       not null auto_increment,
     created_date datetime,
-    name         varchar(255) not null,
+    name         varchar(255) not null unique ,
     primary key (skill_id)
 );
 

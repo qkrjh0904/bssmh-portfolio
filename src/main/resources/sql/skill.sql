@@ -2430,7 +2430,6 @@ values
     ( 'Kontena Pharos'),
     ( 'insightsoftware'),
     ( 'Amazon OpenSearch Service'),
-    ( 'DART'),
     ( 'Azure Data Studio'),
     ( 'Front Scheduling'),
     ( 'Adobe Acrobat'),
