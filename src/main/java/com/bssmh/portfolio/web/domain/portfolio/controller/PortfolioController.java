@@ -3,8 +3,7 @@ package com.bssmh.portfolio.web.domain.portfolio.controller;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.BookmarkPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.DeletePortfolioRq;
-import com.bssmh.portfolio.web.domain.portfolio.controller.rq.SavePortfolioRq;
-import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpdatePortfolioRq;
+import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpsertPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.service.PortfolioService;
 import com.bssmh.portfolio.web.path.ApiPath;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,26 +28,30 @@ public class PortfolioController {
     @Operation(summary = "포트폴리오 생성")
     @PostMapping(ApiPath.PORTFOLIO)
     public void savePortfolio(@AuthenticationPrincipal MemberContext memberContext,
-                              @Validated @RequestBody SavePortfolioRq rq) {
+                              @Validated @RequestBody UpsertPortfolioRq rq) {
         portfolioService.savePortfolio(memberContext, rq);
     }
 
     @Operation(summary = "포트폴리오 삭제")
     @DeleteMapping(ApiPath.PORTFOLIO)
-    public void deletePortfolio(@Validated @RequestBody DeletePortfolioRq rq) {
-        portfolioService.deletePortfolio(rq);
+    public void deletePortfolio(@AuthenticationPrincipal MemberContext memberContext,
+                                @Validated @RequestBody DeletePortfolioRq rq) {
+        portfolioService.deletePortfolio(memberContext, rq);
     }
 
     @Operation(summary = "포트폴리오 수정")
     @PutMapping(ApiPath.PORTFOLIO)
-    public void updatePortfolio(@Validated @RequestBody UpdatePortfolioRq rq) {
-        portfolioService.updatePortfolio(rq);
+    public void updatePortfolio(@AuthenticationPrincipal MemberContext memberContext,
+                                @Validated @RequestBody UpsertPortfolioRq rq) {
+        portfolioService.updatePortfolio(memberContext, rq);
     }
 
     @Operation(summary = "포트폴리오 좋아요",
             description = "toggle 방식")
     @PutMapping(ApiPath.PORTFOLIO_BOOKMARK)
-    public void bookmarkPortfolio(@Validated @RequestBody BookmarkPortfolioRq rq) {
+    public void bookmarkPortfolio(@AuthenticationPrincipal MemberContext memberContext,
+                                  @Validated @RequestBody BookmarkPortfolioRq rq) {
+        portfolioService.bookmarkPortfolio(memberContext, rq);
     }
 
 }

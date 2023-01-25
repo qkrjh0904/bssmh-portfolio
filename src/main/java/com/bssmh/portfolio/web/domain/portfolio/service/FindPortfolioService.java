@@ -1,7 +1,9 @@
 package com.bssmh.portfolio.web.domain.portfolio.service;
 
+import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
+import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rs.FindPortfolioDetailRs;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rs.FindPortfolioListRs;
 import com.bssmh.portfolio.web.domain.portfolio.repository.PortfolioRepository;
@@ -23,13 +25,14 @@ import java.util.stream.Collectors;
 public class FindPortfolioService {
 
     private final PortfolioRepository portfolioRepository;
+    private final FindMemberService findMemberService;
 
     public FindPortfolioDetailRs findPortfolio(Long portfolioId) {
-        Portfolio portfolio = findById(portfolioId);
+        Portfolio portfolio = findByIdOrElseThrow(portfolioId);
         return FindPortfolioDetailRs.create(portfolio);
     }
 
-    private Portfolio findById(Long portfolioId) {
+    public Portfolio findByIdOrElseThrow(Long portfolioId) {
         return portfolioRepository.findById(portfolioId)
                 .orElseThrow(NoSuchPortfolioException::new);
     }
@@ -47,12 +50,30 @@ public class FindPortfolioService {
         return PagedResponse.create(pagination, findPortfolioListRsList);
     }
 
-    public PagedResponse<FindPortfolioListRs> findMyPortfolioSelf(MemberContext memberContext, Pagination pagination) {
+    public PagedResponse<FindPortfolioListRs> findMyPortfolio(MemberContext memberContext, Pagination pagination) {
         String email = memberContext.getEmail();
-        return null;
+        Member member = findMemberService.findByEmailOrElseThrow(email);
+        PageRequest pageRequest = pagination.toPageRequest();
+        Page<Portfolio> myPortfolioList = portfolioRepository.findMyPortfolio(member.getId(), pageRequest);
+        List<FindPortfolioListRs> findPortfolioListRsList = myPortfolioList.stream()
+                .map(FindPortfolioListRs::create)
+                .collect(Collectors.toList());
+
+        pagination.setTotalCount(myPortfolioList.getTotalElements());
+        pagination.setTotalPages(myPortfolioList.getTotalPages());
+        return PagedResponse.create(pagination, findPortfolioListRsList);
     }
 
     public PagedResponse<FindPortfolioListRs> findMemberPortfolio(Long memberId, Pagination pagination) {
-        return null;
+        Member member = findMemberService.findByIdOrElseThrow(memberId);
+        PageRequest pageRequest = pagination.toPageRequest();
+        Page<Portfolio> memberPortfolioList = portfolioRepository.findMemberPortfolio(member.getId(), pageRequest);
+        List<FindPortfolioListRs> findPortfolioListRsList = memberPortfolioList.stream()
+                .map(FindPortfolioListRs::create)
+                .collect(Collectors.toList());
+
+        pagination.setTotalCount(memberPortfolioList.getTotalElements());
+        pagination.setTotalPages(memberPortfolioList.getTotalPages());
+        return PagedResponse.create(pagination, findPortfolioListRsList);
     }
 }
