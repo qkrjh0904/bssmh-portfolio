@@ -1,5 +1,6 @@
 package com.bssmh.portfolio.web.config.security;
 
+import com.bssmh.portfolio.web.path.ApiPath;
 import com.bssmh.portfolio.web.security.CustomOauth2SuccessHandler;
 import com.bssmh.portfolio.web.security.CustomOauth2UserService;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class SecurityConfig {
 
         http.authorizeRequests()
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
+                .antMatchers(ApiPath.BSM_OAUTH).permitAll()
                 .anyRequest().permitAll();
 
         http.oauth2Login()
