@@ -155,3 +155,19 @@ create table skill
     name         varchar(255) not null,
     primary key (skill_id)
 );
+
+create table follow
+(
+    follow_id      bigint not null auto_increment,
+    from_member_id bigint,
+    to_member_id   bigint,
+    primary key (follow_id),
+    constraint uk_from_member_id_to_member_id_on_follow unique (from_member_id, to_member_id),
+    constraint fk_follow_from_member_id
+        foreign key (from_member_id)
+            references member (member_id),
+    constraint fk_follow_to_member_id
+        foreign key (to_member_id)
+            references member (member_id)
+
+);

@@ -64,4 +64,5 @@ public class FindMemberService {
                 .description(member.getDescription())
                 .build();
     }
+
 }
