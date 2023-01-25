@@ -1,11 +1,12 @@
 package com.bssmh.portfolio.web.domain.member.controller.rs;
 
+import com.bssmh.portfolio.db.entity.member.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
-@Builder
+@Getter
+@NoArgsConstructor
 public class FindOtherMemberRs {
 
     @Schema(description = "멤버 id")
@@ -23,4 +24,17 @@ public class FindOtherMemberRs {
     @Schema(description = "소개")
     private String description;
 
+    @Schema(description = "직군, 직무, 작업 등")
+    private String job;
+
+    public static FindOtherMemberRs create(Member member) {
+        FindOtherMemberRs rs = new FindOtherMemberRs();
+        rs.memberId = member.getId();
+        rs.name = member.getName();
+        rs.profileImageUrl = member.getProfileImageUrl();
+        rs.email = member.getEmail();
+        rs.description = member.getDescription();
+        rs.job = member.getJob();
+        return rs;
+    }
 }

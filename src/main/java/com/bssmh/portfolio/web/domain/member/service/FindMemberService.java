@@ -29,22 +29,9 @@ public class FindMemberService {
                 .orElseThrow(NoSuchMemberException::new);
     }
 
-    public List<Member> findAllByName(String search) {
-        return memberRepository.findAllByName(search);
-    }
-
     public FindMemberSelfRs findMemberSelf(String email) {
         Member member = this.findByEmailOrElseThrow(email);
-
-        return FindMemberSelfRs.builder()
-                .memberId(member.getId())
-                .name(member.getName())
-                .profileImageUrl(member.getProfileImageUrl())
-                .email(member.getEmail())
-                .email(member.getEmail())
-                .description(member.getDescription())
-                .memberRoleType(member.getMemberRoleType())
-                .build();
+        return FindMemberSelfRs.create(member);
     }
 
     public Member findByIdOrElseThrow(Long memberId) {
@@ -54,15 +41,8 @@ public class FindMemberService {
 
     public FindOtherMemberRs findOtherMember(MemberContext memberContext, Long memberId) {
         // TODO: 2023-01-11 권한 인증 필요
-
         Member member = this.findByIdOrElseThrow(memberId);
-        return FindOtherMemberRs.builder()
-                .memberId(member.getId())
-                .name(member.getName())
-                .profileImageUrl(member.getProfileImageUrl())
-                .email(member.getEmail())
-                .description(member.getDescription())
-                .build();
+        return FindOtherMemberRs.create(member);
     }
 
 }
