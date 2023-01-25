@@ -1,12 +1,11 @@
 package com.bssmh.portfolio.web.config.web;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.CacheControl;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.time.Duration;
+import static com.bssmh.portfolio.web.config.web.CorsPatternConstant.CORS_DEV;
+import static com.bssmh.portfolio.web.config.web.CorsPatternConstant.CORS_LOCAL;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -15,7 +14,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
                 .allowedMethods("*")
-                .allowedOriginPatterns("http*://localhost:[*]");
+                .allowedOriginPatterns(CORS_LOCAL, CORS_DEV);
     }
 
 }
