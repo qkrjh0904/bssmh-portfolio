@@ -2,6 +2,9 @@ package com.bssmh.portfolio.web.path;
 
 public class ApiPath {
 
+    //auth
+    public static final String BSM_OAUTH = "/api/oauth/bsm";
+
     // member
     public static final String MEMBER_SELF = "/api/member/self";
     public static final String MEMBER_ID = "/api/member/{member-id}";
