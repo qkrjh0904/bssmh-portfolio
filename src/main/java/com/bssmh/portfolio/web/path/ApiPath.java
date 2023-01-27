@@ -28,4 +28,8 @@ public class ApiPath {
 
     // skill
     public static final String SKILL = "/api/skill";
+
+    // follow
+    public static final String FOLLOW = "/api/follow";
+    public static final String UNFOLLOW = "/api/follow/{member-id}";
 }

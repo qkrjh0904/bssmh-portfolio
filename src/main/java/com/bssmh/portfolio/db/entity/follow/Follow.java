@@ -38,8 +38,18 @@ public class Follow {
     @JoinColumn(name = "from_member_id")
     private Member fromMember;
 
+    @Column(name = "from_member_id", insertable = false, updatable = false)
+    private Long fromMemberId;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "to_member_id")
     private Member toMember;
 
+    @Column(name = "to_member_id", insertable = false, updatable = false)
+    private Long toMemberId;
+
+    public Follow(Member fromMember, Member toMember) {
+        this.fromMember = fromMember;
+        this.toMember = toMember;
+    }
 }
