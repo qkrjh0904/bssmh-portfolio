@@ -11,6 +11,11 @@ import java.util.Collection;
 import java.util.Map;
 
 import static com.bssmh.portfolio.web.domain.enums.ClientType.*;
+import static com.bssmh.portfolio.web.security.PrincipalConstants.EMAIL;
+import static com.bssmh.portfolio.web.security.PrincipalConstants.KAKAO_ACCOUNT;
+import static com.bssmh.portfolio.web.security.PrincipalConstants.NICKNAME;
+import static com.bssmh.portfolio.web.security.PrincipalConstants.PROFILE;
+import static com.bssmh.portfolio.web.security.PrincipalConstants.PROFILE_IMAGE_URL;
 
 @Getter
 public class OAuthAttributes implements OAuth2User {
@@ -56,11 +61,13 @@ public class OAuthAttributes implements OAuth2User {
     }
 
     private static OAuthAttributes ofKakao(String userNameAttributeName, Map<String, Object> attributes) {
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get(KAKAO_ACCOUNT);
+        Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get(PROFILE);
         return OAuthAttributes.builder()
                 .registrationId(KAKAO.getClientId())
-                .name((String) attributes.get(PrincipalConstants.NAME))
-                .email((String) attributes.get(PrincipalConstants.EMAIL))
-                .picture((String) attributes.get(PrincipalConstants.PICTURE))
+                .name((String) profile.get(NICKNAME))
+                .email((String) kakaoAccount.get(EMAIL))
+                .picture((String) profile.get(PROFILE_IMAGE_URL))
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
                 .build();
@@ -71,7 +78,7 @@ public class OAuthAttributes implements OAuth2User {
         return OAuthAttributes.builder()
                 .registrationId(NAVER.getClientId())
                 .name((String) response.get(PrincipalConstants.NAME))
-                .email((String) response.get(PrincipalConstants.EMAIL))
+                .email((String) response.get(EMAIL))
                 .picture((String) response.get(PrincipalConstants.PROFILE_IMAGE))
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
@@ -82,7 +89,7 @@ public class OAuthAttributes implements OAuth2User {
         return OAuthAttributes.builder()
                 .registrationId(GOOGLE.getClientId())
                 .name((String) attributes.get(PrincipalConstants.NAME))
-                .email((String) attributes.get(PrincipalConstants.EMAIL))
+                .email((String) attributes.get(EMAIL))
                 .picture((String) attributes.get(PrincipalConstants.PICTURE))
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
@@ -93,7 +100,7 @@ public class OAuthAttributes implements OAuth2User {
         return OAuthAttributes.builder()
                 .registrationId(BSM.getClientId())
                 .name((String) attributes.get(PrincipalConstants.NAME))
-                .email((String) attributes.get(PrincipalConstants.EMAIL))
+                .email((String) attributes.get(EMAIL))
                 .picture((String) attributes.get(PrincipalConstants.PICTURE))
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)

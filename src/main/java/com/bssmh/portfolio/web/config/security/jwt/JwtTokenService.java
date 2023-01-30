@@ -22,6 +22,7 @@ public class JwtTokenService {
 
     private static final String JWT_ISSUER = "BSSMH";
     private static final String MEMBER_EMAIL = "MEMBER_EMAIL";
+    private static final String REGISTRATION_ID = "REGISTRATION_ID";
     private static final String MEMBER_ROLE_TYPE = "MEMBER_ROLE_TYPE";
     private static final String VALIDITY = "VALIDITY";
     private static final String JWT_SECRET = "BSSMH_JWT_SECRET";
@@ -31,6 +32,7 @@ public class JwtTokenService {
         String token = JWT.create()
                 .withIssuer(JWT_ISSUER)
                 .withClaim(MEMBER_EMAIL, member.getEmail())
+                .withClaim(REGISTRATION_ID, member.getRegistrationId())
                 .withClaim(MEMBER_ROLE_TYPE, member.getMemberRoleType().getName())
                 .withClaim(VALIDITY, validity)
                 .sign(getJwtAlgorithm());
@@ -49,6 +51,7 @@ public class JwtTokenService {
         DecodedJWT decodedJWT = verifyToken(token);
 
         String email = decodedJWT.getClaim(MEMBER_EMAIL).asString();
+        String registrationId = decodedJWT.getClaim(REGISTRATION_ID).asString();
         String roleString = decodedJWT.getClaim(MEMBER_ROLE_TYPE).asString();
         MemberRoleType memberRoleType = MemberRoleType.valueOf(roleString);
         String validity = decodedJWT.getClaim(VALIDITY).asString();
@@ -58,7 +61,7 @@ public class JwtTokenService {
             throw new ExpiredJwtException();
         }
 
-        return MemberContext.create(email, memberRoleType);
+        return MemberContext.create(email, registrationId, memberRoleType);
     }
 
     private DecodedJWT verifyToken(String token) {

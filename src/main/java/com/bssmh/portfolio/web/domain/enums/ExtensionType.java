@@ -19,6 +19,7 @@ public enum ExtensionType {
     TIF("tif"), PNG("png"),
     RAW("raw"),
     TIFF("tiff"),
+    WEBP("webp")
     ;
 
     private final String extension;

@@ -16,6 +16,6 @@ public enum ClientType {
     private final String clientId;
 
     public boolean isEqualToClientId(String clientId) {
-        return this.clientId.equals(clientId);
+        return this.clientId.equalsIgnoreCase(clientId);
     }
 }

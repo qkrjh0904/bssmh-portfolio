@@ -60,14 +60,15 @@ public class CustomOauth2SuccessHandler implements AuthenticationSuccessHandler 
     }
 
     private Member saveOrUpdate(OAuthAttributes oAuthAttributes) {
-        Member member = findMemberService.findByEmailOrElseNull(oAuthAttributes.getEmail());
+        Member member = findMemberService.findByEmailAndRegistrationIdOrElseNull(oAuthAttributes.getEmail(),
+                oAuthAttributes.getRegistrationId());
         if (Objects.isNull(member)) {
             member = oAuthAttributes.toEntity();
             memberRepository.save(member);
             this.saveSignUpLog(member);
         }
 
-        member.update(oAuthAttributes.getName(), oAuthAttributes.getPicture());
+        member.update(oAuthAttributes.getPicture());
         return member;
     }
 
