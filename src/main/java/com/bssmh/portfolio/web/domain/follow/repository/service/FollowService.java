@@ -7,9 +7,11 @@ import com.bssmh.portfolio.web.domain.follow.repository.FollowRepository;
 import com.bssmh.portfolio.web.domain.follow.repository.controller.rq.FollowMemberRq;
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
 import com.bssmh.portfolio.web.exception.AlreadyFollowedException;
+import com.bssmh.portfolio.web.exception.SelfFollowNotAllowedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -26,6 +28,7 @@ public class FollowService {
     public void follow(MemberContext memberContext, FollowMemberRq rq) {
         String email = memberContext.getEmail();
         Member fromMember = findMemberService.findByEmailOrElseThrow(email);
+        if (fromMember.getId().equals(rq.getMemberId())) throw new SelfFollowNotAllowedException();
         Member toMember = findMemberService.findByIdOrElseThrow(rq.getMemberId());
 
         Optional<Follow> follow = findFollowService.findByEachMember(fromMember, toMember);
