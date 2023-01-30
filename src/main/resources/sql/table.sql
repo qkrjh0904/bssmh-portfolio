@@ -16,15 +16,16 @@ create table member
     created_date       datetime,
     last_modified_date datetime,
     description        text,
-    email              varchar(255) not null unique,
+    email              varchar(255) not null,
     member_role_type   varchar(255),
     name               varchar(255),
     nick_name          varchar(255),
     phone              varchar(255),
     profile_image_url  text,
-    registration_id    varchar(255),
+    registration_id    varchar(255) not null,
     job                varchar(255),
-    primary key (member_id)
+    primary key (member_id),
+    constraint uk_email_registration_id_on_member unique (email, registration_id)
 );
 
 create table portfolio

@@ -35,7 +35,7 @@ public class PortfolioService {
 
     public void savePortfolio(MemberContext memberContext, UpsertPortfolioRq rq) {
         String email = memberContext.getEmail();
-        Member member = findMemberService.findByEmailOrElseNull(email);
+        Member member = findMemberService.findByEmailAndRegistrationIdOrElseNull(email, memberContext.getRegistrationId());
         if(Objects.isNull(member)){
             throw new NoSuchMemberException();
         }

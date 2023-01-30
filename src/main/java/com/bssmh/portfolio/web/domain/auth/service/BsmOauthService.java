@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.bssmh.portfolio.web.domain.enums.ClientType.BSM;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -46,7 +48,7 @@ public class BsmOauthService {
         BsmResourceResponse resource = getResource(rq.getAuthCode());
 
         Map<String, Object> attributes = toAttributes(resource);
-        OAuthAttributes oAuthAttributes = OAuthAttributes.create(ClientType.BSM.getClientId(), BSM_USER_NAME_ATTRIBUTE_NAME, attributes);
+        OAuthAttributes oAuthAttributes = OAuthAttributes.create(BSM.getClientId(), BSM_USER_NAME_ATTRIBUTE_NAME, attributes);
 
         Member member = authFacade.saveOrUpdate(oAuthAttributes);
         authFacade.saveLoginLog(member);

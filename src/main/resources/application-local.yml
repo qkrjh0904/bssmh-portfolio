@@ -13,6 +13,32 @@ spring:
       bsm:
         client-id: ${oauth.bsm.id}
         client-secret: ${oauth.bsm.secret}
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${oauth2.google.id}
+            client-secret: ${oauth2.google.secret}
+            scope:
+              - profile
+              - email
+          kakao:
+            client-id: ${oauth2.kakao.id}
+            redirect-uri: ${oauth2.kakao.redirect-uri}
+            client-authentication-method: POST
+            authorization-grant-type: authorization_code
+            scope:
+              - profile_nickname
+              - profile_image
+              - account_email
+              - birthday
+            client-name: Kakao
+        provider:
+          kakao:
+            authorization_uri: https://kauth.kakao.com/oauth/authorize
+            token_uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user_name_attribute: id
 
 decorator:
   datasource:

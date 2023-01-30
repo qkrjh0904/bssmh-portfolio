@@ -1,6 +1,5 @@
 package com.bssmh.portfolio.web.config.security;
 
-import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {

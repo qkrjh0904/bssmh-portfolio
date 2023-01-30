@@ -19,12 +19,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_email_registration_id_on_member",
+                        columnNames = {"email", "registrationId"})
+        }
+)
 public class Member extends BaseTimeEntity {
 
     @Id
@@ -32,7 +41,7 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
 
     private String name;
@@ -42,6 +51,7 @@ public class Member extends BaseTimeEntity {
     @Column(columnDefinition = "text")
     private String profileImageUrl;
 
+    @Column(nullable = false)
     private String registrationId;
 
     @Enumerated(EnumType.STRING)
@@ -88,8 +98,7 @@ public class Member extends BaseTimeEntity {
                 .build();
     }
 
-    public void update(String name, String profileImageUrl) {
-        this.name = name;
+    public void update(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
     }
 

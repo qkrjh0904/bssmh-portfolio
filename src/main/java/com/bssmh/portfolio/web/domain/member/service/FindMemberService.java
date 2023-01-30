@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -19,8 +17,8 @@ public class FindMemberService {
 
     private final MemberRepository memberRepository;
 
-    public Member findByEmailOrElseNull(String email) {
-        return memberRepository.findByEmail(email)
+    public Member findByEmailAndRegistrationIdOrElseNull(String email, String registrationId) {
+        return memberRepository.findByEmailAndRegistrationId(email, registrationId)
                 .orElse(null);
     }
 
