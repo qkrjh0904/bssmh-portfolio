@@ -32,4 +32,6 @@ public class ApiPath {
     // follow
     public static final String FOLLOW = "/api/follow";
     public static final String UNFOLLOW = "/api/follow/{member-id}";
+    public static final String FOLLOWER = "/api/follower";
+    public static final String FOLLOWING = "/api/following";
 }

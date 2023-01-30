@@ -2,7 +2,10 @@ package com.bssmh.portfolio.web.domain.follow.repository.controller;
 
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.follow.repository.controller.rq.FollowMemberRq;
+import com.bssmh.portfolio.web.domain.follow.repository.service.FindFollowService;
 import com.bssmh.portfolio.web.domain.follow.repository.service.FollowService;
+import com.bssmh.portfolio.web.domain.member.controller.rs.FindOtherMemberRs;
+import com.bssmh.portfolio.web.endpoint.ListResponse;
 import com.bssmh.portfolio.web.path.ApiPath;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,7 +18,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class FollowController {
 
+    // service
     private final FollowService followService;
+    private final FindFollowService findFollowService;
 
     @Operation(summary = "멤버 팔로우")
     @PostMapping(ApiPath.FOLLOW)
@@ -30,4 +35,17 @@ public class FollowController {
                          @PathVariable("member-id") Long memberId) {
         followService.unFollow(memberContext, memberId);
     }
+
+    @Operation(summary = "내 팔로워 목록")
+    @GetMapping(ApiPath.FOLLOWER)
+    public ListResponse<FindOtherMemberRs> follower(@AuthenticationPrincipal MemberContext memberContext) {
+        return findFollowService.findMyFollower(memberContext);
+    }
+
+    @Operation(summary = "내 팔로잉 목록")
+    @GetMapping(ApiPath.FOLLOWING)
+    public ListResponse<FindOtherMemberRs> following(@AuthenticationPrincipal MemberContext memberContext) {
+        return findFollowService.findMyFollowing(memberContext);
+    }
+
 }
