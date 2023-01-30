@@ -48,41 +48,39 @@ public class FindFollowService {
     public ListResponse<FindOtherMemberRs> findMyFollower(MemberContext memberContext) {
         String email = memberContext.getEmail();
         Member member = findMemberService.findByEmailOrElseThrow(email);
-        List<Follow> myFollowerList = member.getToMemberList();
-        return toFollowerRsList(myFollowerList);
+        return toFollowerRsList(member);
     }
 
     public ListResponse<FindOtherMemberRs> findMyFollowing(MemberContext memberContext) {
         String email = memberContext.getEmail();
         Member member = findMemberService.findByEmailOrElseThrow(email);
-        List<Follow> myFollowingList = member.getFromMemberList();
-        return toFollowingRsList(myFollowingList);
+        return toFollowingRsList(member);
     }
 
     public ListResponse<FindOtherMemberRs> findMemberFollower(Long memberId) {
         Member member = findMemberService.findByIdOrElseThrow(memberId);
-        List<Follow> myFollowerList = member.getToMemberList();
-        return toFollowerRsList(myFollowerList);
+        return toFollowerRsList(member);
     }
 
     public ListResponse<FindOtherMemberRs> findMemberFollowing(Long memberId) {
         Member member = findMemberService.findByIdOrElseThrow(memberId);
-        List<Follow> myFollowingList = member.getFromMemberList();
-        return toFollowingRsList(myFollowingList);
+        return toFollowingRsList(member);
     }
 
-    private ListResponse<FindOtherMemberRs> toFollowingRsList(List<Follow> followingList) {
-        List<FindOtherMemberRs> myFollowingRsList = followingList.stream()
+    private ListResponse<FindOtherMemberRs> toFollowingRsList(Member member) {
+        List<Follow> followingList = member.getFromMemberList();
+        List<FindOtherMemberRs> followingRsList = followingList.stream()
                 .map(follow -> FindOtherMemberRs.create(follow.getToMember()))
                 .collect(Collectors.toList());
-        return ListResponse.create(myFollowingRsList);
+        return ListResponse.create(followingRsList);
     }
 
-    private ListResponse<FindOtherMemberRs> toFollowerRsList(List<Follow> followerList) {
-        List<FindOtherMemberRs> myFollowerRsList = followerList.stream()
+    private ListResponse<FindOtherMemberRs> toFollowerRsList(Member member) {
+        List<Follow> followerList = member.getToMemberList();
+        List<FindOtherMemberRs> followerRsList = followerList.stream()
                 .map(follow -> FindOtherMemberRs.create(follow.getFromMember()))
                 .collect(Collectors.toList());
-        return ListResponse.create(myFollowerRsList);
+        return ListResponse.create(followerRsList);
     }
 
 }
