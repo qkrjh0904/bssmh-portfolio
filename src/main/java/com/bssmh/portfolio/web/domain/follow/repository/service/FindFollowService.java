@@ -35,37 +35,54 @@ public class FindFollowService {
     // repository
     private final FollowRepository followRepository;
 
+    public Optional<Follow> findByEachMember(Member fromMember, Member toMember) {
+        return followRepository.findByFromMemberAndToMember(fromMember, toMember);
+    }
+
+    public Follow findByEachMemberOrElseThrow(Member fromMember, Member toMember) {
+        return followRepository.findByFromMemberAndToMember(fromMember, toMember)
+                .orElseThrow(NoSuchMemberException::new);
+    }
+
+
     public ListResponse<FindOtherMemberRs> findMyFollower(MemberContext memberContext) {
         String email = memberContext.getEmail();
         Member member = findMemberService.findByEmailOrElseThrow(email);
-
         List<Follow> myFollowerList = member.getToMemberList();
-        List<FindOtherMemberRs> myFollowerRsList = myFollowerList.stream()
-                .map(follow -> FindOtherMemberRs.create(follow.getFromMember()))
-                .collect(Collectors.toList());
-
-        return ListResponse.create(myFollowerRsList);
+        return toFollowerRsList(myFollowerList);
     }
 
     public ListResponse<FindOtherMemberRs> findMyFollowing(MemberContext memberContext) {
         String email = memberContext.getEmail();
         Member member = findMemberService.findByEmailOrElseThrow(email);
-
         List<Follow> myFollowingList = member.getFromMemberList();
-        List<FindOtherMemberRs> myFollowingRsList = myFollowingList.stream()
+        return toFollowingRsList(myFollowingList);
+    }
+
+    public ListResponse<FindOtherMemberRs> findMemberFollower(Long memberId) {
+        Member member = findMemberService.findByIdOrElseThrow(memberId);
+        List<Follow> myFollowerList = member.getToMemberList();
+        return toFollowerRsList(myFollowerList);
+    }
+
+    public ListResponse<FindOtherMemberRs> findMemberFollowing(Long memberId) {
+        Member member = findMemberService.findByIdOrElseThrow(memberId);
+        List<Follow> myFollowingList = member.getFromMemberList();
+        return toFollowingRsList(myFollowingList);
+    }
+
+    private ListResponse<FindOtherMemberRs> toFollowingRsList(List<Follow> followingList) {
+        List<FindOtherMemberRs> myFollowingRsList = followingList.stream()
                 .map(follow -> FindOtherMemberRs.create(follow.getToMember()))
                 .collect(Collectors.toList());
-
         return ListResponse.create(myFollowingRsList);
     }
 
-    public Optional<Follow> findByEachMemberId(Member fromMember, Member toMember) {
-        return followRepository.findByFromMemberAndToMember(fromMember, toMember);
-    }
-
-    public Follow findByEachMemberIdOrElseThrow(Member fromMember, Member toMember) {
-        return followRepository.findByFromMemberAndToMember(fromMember, toMember)
-                .orElseThrow(NoSuchMemberException::new);
+    private ListResponse<FindOtherMemberRs> toFollowerRsList(List<Follow> followerList) {
+        List<FindOtherMemberRs> myFollowerRsList = followerList.stream()
+                .map(follow -> FindOtherMemberRs.create(follow.getFromMember()))
+                .collect(Collectors.toList());
+        return ListResponse.create(myFollowerRsList);
     }
 
 }

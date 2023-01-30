@@ -37,15 +37,27 @@ public class FollowController {
     }
 
     @Operation(summary = "내 팔로워 목록")
-    @GetMapping(ApiPath.FOLLOWER)
-    public ListResponse<FindOtherMemberRs> follower(@AuthenticationPrincipal MemberContext memberContext) {
+    @GetMapping(ApiPath.FOLLOWER_SELF)
+    public ListResponse<FindOtherMemberRs> followerSelf(@AuthenticationPrincipal MemberContext memberContext) {
         return findFollowService.findMyFollower(memberContext);
     }
 
     @Operation(summary = "내 팔로잉 목록")
-    @GetMapping(ApiPath.FOLLOWING)
-    public ListResponse<FindOtherMemberRs> following(@AuthenticationPrincipal MemberContext memberContext) {
+    @GetMapping(ApiPath.FOLLOWING_SELF)
+    public ListResponse<FindOtherMemberRs> followingSelf(@AuthenticationPrincipal MemberContext memberContext) {
         return findFollowService.findMyFollowing(memberContext);
+    }
+
+    @Operation(summary = "다른 멤버 팔로워 목록")
+    @GetMapping(ApiPath.FOLLOWER_MEMBER_ID)
+    public ListResponse<FindOtherMemberRs> follower(@PathVariable("member-id") Long memberId) {
+        return findFollowService.findMemberFollower(memberId);
+    }
+
+    @Operation(summary = "다른 멤버 팔로잉 목록")
+    @GetMapping(ApiPath.FOLLOWING_MEMBER_ID)
+    public ListResponse<FindOtherMemberRs> following(@PathVariable("member-id") Long memberId) {
+        return findFollowService.findMemberFollowing(memberId);
     }
 
 }

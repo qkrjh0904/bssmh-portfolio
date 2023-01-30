@@ -28,7 +28,7 @@ public class FollowService {
         Member fromMember = findMemberService.findByEmailOrElseThrow(email);
         Member toMember = findMemberService.findByIdOrElseThrow(rq.getMemberId());
 
-        Optional<Follow> follow = findFollowService.findByEachMemberId(fromMember, toMember);
+        Optional<Follow> follow = findFollowService.findByEachMember(fromMember, toMember);
         if (follow.isPresent()) throw new AlreadyFollowedException();
 
         Follow newFollow = new Follow(fromMember, toMember);
@@ -40,7 +40,7 @@ public class FollowService {
         Member fromMember = findMemberService.findByEmailOrElseThrow(email);
         Member toMember = findMemberService.findByIdOrElseThrow(toMemberId);
 
-        Follow follow = findFollowService.findByEachMemberIdOrElseThrow(fromMember, toMember);
+        Follow follow = findFollowService.findByEachMemberOrElseThrow(fromMember, toMember);
         followRepository.delete(follow);
     }
 }
