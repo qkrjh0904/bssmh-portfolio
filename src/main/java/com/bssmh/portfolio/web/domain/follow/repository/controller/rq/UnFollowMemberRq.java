@@ -6,9 +6,9 @@ import lombok.Getter;
 import javax.validation.constraints.NotNull;
 
 @Getter
-public class FollowMemberRq {
+public class UnFollowMemberRq {
 
     @NotNull
-    @Schema(description = "팔로우할 대상의 멤버 id")
+    @Schema(description = "팔로우 취소할 대상의 멤버 id")
     private Long memberId;
 }

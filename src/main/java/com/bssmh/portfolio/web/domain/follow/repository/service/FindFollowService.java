@@ -13,6 +13,7 @@ import com.bssmh.portfolio.web.domain.portfolio.controller.rs.FindPortfolioListR
 import com.bssmh.portfolio.web.endpoint.ListResponse;
 import com.bssmh.portfolio.web.endpoint.PagedResponse;
 import com.bssmh.portfolio.web.endpoint.Pagination;
+import com.bssmh.portfolio.web.exception.AlreadyFollowedException;
 import com.bssmh.portfolio.web.exception.NoSuchMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,8 +36,9 @@ public class FindFollowService {
     // repository
     private final FollowRepository followRepository;
 
-    public Optional<Follow> findByEachMember(Member fromMember, Member toMember) {
-        return followRepository.findByFromMemberAndToMember(fromMember, toMember);
+    public void findByEachMemberIfPresentThrow(Member fromMember, Member toMember) {
+        followRepository.findByFromMemberAndToMember(fromMember, toMember)
+                .ifPresent((follow) -> {throw new AlreadyFollowedException();});
     }
 
     public Follow findByEachMemberOrElseThrow(Member fromMember, Member toMember) {

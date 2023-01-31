@@ -1,6 +1,10 @@
 package com.bssmh.portfolio.db.entity.follow;
 
+import com.bssmh.portfolio.db.entity.attachfile.AttachFile;
 import com.bssmh.portfolio.db.entity.member.Member;
+import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
+import com.bssmh.portfolio.db.enums.PortfolioScope;
+import com.bssmh.portfolio.db.enums.PortfolioType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,8 +46,10 @@ public class Follow {
     @JoinColumn(name = "to_member_id")
     private Member toMember;
 
-    public Follow(Member fromMember, Member toMember) {
-        this.fromMember = fromMember;
-        this.toMember = toMember;
+    public static Follow create(Member fromMember, Member toMember) {
+        Follow follow = new Follow();
+        follow.fromMember = fromMember;
+        follow.toMember = toMember;
+        return follow;
     }
 }

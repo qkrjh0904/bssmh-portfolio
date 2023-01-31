@@ -4,6 +4,6 @@ import org.springframework.http.HttpStatus;
 
 public class NoSuchFollowException extends GeneralHttpException {
     public NoSuchFollowException() {
-        super(HttpStatus.NOT_FOUND, "팔로우 대상을 찾을 수 없습니다.", null);
+        super(HttpStatus.BAD_REQUEST, "팔로우 대상을 찾을 수 없습니다.", null);
     }
 }

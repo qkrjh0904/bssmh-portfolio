@@ -5,16 +5,15 @@ import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.follow.repository.FollowRepository;
 import com.bssmh.portfolio.web.domain.follow.repository.controller.rq.FollowMemberRq;
+import com.bssmh.portfolio.web.domain.follow.repository.controller.rq.UnFollowMemberRq;
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
-import com.bssmh.portfolio.web.exception.AlreadyFollowedException;
 import com.bssmh.portfolio.web.exception.SelfFollowNotAllowedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class FollowService {
 
@@ -25,23 +24,31 @@ public class FollowService {
     // repository
     private final FollowRepository followRepository;
 
-    public void follow(MemberContext memberContext, FollowMemberRq rq) {
+    public void followMember(MemberContext memberContext, FollowMemberRq rq) {
         String email = memberContext.getEmail();
         Member fromMember = findMemberService.findByEmailOrElseThrow(email);
-        if (fromMember.getId().equals(rq.getMemberId())) throw new SelfFollowNotAllowedException();
         Member toMember = findMemberService.findByIdOrElseThrow(rq.getMemberId());
+        selfFollowCheck(fromMember, toMember);
+        duplicateFollowCheck(fromMember, toMember);
 
-        Optional<Follow> follow = findFollowService.findByEachMember(fromMember, toMember);
-        if (follow.isPresent()) throw new AlreadyFollowedException();
-
-        Follow newFollow = new Follow(fromMember, toMember);
+        Follow newFollow = Follow.create(fromMember, toMember);
         followRepository.save(newFollow);
     }
 
-    public void unFollow(MemberContext memberContext, Long toMemberId) {
+    private void selfFollowCheck(Member fromMember, Member toMember) {
+        if (fromMember.getId().equals(toMember.getId())) {
+            throw new SelfFollowNotAllowedException();
+        }
+    }
+
+    private void duplicateFollowCheck(Member fromMember, Member toMember) {
+        findFollowService.findByEachMemberIfPresentThrow(fromMember, toMember);
+    }
+
+    public void unFollowMember(MemberContext memberContext, UnFollowMemberRq rq) {
         String email = memberContext.getEmail();
         Member fromMember = findMemberService.findByEmailOrElseThrow(email);
-        Member toMember = findMemberService.findByIdOrElseThrow(toMemberId);
+        Member toMember = findMemberService.findByIdOrElseThrow(rq.getMemberId());
 
         Follow follow = findFollowService.findByEachMemberOrElseThrow(fromMember, toMember);
         followRepository.delete(follow);
