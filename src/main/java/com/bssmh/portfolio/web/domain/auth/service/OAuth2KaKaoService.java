@@ -4,7 +4,6 @@ import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.web.config.security.jwt.JwtTokenService;
 import com.bssmh.portfolio.web.domain.auth.constants.AuthConstants;
 import com.bssmh.portfolio.web.domain.dto.JwtTokenDto;
-import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
 import com.bssmh.portfolio.web.exception.AuthenticationException;
 import com.bssmh.portfolio.web.security.OAuthAttributes;
 import lombok.RequiredArgsConstructor;

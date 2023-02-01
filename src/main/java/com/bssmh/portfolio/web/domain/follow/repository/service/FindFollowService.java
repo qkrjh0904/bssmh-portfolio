@@ -49,13 +49,15 @@ public class FindFollowService {
 
     public ListResponse<FindOtherMemberRs> findMyFollower(MemberContext memberContext) {
         String email = memberContext.getEmail();
-        Member member = findMemberService.findByEmailOrElseThrow(email);
+        String registrationId = memberContext.getRegistrationId();
+        Member member = findMemberService.findByEmailAndRegistrationIdOrElseThrow(email, registrationId);
         return toFollowerRsList(member);
     }
 
     public ListResponse<FindOtherMemberRs> findMyFollowing(MemberContext memberContext) {
         String email = memberContext.getEmail();
-        Member member = findMemberService.findByEmailOrElseThrow(email);
+        String registrationId = memberContext.getRegistrationId();
+        Member member = findMemberService.findByEmailAndRegistrationIdOrElseThrow(email, registrationId);
         return toFollowingRsList(member);
     }
 
