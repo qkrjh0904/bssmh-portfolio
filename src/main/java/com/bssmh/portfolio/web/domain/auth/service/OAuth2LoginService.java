@@ -1,4 +1,4 @@
-package com.bssmh.portfolio.web.security;
+package com.bssmh.portfolio.web.domain.auth.service;
 
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.member.MemberLoginLog;
@@ -7,38 +7,25 @@ import com.bssmh.portfolio.web.domain.member.repository.MemberLoginLogRepository
 import com.bssmh.portfolio.web.domain.member.repository.MemberRepository;
 import com.bssmh.portfolio.web.domain.member.repository.MemberSignUpLogRepository;
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
+import com.bssmh.portfolio.web.security.OAuthAttributes;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Objects;
 
-@Component
+@Service
 @RequiredArgsConstructor
-public class CustomOauth2SuccessHandler implements AuthenticationSuccessHandler {
+@Transactional
+public class OAuth2LoginService {
 
-    // repository
+    private final FindMemberService findMemberService;
     private final MemberLoginLogRepository memberLoginLogRepository;
     private final MemberSignUpLogRepository memberSignUpLogRepository;
     private final MemberRepository memberRepository;
 
-    // service
-    private final FindMemberService findMemberService;
 
-
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        OAuthAttributes oAuthAttributes = (OAuthAttributes) authentication.getPrincipal();
-        Member member = this.saveOrUpdate(oAuthAttributes);
-        this.saveLoginLog(member);
-    }
-
-    private Member saveOrUpdate(OAuthAttributes oAuthAttributes) {
+    public Member saveOrUpdate(OAuthAttributes oAuthAttributes) {
         Member member = findMemberService.findByEmailAndRegistrationIdOrElseNull(oAuthAttributes.getEmail(),
                 oAuthAttributes.getRegistrationId());
         if (Objects.isNull(member)) {
@@ -51,7 +38,7 @@ public class CustomOauth2SuccessHandler implements AuthenticationSuccessHandler 
         return member;
     }
 
-    private void saveLoginLog(Member member) {
+    public void saveLoginLog(Member member) {
         MemberLoginLog memberLoginLog = MemberLoginLog.create(member.getEmail(), member.getName(), member);
         memberLoginLogRepository.save(memberLoginLog);
     }
@@ -60,5 +47,6 @@ public class CustomOauth2SuccessHandler implements AuthenticationSuccessHandler 
         MemberSignUpLog memberSignUpLog = MemberSignUpLog.create(member.getEmail(), member.getName(), member);
         memberSignUpLogRepository.save(memberSignUpLog);
     }
+
 
 }

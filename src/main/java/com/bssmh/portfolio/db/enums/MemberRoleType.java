@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum MemberRoleType {
 
     ROLE_ADMIN("ROLE_ADMIN", "관리자"),
+    ROLE_MEMBER("ROLE_MEMBER", "회원"),
     ROLE_NORMAL("ROLE_NORMAL", "일반");
 
     private final String name;

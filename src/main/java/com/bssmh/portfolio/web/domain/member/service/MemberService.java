@@ -24,7 +24,8 @@ public class MemberService {
 
     public void updateMember(MemberContext memberContext, UpdateMemberRq rq) {
         String email = memberContext.getEmail();
-        Member member = findMemberService.findByEmailOrElseThrow(email);
+        String registrationId = memberContext.getRegistrationId();
+        Member member = findMemberService.findByEmailAndRegistrationIdOrElseThrow(email, registrationId);
         member.update(
                 rq.getNickName(),
                 rq.getDescription(),

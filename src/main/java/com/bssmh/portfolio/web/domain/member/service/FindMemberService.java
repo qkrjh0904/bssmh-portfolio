@@ -22,13 +22,13 @@ public class FindMemberService {
                 .orElse(null);
     }
 
-    public Member findByEmailOrElseThrow(String email) {
-        return memberRepository.findByEmail(email)
+    public Member findByEmailAndRegistrationIdOrElseThrow(String email, String registrationId) {
+        return memberRepository.findByEmailAndRegistrationId(email, registrationId)
                 .orElseThrow(NoSuchMemberException::new);
     }
 
-    public FindMemberSelfRs findMemberSelf(String email) {
-        Member member = this.findByEmailOrElseThrow(email);
+    public FindMemberSelfRs findMemberSelf(String email, String registrationId) {
+        Member member = this.findByEmailAndRegistrationIdOrElseThrow(email, registrationId);
         return FindMemberSelfRs.create(member);
     }
 
