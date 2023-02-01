@@ -19,6 +19,7 @@ spring:
           google:
             client-id: ${oauth2.google.id}
             client-secret: ${oauth2.google.secret}
+            redirect-uri: ${oauth2.google.redirect-uri}
             scope:
               - profile
               - email

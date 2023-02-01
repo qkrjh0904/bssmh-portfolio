@@ -5,6 +5,9 @@ public class ApiPath {
     //auth
     public static final String BSM_OAUTH = "/api/oauth/bsm";
 
+    // oauth2
+    public static final String LOGIN_OAUTH2 = "/api/login/oauth2";
+
     // member
     public static final String MEMBER = "/api/member";
     public static final String MEMBER_SELF = "/api/member/self";

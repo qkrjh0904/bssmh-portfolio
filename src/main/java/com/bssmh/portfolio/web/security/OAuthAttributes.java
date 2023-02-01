@@ -1,6 +1,7 @@
 package com.bssmh.portfolio.web.security;
 
 import com.bssmh.portfolio.db.entity.member.Member;
+import com.bssmh.portfolio.web.exception.AuthenticationException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -57,16 +58,15 @@ public class OAuthAttributes implements OAuth2User {
             return ofBsm(userNameAttributeName, attributes);
         }
 
-        return null;
+        throw new AuthenticationException();
     }
 
     private static OAuthAttributes ofKakao(String userNameAttributeName, Map<String, Object> attributes) {
-        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get(KAKAO_ACCOUNT);
-        Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get(PROFILE);
+        Map<String, Object> profile = (Map<String, Object>) attributes.get(userNameAttributeName);
         return OAuthAttributes.builder()
                 .registrationId(KAKAO.getClientId())
                 .name((String) profile.get(NICKNAME))
-                .email((String) kakaoAccount.get(EMAIL))
+                .email((String) attributes.get(EMAIL))
                 .picture((String) profile.get(PROFILE_IMAGE_URL))
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
