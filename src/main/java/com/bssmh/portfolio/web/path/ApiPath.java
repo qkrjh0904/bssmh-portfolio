@@ -2,7 +2,7 @@ package com.bssmh.portfolio.web.path;
 
 public class ApiPath {
 
-    //auth
+    // auth
     public static final String BSM_OAUTH = "/api/oauth/bsm";
 
     // member
@@ -28,4 +28,12 @@ public class ApiPath {
 
     // skill
     public static final String SKILL = "/api/skill";
+
+    // follow
+    public static final String FOLLOW = "/api/follow";
+    public static final String UNFOLLOW = "/api/follow/unfollow";
+    public static final String FOLLOWER_SELF = "/api/follow/follower";
+    public static final String FOLLOWING_SELF = "/api/follow/following";
+    public static final String FOLLOWER_MEMBER_ID = "/api/follow/follower/{member-id}";
+    public static final String FOLLOWING_MEMBER_ID = "/api/follow/following/{member-id}";
 }
