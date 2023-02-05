@@ -31,8 +31,9 @@ public class CommentController {
 
     @Operation(summary = "댓글 리스트 조회")
     @GetMapping(ApiPath.COMMENT_PORTFOLIO_ID)
-    public ListResponse<FindCommentRs> findComment(@PathVariable("portfolio-id") Long portfolioId) {
-        return findCommentService.findCommentByPortfolioId(portfolioId);
+    public ListResponse<FindCommentRs> findComment(@AuthenticationPrincipal MemberContext memberContext,
+                                                   @PathVariable("portfolio-id") Long portfolioId) {
+        return findCommentService.findCommentByPortfolioId(memberContext, portfolioId);
     }
 
     @Operation(summary = "댓글 생성")
