@@ -1,6 +1,9 @@
 package com.bssmh.portfolio.web.domain.comment.controller.rs;
 
+import com.bssmh.portfolio.db.entity.comment.Comment;
+import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.web.domain.dto.MemberDto;
+import com.bssmh.portfolio.web.domain.member.controller.rs.FindOtherMemberRs;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -16,7 +19,12 @@ public class FindCommentRs {
     @Schema(description = "생성일")
     private String createdDate;
 
-    @Schema(description = "수정가능 여부")
-    private Boolean editable;
+    public static FindCommentRs create(Comment comment) {
+        FindCommentRs rs = new FindCommentRs();
+        rs.writer = MemberDto.create(comment.getMember());
+        rs.content = comment.getContent();
+        rs.createdDate = comment.getCreatedDate().toString();
+        return rs;
+    }
 
 }

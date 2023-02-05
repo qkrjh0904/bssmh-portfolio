@@ -8,6 +8,14 @@ spring:
       username: ${bssmh-portfolio.spring.datasource.username}
       password: ${bssmh-portfolio.spring.datasource.password}
       driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
   security:
     oauth:
       bsm:
@@ -67,4 +75,10 @@ logging:
       amazonaws:
         util:
           EC2MetadataUtils: error
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+
 

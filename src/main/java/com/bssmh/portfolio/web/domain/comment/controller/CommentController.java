@@ -5,6 +5,10 @@ import com.bssmh.portfolio.web.domain.comment.controller.rq.DeleteCommentRq;
 import com.bssmh.portfolio.web.domain.comment.controller.rq.SaveCommentRq;
 import com.bssmh.portfolio.web.domain.comment.controller.rq.UpdateCommentRq;
 import com.bssmh.portfolio.web.domain.comment.controller.rs.FindCommentRs;
+import com.bssmh.portfolio.web.domain.comment.service.CommentService;
+import com.bssmh.portfolio.web.domain.comment.service.FindCommentService;
+import com.bssmh.portfolio.web.domain.portfolio.service.FindPortfolioService;
+import com.bssmh.portfolio.web.endpoint.ListResponse;
 import com.bssmh.portfolio.web.path.ApiPath;
 import com.bssmh.portfolio.web.utils.RoleCheckUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,11 +28,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CommentController {
 
+    private final CommentService commentService;
+    private final FindCommentService findCommentService;
 
     @Operation(summary = "댓글 리스트 조회")
     @GetMapping(ApiPath.COMMENT_PORTFOLIO_ID)
-    public FindCommentRs findComment(@PathVariable("portfolio-id") Long portfolioId) {
-        return null;
+    public ListResponse<FindCommentRs> findComment(@PathVariable("portfolio-id") Long portfolioId) {
+        return findCommentService.findCommentByPortfolioId(portfolioId);
     }
 
     @Operation(summary = "댓글 생성")
