@@ -1,11 +1,9 @@
 package com.bssmh.portfolio.web.domain.comment.service;
 import com.bssmh.portfolio.db.entity.comment.Comment;
-import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.web.domain.comment.controller.rs.FindCommentRs;
 import com.bssmh.portfolio.web.domain.comment.repository.CommentRepository;
 import com.bssmh.portfolio.web.endpoint.ListResponse;
 import com.bssmh.portfolio.web.exception.NoSuchCommentException;
-import com.bssmh.portfolio.web.exception.NoSuchPortfolioException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
