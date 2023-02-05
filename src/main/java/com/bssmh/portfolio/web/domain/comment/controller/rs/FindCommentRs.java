@@ -1,9 +1,7 @@
 package com.bssmh.portfolio.web.domain.comment.controller.rs;
 
 import com.bssmh.portfolio.db.entity.comment.Comment;
-import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.web.domain.dto.MemberDto;
-import com.bssmh.portfolio.web.domain.member.controller.rs.FindOtherMemberRs;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

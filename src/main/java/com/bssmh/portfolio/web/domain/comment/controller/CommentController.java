@@ -7,7 +7,6 @@ import com.bssmh.portfolio.web.domain.comment.controller.rq.UpdateCommentRq;
 import com.bssmh.portfolio.web.domain.comment.controller.rs.FindCommentRs;
 import com.bssmh.portfolio.web.domain.comment.service.CommentService;
 import com.bssmh.portfolio.web.domain.comment.service.FindCommentService;
-import com.bssmh.portfolio.web.domain.portfolio.service.FindPortfolioService;
 import com.bssmh.portfolio.web.endpoint.ListResponse;
 import com.bssmh.portfolio.web.path.ApiPath;
 import com.bssmh.portfolio.web.utils.RoleCheckUtil;
@@ -42,6 +41,7 @@ public class CommentController {
     public void saveComment(@AuthenticationPrincipal MemberContext memberContext,
                             @Validated @RequestBody SaveCommentRq rq) {
         RoleCheckUtil.moreThanMember(memberContext.getRole());
+        commentService.saveComment(memberContext, rq);
     }
 
     @Operation(summary = "댓글 수정")
@@ -49,6 +49,7 @@ public class CommentController {
     public void updateComment(@AuthenticationPrincipal MemberContext memberContext,
                               @Validated @RequestBody UpdateCommentRq rq) {
         RoleCheckUtil.moreThanMember(memberContext.getRole());
+
     }
 
     @Operation(summary = "댓글 삭제")
@@ -56,6 +57,7 @@ public class CommentController {
     public void deleteComment(@AuthenticationPrincipal MemberContext memberContext,
                               @Validated @RequestBody DeleteCommentRq rq) {
         RoleCheckUtil.moreThanMember(memberContext.getRole());
+
     }
 
 }

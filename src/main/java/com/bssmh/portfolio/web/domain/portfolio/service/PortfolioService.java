@@ -103,7 +103,6 @@ public class PortfolioService {
         if(writerId.equals(memberId)){
             return;
         }
-
         throw new DoNotHavePermissionToModifyPortfolioException();
     }
 
