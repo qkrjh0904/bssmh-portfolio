@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class CommentController {
-
     private final CommentService commentService;
     private final FindCommentService findCommentService;
 
@@ -49,6 +48,7 @@ public class CommentController {
     public void updateComment(@AuthenticationPrincipal MemberContext memberContext,
                               @Validated @RequestBody UpdateCommentRq rq) {
         RoleCheckUtil.moreThanMember(memberContext.getRole());
+        commentService.updateComment(memberContext, rq);
 
     }
 
@@ -57,6 +57,7 @@ public class CommentController {
     public void deleteComment(@AuthenticationPrincipal MemberContext memberContext,
                               @Validated @RequestBody DeleteCommentRq rq) {
         RoleCheckUtil.moreThanMember(memberContext.getRole());
+        commentService.deleteComment(memberContext, rq);
 
     }
 

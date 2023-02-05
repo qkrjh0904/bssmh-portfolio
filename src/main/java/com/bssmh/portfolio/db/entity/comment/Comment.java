@@ -1,8 +1,11 @@
 package com.bssmh.portfolio.db.entity.comment;
 
+import com.bssmh.portfolio.db.entity.attachfile.AttachFile;
 import com.bssmh.portfolio.db.entity.common.BaseTimeEntity;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
+import com.bssmh.portfolio.db.enums.PortfolioScope;
+import com.bssmh.portfolio.db.enums.PortfolioType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +41,10 @@ public class Comment extends BaseTimeEntity {
         comment.portfolio = portfolio;
         comment.member = member;
         return comment;
+    }
+
+    public void update(String content) {
+        this.content = content;
     }
 
 }
