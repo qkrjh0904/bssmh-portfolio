@@ -65,7 +65,7 @@ public class CommentService {
     private void commentPermissionCheck(Comment comment, Member member) {
         Long writerId = comment.getMember().getId();
         Long memberId = member.getId();
-        if(writerId.equals(memberId)){
+        if (writerId.equals(memberId)){
             return;
         }
         throw new DoNotHavePermissionToModifyCommentException();
