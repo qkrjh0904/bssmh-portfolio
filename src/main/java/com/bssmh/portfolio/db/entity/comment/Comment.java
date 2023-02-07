@@ -5,6 +5,7 @@ import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 import static javax.persistence.FetchType.LAZY;

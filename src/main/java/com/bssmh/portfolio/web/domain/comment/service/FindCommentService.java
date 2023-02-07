@@ -27,25 +27,16 @@ public class FindCommentService {
 
     public ListResponse<FindCommentRs> findCommentByPortfolioId(MemberContext memberContext, Long portfolioId) {
         List<Comment> commentList = commentRepository.findCommentByPortfolioId(portfolioId);
-        if (memberContext == null) {
-            return findCommentWithoutMemberId(commentList, portfolioId);
-        } else {
-            String email = memberContext.getEmail();
-            String registrationId = memberContext.getRegistrationId();
-            Member member = findMemberService.findByEmailAndRegistrationIdOrElseThrow(email, registrationId);
-            return findCommentWithMemberId(commentList, portfolioId, member.getId());
+        String email = null;
+        String registrationId = null;
+        // 로그인한 사용자라면
+        if (memberContext != null) {
+            email = memberContext.getEmail();
+            registrationId = memberContext.getRegistrationId();
         }
-    }
-
-    private ListResponse<FindCommentRs> findCommentWithMemberId(List<Comment> commentList, Long portfolioId, Long memberId) {
+        Member member = findMemberService.findByEmailAndRegistrationIdOrElseNull(email, registrationId);
         List<FindCommentRs> commentRsList = commentList.stream()
-                .map(comment -> FindCommentRs.create(comment, memberId))
-                .collect(Collectors.toList());
-        return ListResponse.create(commentRsList);
-    }
-    private ListResponse<FindCommentRs> findCommentWithoutMemberId(List<Comment> commentList, Long portfolioId) {
-        List<FindCommentRs> commentRsList = commentList.stream()
-                .map(comment -> FindCommentRs.create(comment, null))
+                .map(comment -> FindCommentRs.create(comment, member))
                 .collect(Collectors.toList());
         return ListResponse.create(commentRsList);
     }

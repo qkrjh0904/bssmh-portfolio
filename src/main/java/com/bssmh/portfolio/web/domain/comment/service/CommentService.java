@@ -33,13 +33,8 @@ public class CommentService {
     private final CommentRepository commentRepository;
     public void saveComment(MemberContext memberContext, SaveCommentRq rq) {
         String email = memberContext.getEmail();
-        Member member = findMemberService.findByEmailAndRegistrationIdOrElseNull(email, memberContext.getRegistrationId());
-        if(Objects.isNull(member)){
-            throw new NoSuchMemberException();
-        }
-
+        Member member = findMemberService.findByEmailAndRegistrationIdOrElseThrow(email, memberContext.getRegistrationId());
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(rq.getPortfolioId());
-
         Comment comment = Comment.create(
                 rq.getContent(),
                 portfolio,
@@ -64,7 +59,6 @@ public class CommentService {
         Long commentId = rq.getCommentId();
         Comment comment = findCommentService.findByIdOrElseThrow(commentId);
         commentPermissionCheck(comment, member);
-
         comment.update(rq.getContent());
     }
 
