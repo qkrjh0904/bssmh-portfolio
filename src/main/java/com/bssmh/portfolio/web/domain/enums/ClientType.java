@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ClientType {
 
-    @Deprecated
-    NAVER("naver"),
     GOOGLE("google"),
     KAKAO("kakao"),
     BSM("bsm"),

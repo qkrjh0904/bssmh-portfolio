@@ -7,7 +7,6 @@ public class PrincipalConstants {
     public static final String NICKNAME = "nickname";
 
     public static final String PICTURE = "picture";
-    public static final String PROFILE_IMAGE = "profile_image";
     public static final String PROFILE_IMAGE_URL = "profile_image_url";
 
     public static final String KAKAO_ACCOUNT = "kakao_account";

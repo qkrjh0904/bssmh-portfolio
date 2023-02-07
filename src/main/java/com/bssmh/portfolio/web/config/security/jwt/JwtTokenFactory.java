@@ -18,7 +18,7 @@ import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
-public class JwtTokenService {
+public class JwtTokenFactory {
 
     private static final String JWT_ISSUER = "BSSMH";
     private static final String MEMBER_EMAIL = "MEMBER_EMAIL";

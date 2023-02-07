@@ -18,10 +18,9 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         ClientRegistration clientRegistration = userRequest.getClientRegistration();
-        String userNameAttributeName = clientRegistration.getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
         String registrationId = clientRegistration.getRegistrationId();
 
-        return OAuthAttributes.create(registrationId, userNameAttributeName, oAuth2User.getAttributes());
+        return OAuthAttributes.create(registrationId, oAuth2User.getAttributes());
     }
 
 }

@@ -170,5 +170,4 @@ create table follow
     constraint fk_follow_to_member_id
         foreign key (to_member_id)
             references member (member_id)
-
 );

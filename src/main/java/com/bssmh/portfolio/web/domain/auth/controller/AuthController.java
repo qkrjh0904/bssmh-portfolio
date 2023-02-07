@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-
 @Tag(name = "인증")
 @RestController
 @RequiredArgsConstructor
@@ -24,10 +22,11 @@ public class AuthController {
     private final BsmOauthService bsmOauthService;
     private final OAuth2Service oAuth2Service;
 
+    @Deprecated
     @Operation(summary = "BSM OAuth 로그인")
     @PostMapping(ApiPath.BSM_OAUTH)
-    public JwtTokenDto bsmLogin(@Validated @RequestBody BsmOauthRq rq) throws IOException {
-        return bsmOauthService.bsmLogin(rq);
+    public JwtTokenDto bsmLogin(@Validated @RequestBody BsmOauthRq rq) {
+        return bsmOauthService.bsmLogin(rq.getAuthCode());
     }
 
     @Operation(summary = "OAuth2 로그인(Google, 카카오)")

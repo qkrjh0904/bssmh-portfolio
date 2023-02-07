@@ -1,7 +1,7 @@
 package com.bssmh.portfolio.web.domain.auth.service;
 
 import com.bssmh.portfolio.db.entity.member.Member;
-import com.bssmh.portfolio.web.config.security.jwt.JwtTokenService;
+import com.bssmh.portfolio.web.config.security.jwt.JwtTokenFactory;
 import com.bssmh.portfolio.web.domain.auth.constants.AuthConstants;
 import com.bssmh.portfolio.web.domain.dto.JwtTokenDto;
 import com.bssmh.portfolio.web.exception.AuthenticationException;
@@ -23,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Map;
 
 import static com.bssmh.portfolio.web.domain.auth.constants.AuthConstants.AUTHORIZATION;
+import static com.bssmh.portfolio.web.domain.auth.constants.AuthConstants.AUTHORIZATION_CODE;
 import static com.bssmh.portfolio.web.domain.auth.constants.AuthConstants.BEARER;
 import static com.bssmh.portfolio.web.domain.auth.constants.AuthConstants.KAKAO_AUTH_URL;
 import static com.bssmh.portfolio.web.domain.auth.constants.AuthConstants.KAKAO_PROFILE_URL;
@@ -33,7 +34,7 @@ import static com.bssmh.portfolio.web.security.PrincipalConstants.PROFILE;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class OAuth2KaKaoService {
+public class OAuth2KakaoService {
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClinetId;
@@ -41,17 +42,14 @@ public class OAuth2KaKaoService {
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
     private String kakaoRedirectUri;
 
-    @Value("${spring.security.oauth2.client.registration.kakao.authorization-grant-type}")
-    private String kakaoAuthorizationGrantType;
-
     // service
-    private final JwtTokenService jwtTokenService;
+    private final JwtTokenFactory jwtTokenFactory;
     private final OAuth2LoginService oAuth2LoginService;
 
     public JwtTokenDto getToken(String code) {
         String kakaoAuthToken = getKakaoAuthToken(code);
         Member member = getMemberByKakaoToken(kakaoAuthToken);
-        return jwtTokenService.generateJwtToken(member);
+        return jwtTokenFactory.generateJwtToken(member);
     }
 
     private String getKakaoAuthToken(String code) {
@@ -59,7 +57,7 @@ public class OAuth2KaKaoService {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         LinkedMultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add(AuthConstants.GRANT_TYPE, kakaoAuthorizationGrantType);
+        params.add(AuthConstants.GRANT_TYPE, AUTHORIZATION_CODE);
         params.add(AuthConstants.CLIENT_ID, kakaoClinetId);
         params.add(AuthConstants.REDIRECT_URI, kakaoRedirectUri);
         params.add(AuthConstants.CODE, code);
@@ -80,7 +78,7 @@ public class OAuth2KaKaoService {
         JSONObject jsonObject = getResponse(httpEntity, KAKAO_PROFILE_URL);
 
         Map<String, Object> attributes = (Map<String, Object>) jsonObject.get(KAKAO_ACCOUNT);
-        OAuthAttributes oAuthAttributes = OAuthAttributes.create(KAKAO.getClientId(), PROFILE, attributes);
+        OAuthAttributes oAuthAttributes = OAuthAttributes.create(KAKAO.getClientId(), attributes);
 
         Member member = oAuth2LoginService.saveOrUpdate(oAuthAttributes);
         oAuth2LoginService.saveLoginLog(member);
