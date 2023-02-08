@@ -1,5 +1,6 @@
 package com.bssmh.portfolio.db.entity.bookmark;
 
+import com.bssmh.portfolio.db.entity.comment.Comment;
 import com.bssmh.portfolio.db.entity.common.BaseTimeEntity;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
@@ -34,4 +35,12 @@ public class Bookmark extends BaseTimeEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public static Bookmark create(Portfolio portfolio, Member member) {
+        Bookmark bookmark = new Bookmark();
+        bookmark.portfolio = portfolio;
+        bookmark.member = member;
+        return bookmark;
+    }
+
 }
