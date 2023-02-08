@@ -2,12 +2,14 @@ spring:
   config:
     activate:
       on-profile: local
+
   datasource:
     hikari:
       jdbc-url: ${bssmh-portfolio.spring.datasource.url}
       username: ${bssmh-portfolio.spring.datasource.username}
       password: ${bssmh-portfolio.spring.datasource.password}
       driver-class-name: com.mysql.cj.jdbc.Driver
+
   security:
     oauth:
       bsm:
@@ -67,4 +69,5 @@ logging:
       amazonaws:
         util:
           EC2MetadataUtils: error
+
 
