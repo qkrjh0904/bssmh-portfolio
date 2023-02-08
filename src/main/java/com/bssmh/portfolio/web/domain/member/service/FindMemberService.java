@@ -1,7 +1,6 @@
 package com.bssmh.portfolio.web.domain.member.service;
 
 import com.bssmh.portfolio.db.entity.member.Member;
-import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.member.controller.rs.FindMemberSelfRs;
 import com.bssmh.portfolio.web.domain.member.controller.rs.FindOtherMemberRs;
 import com.bssmh.portfolio.web.domain.member.repository.MemberRepository;
@@ -37,8 +36,7 @@ public class FindMemberService {
                 .orElseThrow(NoSuchMemberException::new);
     }
 
-    public FindOtherMemberRs findOtherMember(MemberContext memberContext, Long memberId) {
-        // TODO: 2023-01-11 권한 인증 필요
+    public FindOtherMemberRs findOtherMember(Long memberId) {
         Member member = this.findByIdOrElseThrow(memberId);
         return FindOtherMemberRs.create(member);
     }

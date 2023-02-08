@@ -29,7 +29,7 @@ public class AuthController {
         return bsmOauthService.bsmLogin(rq.getAuthCode());
     }
 
-    @Operation(summary = "OAuth2 로그인(Google, 카카오)")
+    @Operation(summary = "OAuth 로그인")
     @PostMapping(ApiPath.LOGIN_OAUTH2)
     public JwtTokenDto loginOAuth2(@Validated @RequestBody OAuth2Rq rq) {
         return oAuth2Service.loginOAuth2(rq);

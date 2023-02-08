@@ -34,9 +34,8 @@ public class MemberController {
 
     @Operation(summary = "다른 멤버 조회", description = "일부 정보만 제공")
     @GetMapping(ApiPath.MEMBER_ID)
-    public FindOtherMemberRs findOtherMember(@AuthenticationPrincipal MemberContext memberContext,
-                                             @PathVariable("member-id") Long memberId) {
-        return findMemberService.findOtherMember(memberContext, memberId);
+    public FindOtherMemberRs findOtherMember(@PathVariable("member-id") Long memberId) {
+        return findMemberService.findOtherMember(memberId);
     }
 
     @Operation(summary = "멤버 정보 수정")

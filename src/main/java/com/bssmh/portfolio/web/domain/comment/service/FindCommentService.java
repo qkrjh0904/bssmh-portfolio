@@ -1,4 +1,5 @@
 package com.bssmh.portfolio.web.domain.comment.service;
+
 import com.bssmh.portfolio.db.entity.comment.Comment;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,18 +29,21 @@ public class FindCommentService {
 
     public ListResponse<FindCommentRs> findCommentByPortfolioId(MemberContext memberContext, Long portfolioId) {
         List<Comment> commentList = commentRepository.findCommentByPortfolioId(portfolioId);
-        String email = null;
-        String registrationId = null;
-        // 로그인한 사용자라면
-        if (memberContext != null) {
-            email = memberContext.getEmail();
-            registrationId = memberContext.getRegistrationId();
-        }
-        Member member = findMemberService.findByEmailAndRegistrationIdOrElseNull(email, registrationId);
+        Member member = getLoginMember(memberContext);
         List<FindCommentRs> commentRsList = commentList.stream()
                 .map(comment -> FindCommentRs.create(comment, member))
                 .collect(Collectors.toList());
         return ListResponse.create(commentRsList);
+    }
+
+    private Member getLoginMember(MemberContext memberContext) {
+        if (Objects.isNull(memberContext)) {
+            return null;
+        }
+
+        String email = memberContext.getEmail();
+        String registrationId = memberContext.getRegistrationId();
+        return findMemberService.findByEmailAndRegistrationIdOrElseNull(email, registrationId);
     }
 
     public Comment findByIdOrElseThrow(Long commentId) {
