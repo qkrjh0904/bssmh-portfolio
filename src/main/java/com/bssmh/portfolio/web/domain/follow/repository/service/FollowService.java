@@ -25,9 +25,7 @@ public class FollowService {
     private final FollowRepository followRepository;
 
     public void followMember(MemberContext memberContext, FollowMemberRq rq) {
-        String email = memberContext.getEmail();
-        String registrationId = memberContext.getRegistrationId();
-        Member fromMember = findMemberService.findByEmailAndRegistrationIdOrElseThrow(email, registrationId);
+        Member fromMember = findMemberService.getLoginMember(memberContext);
         Member toMember = findMemberService.findByIdOrElseThrow(rq.getMemberId());
         selfFollowCheck(fromMember, toMember);
         duplicateFollowCheck(fromMember, toMember);
@@ -47,9 +45,7 @@ public class FollowService {
     }
 
     public void unFollowMember(MemberContext memberContext, UnFollowMemberRq rq) {
-        String email = memberContext.getEmail();
-        String registrationId = memberContext.getRegistrationId();
-        Member fromMember = findMemberService.findByEmailAndRegistrationIdOrElseThrow(email, registrationId);
+        Member fromMember = findMemberService.getLoginMember(memberContext);
         Member toMember = findMemberService.findByIdOrElseThrow(rq.getMemberId());
 
         Follow follow = findFollowService.findByEachMemberOrElseThrow(fromMember, toMember);

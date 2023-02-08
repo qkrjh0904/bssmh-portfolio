@@ -29,7 +29,7 @@ public class MemberController {
     @Operation(summary = "내 계정 조회", description = "모든 데이터 제공")
     @GetMapping(ApiPath.MEMBER_SELF)
     public FindMemberSelfRs findMemberSelf(@AuthenticationPrincipal MemberContext memberContext) {
-        return findMemberService.findMemberSelf(memberContext.getEmail(), memberContext.getRegistrationId());
+        return findMemberService.findMemberSelf(memberContext);
     }
 
     @Operation(summary = "다른 멤버 조회", description = "일부 정보만 제공")

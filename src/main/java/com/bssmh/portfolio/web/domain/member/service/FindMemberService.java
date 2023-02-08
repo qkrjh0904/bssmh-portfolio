@@ -1,6 +1,7 @@
 package com.bssmh.portfolio.web.domain.member.service;
 
 import com.bssmh.portfolio.db.entity.member.Member;
+import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.member.controller.rs.FindMemberSelfRs;
 import com.bssmh.portfolio.web.domain.member.controller.rs.FindOtherMemberRs;
 import com.bssmh.portfolio.web.domain.member.repository.MemberRepository;
@@ -8,6 +9,8 @@ import com.bssmh.portfolio.web.exception.NoSuchMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -21,13 +24,13 @@ public class FindMemberService {
                 .orElse(null);
     }
 
-    public Member findByEmailAndRegistrationIdOrElseThrow(String email, String registrationId) {
+    private Member findByEmailAndRegistrationIdOrElseThrow(String email, String registrationId) {
         return memberRepository.findByEmailAndRegistrationId(email, registrationId)
                 .orElseThrow(NoSuchMemberException::new);
     }
 
-    public FindMemberSelfRs findMemberSelf(String email, String registrationId) {
-        Member member = this.findByEmailAndRegistrationIdOrElseThrow(email, registrationId);
+    public FindMemberSelfRs findMemberSelf(MemberContext memberContext) {
+        Member member = this.getLoginMember(memberContext);
         return FindMemberSelfRs.create(member);
     }
 
@@ -41,4 +44,13 @@ public class FindMemberService {
         return FindOtherMemberRs.create(member);
     }
 
+    public Member getLoginMember(MemberContext memberContext) {
+        if (Objects.isNull(memberContext)) {
+            return null;
+        }
+
+        String email = memberContext.getEmail();
+        String registrationId = memberContext.getRegistrationId();
+        return this.findByEmailAndRegistrationIdOrElseThrow(email, registrationId);
+    }
 }

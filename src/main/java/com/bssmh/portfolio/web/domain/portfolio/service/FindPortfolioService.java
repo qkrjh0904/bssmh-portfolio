@@ -45,9 +45,7 @@ public class FindPortfolioService {
      */
     private void validationCheck(MemberContext memberContext, Portfolio portfolio) {
         Member writer = portfolio.getMember();
-        String email = memberContext.getEmail();
-        String registrationId = memberContext.getRegistrationId();
-        Member member = findMemberService.findByEmailAndRegistrationIdOrElseThrow(email, registrationId);
+        Member member = findMemberService.getLoginMember(memberContext);
 
         if(member.getId().equals(writer.getId())){
             return;
@@ -81,9 +79,7 @@ public class FindPortfolioService {
     }
 
     public PagedResponse<FindPortfolioListRs> findMyPortfolio(MemberContext memberContext, Pagination pagination) {
-        String email = memberContext.getEmail();
-        String registrationId = memberContext.getRegistrationId();
-        Member member = findMemberService.findByEmailAndRegistrationIdOrElseThrow(email, registrationId);
+        Member member = findMemberService.getLoginMember(memberContext);
         PageRequest pageRequest = pagination.toPageRequest();
         Page<Portfolio> myPortfolioList = portfolioRepository.findMyPortfolio(member.getId(), pageRequest);
         List<FindPortfolioListRs> findPortfolioListRsList = myPortfolioList.stream()

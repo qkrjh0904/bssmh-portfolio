@@ -2,27 +2,18 @@ package com.bssmh.portfolio.web.domain.follow.repository.service;
 
 import com.bssmh.portfolio.db.entity.follow.Follow;
 import com.bssmh.portfolio.db.entity.member.Member;
-import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.follow.repository.FollowRepository;
-import com.bssmh.portfolio.web.domain.member.controller.rs.FindMemberSelfRs;
 import com.bssmh.portfolio.web.domain.member.controller.rs.FindOtherMemberRs;
-import com.bssmh.portfolio.web.domain.member.repository.MemberRepository;
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
-import com.bssmh.portfolio.web.domain.portfolio.controller.rs.FindPortfolioListRs;
 import com.bssmh.portfolio.web.endpoint.ListResponse;
-import com.bssmh.portfolio.web.endpoint.PagedResponse;
-import com.bssmh.portfolio.web.endpoint.Pagination;
 import com.bssmh.portfolio.web.exception.AlreadyFollowedException;
 import com.bssmh.portfolio.web.exception.NoSuchMemberException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,16 +39,12 @@ public class FindFollowService {
 
 
     public ListResponse<FindOtherMemberRs> findMyFollower(MemberContext memberContext) {
-        String email = memberContext.getEmail();
-        String registrationId = memberContext.getRegistrationId();
-        Member member = findMemberService.findByEmailAndRegistrationIdOrElseThrow(email, registrationId);
+        Member member = findMemberService.getLoginMember(memberContext);
         return toFollowerRsList(member);
     }
 
     public ListResponse<FindOtherMemberRs> findMyFollowing(MemberContext memberContext) {
-        String email = memberContext.getEmail();
-        String registrationId = memberContext.getRegistrationId();
-        Member member = findMemberService.findByEmailAndRegistrationIdOrElseThrow(email, registrationId);
+        Member member = findMemberService.getLoginMember(memberContext);
         return toFollowingRsList(member);
     }
 

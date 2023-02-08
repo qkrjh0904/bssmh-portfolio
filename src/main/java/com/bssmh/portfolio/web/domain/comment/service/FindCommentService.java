@@ -29,21 +29,11 @@ public class FindCommentService {
 
     public ListResponse<FindCommentRs> findCommentByPortfolioId(MemberContext memberContext, Long portfolioId) {
         List<Comment> commentList = commentRepository.findCommentByPortfolioId(portfolioId);
-        Member member = getLoginMember(memberContext);
+        Member member = findMemberService.getLoginMember(memberContext);
         List<FindCommentRs> commentRsList = commentList.stream()
                 .map(comment -> FindCommentRs.create(comment, member))
                 .collect(Collectors.toList());
         return ListResponse.create(commentRsList);
-    }
-
-    private Member getLoginMember(MemberContext memberContext) {
-        if (Objects.isNull(memberContext)) {
-            return null;
-        }
-
-        String email = memberContext.getEmail();
-        String registrationId = memberContext.getRegistrationId();
-        return findMemberService.findByEmailAndRegistrationIdOrElseNull(email, registrationId);
     }
 
     public Comment findByIdOrElseThrow(Long commentId) {
