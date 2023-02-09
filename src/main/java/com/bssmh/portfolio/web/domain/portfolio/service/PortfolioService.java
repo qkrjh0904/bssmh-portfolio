@@ -110,7 +110,7 @@ public class PortfolioService {
         Long portfolioId = rq.getPortfolioId();
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(portfolioId);
 
-        bookmarkService.addBookmarkList(member, portfolio);
+        bookmarkService.toggleBookmarkList(member, portfolio);
     }
 
 }

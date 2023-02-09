@@ -51,7 +51,6 @@ public class CommentController {
                               @Validated @RequestBody UpdateCommentRq rq) {
         RoleCheckUtil.moreThanMember(memberContext.getRole());
         commentService.updateComment(memberContext, rq);
-
     }
 
     @Operation(summary = "댓글 삭제")
