@@ -31,7 +31,6 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     public void saveComment(MemberContext memberContext, SaveCommentRq rq) {
-        String email = memberContext.getEmail();
         Member member = findMemberService.getLoginMember(memberContext);
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(rq.getPortfolioId());
         Comment comment = Comment.create(

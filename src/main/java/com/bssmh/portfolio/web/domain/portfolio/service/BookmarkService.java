@@ -25,6 +25,6 @@ public class BookmarkService {
             portfolio.addBookmarkList(bookmark);
             return;
         }
-        bookmarkRepository.deleteBookmarkByMember(member);
+        bookmarkRepository.deleteBookmarkByMemberAndPortfolio(member, portfolio);
     }
 }

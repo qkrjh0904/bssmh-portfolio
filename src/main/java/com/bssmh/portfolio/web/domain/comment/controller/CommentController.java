@@ -41,7 +41,6 @@ public class CommentController {
     @PostMapping(ApiPath.COMMENT)
     public void saveComment(@AuthenticationPrincipal MemberContext memberContext,
                             @Validated @RequestBody SaveCommentRq rq) {
-        RoleCheckUtil.moreThanMember(memberContext.getRole());
         commentService.saveComment(memberContext, rq);
     }
 
@@ -49,7 +48,6 @@ public class CommentController {
     @PutMapping(ApiPath.COMMENT)
     public void updateComment(@AuthenticationPrincipal MemberContext memberContext,
                               @Validated @RequestBody UpdateCommentRq rq) {
-        RoleCheckUtil.moreThanMember(memberContext.getRole());
         commentService.updateComment(memberContext, rq);
     }
 
@@ -57,7 +55,6 @@ public class CommentController {
     @DeleteMapping(ApiPath.COMMENT)
     public void deleteComment(@AuthenticationPrincipal MemberContext memberContext,
                               @Validated @RequestBody DeleteCommentRq rq) {
-        RoleCheckUtil.moreThanMember(memberContext.getRole());
         commentService.deleteComment(memberContext, rq);
 
     }
