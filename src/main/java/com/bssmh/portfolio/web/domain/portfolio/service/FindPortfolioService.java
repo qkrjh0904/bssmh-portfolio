@@ -1,8 +1,10 @@
 package com.bssmh.portfolio.web.domain.portfolio.service;
 
+import com.bssmh.portfolio.db.entity.follow.Follow;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
+import com.bssmh.portfolio.web.domain.follow.repository.service.FindFollowService;
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rs.FindPortfolioDetailRs;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rs.FindPortfolioListRs;
@@ -18,9 +20,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.bssmh.portfolio.db.enums.PortfolioScope.PRIVATE;
+import static com.bssmh.portfolio.db.enums.PortfolioScope.PUBLIC;
 
 @Service
 @RequiredArgsConstructor
@@ -29,12 +33,11 @@ public class FindPortfolioService {
 
     private final PortfolioRepository portfolioRepository;
     private final FindMemberService findMemberService;
+    private final FindFollowService findFollowService;
 
     public FindPortfolioDetailRs findPortfolio(MemberContext memberContext, Long portfolioId) {
         Portfolio portfolio = findByIdOrElseThrow(portfolioId);
-
         validationCheck(memberContext, portfolio);
-
         return FindPortfolioDetailRs.create(portfolio);
     }
 
@@ -44,20 +47,32 @@ public class FindPortfolioService {
      * 3. 자신의 글이 아닌데 PRIVATE 아닌가?
      */
     private void validationCheck(MemberContext memberContext, Portfolio portfolio) {
-        Member writer = portfolio.getMember();
-        Member member = findMemberService.getLoginMember(memberContext);
-
-        if(member.getId().equals(writer.getId())){
-            return;
-        }
-
-        if(PRIVATE.equals(portfolio.getPortfolioScope())){
+        // 로그인 안했으면 public 만 가능
+        if (Objects.isNull(memberContext)) {
+            if (PUBLIC.equals(portfolio.getPortfolioScope())) {
+                return;
+            }
             throw new AccessDeniedException();
         }
 
-        // TODO: 2023-01-30 로직 
+        Member writer = portfolio.getMember();
+        Member member = findMemberService.getLoginMember(memberContext);
 
+        // 내가 작성했으면 통과
+        if (member.getId().equals(writer.getId())) {
+            return;
+        }
 
+        // private 는 접근 불가
+        if (PRIVATE.equals(portfolio.getPortfolioScope())) {
+            throw new AccessDeniedException();
+        }
+
+        // 팔로우면 protected 가능
+        Follow follow = findFollowService.findByEachMemberOrElseNull(member, writer);
+        if(Objects.isNull(follow)){
+            throw new AccessDeniedException();
+        }
     }
 
     public Portfolio findByIdOrElseThrow(Long portfolioId) {

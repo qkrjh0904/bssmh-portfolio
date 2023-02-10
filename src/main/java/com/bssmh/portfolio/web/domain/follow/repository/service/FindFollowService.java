@@ -37,6 +37,10 @@ public class FindFollowService {
                 .orElseThrow(NoSuchMemberException::new);
     }
 
+    public Follow findByEachMemberOrElseNull(Member fromMember, Member toMember) {
+        return followRepository.findByFromMemberAndToMember(fromMember, toMember)
+                .orElse(null);
+    }
 
     public ListResponse<FindOtherMemberRs> findMyFollower(MemberContext memberContext) {
         Member member = findMemberService.getLoginMember(memberContext);
