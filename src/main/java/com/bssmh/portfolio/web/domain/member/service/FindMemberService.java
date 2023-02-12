@@ -30,7 +30,7 @@ public class FindMemberService {
     }
 
     public FindMemberSelfRs findMemberSelf(MemberContext memberContext) {
-        Member member = this.getLoginMember(memberContext);
+        Member member = this.findLoginMember(memberContext);
         return FindMemberSelfRs.create(member);
     }
 
@@ -44,7 +44,7 @@ public class FindMemberService {
         return FindOtherMemberRs.create(member);
     }
 
-    public Member getLoginMember(MemberContext memberContext) {
+    public Member findLoginMember(MemberContext memberContext) {
         if (Objects.isNull(memberContext)) {
             return null;
         }

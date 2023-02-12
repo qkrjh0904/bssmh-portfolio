@@ -43,12 +43,12 @@ public class FindFollowService {
     }
 
     public ListResponse<FindOtherMemberRs> findMyFollower(MemberContext memberContext) {
-        Member member = findMemberService.getLoginMember(memberContext);
+        Member member = findMemberService.findLoginMember(memberContext);
         return toFollowerRsList(member);
     }
 
     public ListResponse<FindOtherMemberRs> findMyFollowing(MemberContext memberContext) {
-        Member member = findMemberService.getLoginMember(memberContext);
+        Member member = findMemberService.findLoginMember(memberContext);
         return toFollowingRsList(member);
     }
 

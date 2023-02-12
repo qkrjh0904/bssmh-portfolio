@@ -64,7 +64,7 @@ public class PortfolioService {
     }
 
     public void deletePortfolio(MemberContext memberContext, DeletePortfolioRq rq) {
-        Member member = findMemberService.getLoginMember(memberContext);
+        Member member = findMemberService.findLoginMember(memberContext);
         Long portfolioId = rq.getPortfolioId();
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(portfolioId);
         portfolioPermissionCheck(portfolio, member);
@@ -72,7 +72,7 @@ public class PortfolioService {
     }
 
     public void updatePortfolio(MemberContext memberContext, UpsertPortfolioRq rq) {
-        Member member = findMemberService.getLoginMember(memberContext);
+        Member member = findMemberService.findLoginMember(memberContext);
         Long portfolioId = rq.getPortfolioId();
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(portfolioId);
         portfolioPermissionCheck(portfolio, member);

@@ -25,7 +25,7 @@ public class FollowService {
     private final FollowRepository followRepository;
 
     public void followMember(MemberContext memberContext, FollowMemberRq rq) {
-        Member fromMember = findMemberService.getLoginMember(memberContext);
+        Member fromMember = findMemberService.findLoginMember(memberContext);
         Member toMember = findMemberService.findByIdOrElseThrow(rq.getMemberId());
         selfFollowCheck(fromMember, toMember);
         duplicateFollowCheck(fromMember, toMember);
@@ -45,7 +45,7 @@ public class FollowService {
     }
 
     public void unFollowMember(MemberContext memberContext, UnFollowMemberRq rq) {
-        Member fromMember = findMemberService.getLoginMember(memberContext);
+        Member fromMember = findMemberService.findLoginMember(memberContext);
         Member toMember = findMemberService.findByIdOrElseThrow(rq.getMemberId());
 
         Follow follow = findFollowService.findByEachMemberOrElseThrow(fromMember, toMember);

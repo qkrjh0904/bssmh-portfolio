@@ -32,7 +32,7 @@ public class CommentService {
 
     public void saveComment(MemberContext memberContext, SaveCommentRq rq) {
         String email = memberContext.getEmail();
-        Member member = findMemberService.getLoginMember(memberContext);
+        Member member = findMemberService.findLoginMember(memberContext);
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(rq.getPortfolioId());
         Comment comment = Comment.create(
                 rq.getContent(),
@@ -42,7 +42,7 @@ public class CommentService {
     }
 
     public void deleteComment(MemberContext memberContext, DeleteCommentRq rq) {
-        Member member = findMemberService.getLoginMember(memberContext);
+        Member member = findMemberService.findLoginMember(memberContext);
         Long commentId = rq.getCommentId();
         Comment comment = findCommentService.findByIdOrElseThrow(commentId);
         commentPermissionCheck(comment, member);
@@ -50,7 +50,7 @@ public class CommentService {
     }
 
     public void updateComment(MemberContext memberContext, UpdateCommentRq rq) {
-        Member member = findMemberService.getLoginMember(memberContext);
+        Member member = findMemberService.findLoginMember(memberContext);
         Long commentId = rq.getCommentId();
         Comment comment = findCommentService.findByIdOrElseThrow(commentId);
         commentPermissionCheck(comment, member);
