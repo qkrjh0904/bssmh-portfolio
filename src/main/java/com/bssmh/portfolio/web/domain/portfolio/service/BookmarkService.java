@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -18,16 +20,16 @@ public class BookmarkService {
 
     // repository
     private final BookmarkRepository bookmarkRepository;
+
     public void toggleBookmarkPortfolio(Member member, Portfolio portfolio) {
+
         Bookmark bookmark = findBookmarkService.findByMemberAndPortfolioOrElseNull(member, portfolio);
-        if (bookmark != null) {
+        if (Objects.nonNull(bookmark)) {
             bookmarkRepository.delete(bookmark);
             return;
         }
-        Bookmark newBookmark = Bookmark.create(
-                portfolio,
-                member);
+
+        Bookmark newBookmark = Bookmark.create(portfolio, member);
         bookmarkRepository.save(newBookmark);
-        portfolio.addBookmarkList(newBookmark);
     }
 }

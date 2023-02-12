@@ -106,10 +106,8 @@ public class PortfolioService {
 
 
     public void bookmarkPortfolio(MemberContext memberContext, BookmarkPortfolioRq rq) {
-        Member member = findMemberService.getLoginMember(memberContext);
-        Long portfolioId = rq.getPortfolioId();
-        Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(portfolioId);
-
+        Member member = findMemberService.findLoginMember(memberContext);
+        Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(rq.getPortfolioId());
         bookmarkService.toggleBookmarkPortfolio(member, portfolio);
     }
 
