@@ -3,6 +3,8 @@ package com.bssmh.portfolio.db.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @RequiredArgsConstructor
 public enum PortfolioScope {
@@ -12,4 +14,8 @@ public enum PortfolioScope {
 
     private final String name;
 
+
+    public static Boolean getMoreThanProtected(PortfolioScope portfolioScope) {
+        return List.of(PUBLIC, PROTECTED).contains(portfolioScope);
+    }
 }

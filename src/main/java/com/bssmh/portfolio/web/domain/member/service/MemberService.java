@@ -23,7 +23,7 @@ public class MemberService {
     }
 
     public void updateMember(MemberContext memberContext, UpdateMemberRq rq) {
-        Member member = findMemberService.getLoginMember(memberContext);
+        Member member = findMemberService.findLoginMember(memberContext);
         member.update(
                 rq.getNickName(),
                 rq.getDescription(),

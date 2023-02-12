@@ -2,7 +2,9 @@ package com.bssmh.portfolio.web.domain.portfolio.service;
 
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
+import com.bssmh.portfolio.db.enums.PortfolioScope;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
+import com.bssmh.portfolio.web.domain.follow.repository.service.FindFollowService;
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rs.FindPortfolioDetailRs;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rs.FindPortfolioListRs;
@@ -18,9 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static com.bssmh.portfolio.db.enums.PortfolioScope.PRIVATE;
 
 @Service
 @RequiredArgsConstructor
@@ -32,32 +33,31 @@ public class FindPortfolioService {
 
     public FindPortfolioDetailRs findPortfolio(MemberContext memberContext, Long portfolioId) {
         Portfolio portfolio = findByIdOrElseThrow(portfolioId);
-
         validationCheck(memberContext, portfolio);
-
         return FindPortfolioDetailRs.create(portfolio);
     }
 
     /**
-     * 1. 자신의 글인가?
-     * 2. 자신의 글이 아니고 PROTECTED 면 팔로우 했는가?
-     * 3. 자신의 글이 아닌데 PRIVATE 아닌가?
+     * 자신의 글이 아니라면 protected 까지 공개
      */
     private void validationCheck(MemberContext memberContext, Portfolio portfolio) {
-        Member writer = portfolio.getMember();
-        Member member = findMemberService.getLoginMember(memberContext);
-
-        if(member.getId().equals(writer.getId())){
-            return;
-        }
-
-        if(PRIVATE.equals(portfolio.getPortfolioScope())){
+        // 로그인 안했으면 public 만 가능
+        if (Objects.isNull(memberContext)) {
+            if (PortfolioScope.getMoreThanProtected(portfolio.getPortfolioScope())) {
+                return;
+            }
             throw new AccessDeniedException();
         }
 
-        // TODO: 2023-01-30 로직 
+        Member writer = portfolio.getMember();
+        Member loginMember = findMemberService.findLoginMember(memberContext);
 
+        // 내가 작성했으면 통과
+        if (loginMember.getId().equals(writer.getId())) {
+            return;
+        }
 
+        throw new AccessDeniedException();
     }
 
     public Portfolio findByIdOrElseThrow(Long portfolioId) {
@@ -79,7 +79,7 @@ public class FindPortfolioService {
     }
 
     public PagedResponse<FindPortfolioListRs> findMyPortfolio(MemberContext memberContext, Pagination pagination) {
-        Member member = findMemberService.getLoginMember(memberContext);
+        Member member = findMemberService.findLoginMember(memberContext);
         PageRequest pageRequest = pagination.toPageRequest();
         Page<Portfolio> myPortfolioList = portfolioRepository.findMyPortfolio(member.getId(), pageRequest);
         List<FindPortfolioListRs> findPortfolioListRsList = myPortfolioList.stream()
@@ -103,4 +103,5 @@ public class FindPortfolioService {
         pagination.setTotalPages(memberPortfolioList.getTotalPages());
         return PagedResponse.create(pagination, findPortfolioListRsList);
     }
+
 }
