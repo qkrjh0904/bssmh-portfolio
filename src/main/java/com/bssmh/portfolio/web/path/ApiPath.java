@@ -7,6 +7,7 @@ public class ApiPath {
 
     // oauth2
     public static final String LOGIN_OAUTH2 = "/api/login/oauth2";
+    public static final String REFRESH_TOKEN = "/api/refresh-token";
 
     // member
     public static final String MEMBER = "/api/member";
