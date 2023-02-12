@@ -27,7 +27,7 @@ public class FindCommentService {
     private final FindMemberService findMemberService;
 
     public ListResponse<FindCommentRs> findCommentByPortfolioId(MemberContext memberContext, Long portfolioId) {
-        List<Comment> commentList = commentRepository.findCommentByPortfolioId(portfolioId);
+        List<Comment> commentList = commentRepository.findCommentByPortfolioIdOrderByCreatedDateDesc(portfolioId);
         Member member = findMemberService.findLoginMember(memberContext);
         List<FindCommentRs> commentRsList = commentList.stream()
                 .map(comment -> FindCommentRs.create(comment, member))
