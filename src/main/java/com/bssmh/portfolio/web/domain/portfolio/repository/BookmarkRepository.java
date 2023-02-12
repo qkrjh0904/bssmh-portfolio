@@ -5,9 +5,9 @@ import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
-    Long countByMember(Member member);
+import java.util.Optional;
 
-    void deleteBookmarkByMemberAndPortfolio(Member member, Portfolio portfolio);
+public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
+    Optional<Bookmark> findByMemberAndPortfolio(Member member, Portfolio portfolio);
 
 }

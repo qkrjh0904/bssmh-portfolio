@@ -13,18 +13,21 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class BookmarkService {
 
+    // service
+    private final FindBookmarkService findBookmarkService;
+
+    // repository
     private final BookmarkRepository bookmarkRepository;
-    public void toggleBookmarkList(Member member, Portfolio portfolio) {
-        Long BookmarkCount = bookmarkRepository.countByMember(member);
-        // 좋아요가 없는 상태라면
-        if (BookmarkCount == 0) {
-            Bookmark bookmark = Bookmark.create(
-                    portfolio,
-                    member);
-            bookmarkRepository.save(bookmark);
-            portfolio.addBookmarkList(bookmark);
+    public void toggleBookmarkPortfolio(Member member, Portfolio portfolio) {
+        Bookmark bookmark = findBookmarkService.findByMemberAndPortfolioOrElseNull(member, portfolio);
+        if (bookmark != null) {
+            bookmarkRepository.delete(bookmark);
             return;
         }
-        bookmarkRepository.deleteBookmarkByMemberAndPortfolio(member, portfolio);
+        Bookmark newBookmark = Bookmark.create(
+                portfolio,
+                member);
+        bookmarkRepository.save(newBookmark);
+        portfolio.addBookmarkList(newBookmark);
     }
 }
