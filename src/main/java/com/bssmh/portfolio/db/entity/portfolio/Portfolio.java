@@ -124,4 +124,8 @@ public class Portfolio extends BaseTimeEntity {
         this.contributorList.clear();
         this.contributorList.addAll(contributorList);
     }
+    public void addBookmarkList(Bookmark bookmark) {
+        this.bookmarkList.add(bookmark);
+    }
+
 }

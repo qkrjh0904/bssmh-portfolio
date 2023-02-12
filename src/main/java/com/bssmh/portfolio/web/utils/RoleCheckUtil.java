@@ -6,8 +6,7 @@ import lombok.experimental.UtilityClass;
 
 import java.util.Set;
 
-import static com.bssmh.portfolio.db.enums.MemberRoleType.ROLE_ADMIN;
-import static com.bssmh.portfolio.db.enums.MemberRoleType.ROLE_MEMBER;
+import static com.bssmh.portfolio.db.enums.MemberRoleType.*;
 
 @UtilityClass
 public class RoleCheckUtil {
