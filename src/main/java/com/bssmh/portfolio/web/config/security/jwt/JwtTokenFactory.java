@@ -1,77 +1,62 @@
 package com.bssmh.portfolio.web.config.security.jwt;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.bssmh.portfolio.db.entity.member.Member;
-import com.bssmh.portfolio.db.enums.MemberRoleType;
-import com.bssmh.portfolio.web.config.security.context.MemberContext;
-import com.bssmh.portfolio.web.exception.ExpiredJwtException;
-import com.bssmh.portfolio.web.exception.InvalidJwtTokenException;
 import com.bssmh.portfolio.web.domain.dto.JwtTokenDto;
+import com.bssmh.portfolio.web.utils.DateUtils;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.bssmh.portfolio.web.config.security.jwt.JwtProperty.JWT_ISSUER;
+import static com.bssmh.portfolio.web.config.security.jwt.JwtProperty.MEMBER_EMAIL;
+import static com.bssmh.portfolio.web.config.security.jwt.JwtProperty.MEMBER_ROLE_TYPE;
+import static com.bssmh.portfolio.web.config.security.jwt.JwtProperty.REGISTRATION_ID;
+import static com.bssmh.portfolio.web.config.security.jwt.JwtProperty.TOKEN_TIME_TO_LIVE;
 
 @Component
 @RequiredArgsConstructor
 public class JwtTokenFactory {
 
-    private static final String JWT_ISSUER = "BSSMH";
-    private static final String MEMBER_EMAIL = "MEMBER_EMAIL";
-    private static final String REGISTRATION_ID = "REGISTRATION_ID";
-    private static final String MEMBER_ROLE_TYPE = "MEMBER_ROLE_TYPE";
-    private static final String VALIDITY = "VALIDITY";
-    private static final String JWT_SECRET = "BSSMH_JWT_SECRET";
-
     public JwtTokenDto generateJwtToken(Member member) {
-        String validity = LocalDateTime.now().plusHours(2L).toString();
-        String token = JWT.create()
-                .withIssuer(JWT_ISSUER)
-                .withClaim(MEMBER_EMAIL, member.getEmail())
-                .withClaim(REGISTRATION_ID, member.getRegistrationId())
-                .withClaim(MEMBER_ROLE_TYPE, member.getMemberRoleType().getName())
-                .withClaim(VALIDITY, validity)
-                .sign(getJwtAlgorithm());
+        Date now = DateUtils.now();
+        Date expiredDate = DateUtils.addTime(now, TOKEN_TIME_TO_LIVE);
+        LocalDateTime expiredLocalDateTime = LocalDateTime.ofInstant(expiredDate.toInstant(), ZoneId.systemDefault());
+        String token = Jwts.builder()
+                .setClaims(createJwtClaims(member))
+                .setIssuedAt(now)
+                .setIssuer(JWT_ISSUER)
+                .setExpiration(expiredDate)
+                .signWith(SignatureAlgorithm.HS256, JwtProperty.SIGN_KEY)
+                .compact();
 
         return JwtTokenDto.builder()
                 .token(token)
-                .validity(validity)
+                .validity(expiredLocalDateTime.toString())
                 .build();
     }
 
-    private Algorithm getJwtAlgorithm() {
-        return Algorithm.HMAC256(JWT_SECRET);
+    private Map<String, Object> createJwtClaims(Member member) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(MEMBER_EMAIL, member.getEmail());
+        claims.put(REGISTRATION_ID, member.getRegistrationId());
+        claims.put(MEMBER_ROLE_TYPE, member.getMemberRoleType().getName());
+        return claims;
     }
 
-    public MemberContext decodeJwtToken(String token) {
-        DecodedJWT decodedJWT = verifyToken(token);
-
-        String email = decodedJWT.getClaim(MEMBER_EMAIL).asString();
-        String registrationId = decodedJWT.getClaim(REGISTRATION_ID).asString();
-        String roleString = decodedJWT.getClaim(MEMBER_ROLE_TYPE).asString();
-        MemberRoleType memberRoleType = MemberRoleType.valueOf(roleString);
-        String validity = decodedJWT.getClaim(VALIDITY).asString();
-
-        LocalDateTime validityToLocalDateTime = LocalDateTime.parse(validity);
-        if(LocalDateTime.now().isAfter(validityToLocalDateTime)){
-            throw new ExpiredJwtException();
-        }
-
-        return MemberContext.create(email, registrationId, memberRoleType);
-    }
-
-    private DecodedJWT verifyToken(String token) {
-        JWTVerifier jwtVerifier = JWT.require(getJwtAlgorithm()).build();
-        DecodedJWT decodedJWT = jwtVerifier.verify(token);
-
-        if (Objects.isNull(decodedJWT)) {
-            throw new InvalidJwtTokenException();
-        }
-        return decodedJWT;
+    public Claims parseClaims(String token) {
+        return Jwts
+                .parser()
+                .setSigningKey(JwtProperty.SIGN_KEY)
+                .parseClaimsJws(token)
+                .getBody();
     }
 
 }

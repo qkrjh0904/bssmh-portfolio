@@ -29,7 +29,6 @@ import static com.bssmh.portfolio.web.domain.auth.constants.AuthConstants.KAKAO_
 import static com.bssmh.portfolio.web.domain.auth.constants.AuthConstants.KAKAO_PROFILE_URL;
 import static com.bssmh.portfolio.web.domain.enums.ClientType.KAKAO;
 import static com.bssmh.portfolio.web.security.PrincipalConstants.KAKAO_ACCOUNT;
-import static com.bssmh.portfolio.web.security.PrincipalConstants.PROFILE;
 
 @Service
 @RequiredArgsConstructor
