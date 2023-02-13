@@ -1,4 +1,4 @@
-package com.bssmh.portfolio.web.endpoint;
+package com.bssmh.portfolio.web.domain.error.controller.rs;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -6,8 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @Builder
-public class ErrorResponse {
-    private Integer statusCode;
-    private String reason;
+public class ErrorRs {
+    private HttpStatus httpStatus;
     private String message;
 }

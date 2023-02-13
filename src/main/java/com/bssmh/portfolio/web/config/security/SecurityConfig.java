@@ -38,9 +38,13 @@ public class SecurityConfig {
 
         http.authorizeRequests()
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
-                .antMatchers(ApiPath.BSM_OAUTH).permitAll()
-                .antMatchers(ApiPath.LOGIN_OAUTH2).permitAll()
-                .anyRequest().permitAll();
+                .antMatchers(ApiPath.ERROR_AUTH).permitAll()
+                .antMatchers(ApiPath.BSM_OAUTH, ApiPath.LOGIN_OAUTH2, ApiPath.REFRESH_TOKEN).permitAll()
+                .antMatchers(ApiPath.COMMENT_PORTFOLIO_ID).permitAll()
+                .antMatchers(ApiPath.FILE_UPLOAD).permitAll()
+                .antMatchers(ApiPath.PORTFOLIO_SEARCH).permitAll()
+                .antMatchers(ApiPath.MEMBER_ID).permitAll()
+                .anyRequest().authenticated();
 
         http.addFilterBefore(jwtOncePerRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()

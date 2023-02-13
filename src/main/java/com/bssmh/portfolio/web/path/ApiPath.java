@@ -2,6 +2,9 @@ package com.bssmh.portfolio.web.path;
 
 public class ApiPath {
 
+    // error
+    public static final String ERROR_AUTH = "/error/auth";
+
     // auth
     public static final String BSM_OAUTH = "/api/oauth/bsm";
 

@@ -18,7 +18,6 @@ public class SkillController {
 
     private final SkillService skillService;
 
-
     @Operation(summary = "기술명으로 기술스택 조회")
     @GetMapping(ApiPath.SKILL)
     public ListResponse<FindSkillByNameRs> findSkillByName(@RequestParam(required = false) String name) {

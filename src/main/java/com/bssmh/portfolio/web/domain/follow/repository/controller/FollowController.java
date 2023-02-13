@@ -31,7 +31,7 @@ public class FollowController {
     @Operation(summary = "멤버 팔로우")
     @PostMapping(ApiPath.FOLLOW)
     public void followMember(@AuthenticationPrincipal MemberContext memberContext,
-                       @RequestBody FollowMemberRq rq) {
+                             @RequestBody FollowMemberRq rq) {
         followService.followMember(memberContext, rq);
     }
 

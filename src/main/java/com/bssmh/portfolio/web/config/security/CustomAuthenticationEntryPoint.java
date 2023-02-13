@@ -1,14 +1,15 @@
 package com.bssmh.portfolio.web.config.security;
 
 import com.bssmh.portfolio.web.config.security.jwt.JwtExceptionCode;
+import com.bssmh.portfolio.web.path.ApiPath;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import static com.bssmh.portfolio.web.config.security.jwt.JwtProperty.JWT_EXCEPTION;
 
@@ -16,8 +17,9 @@ import static com.bssmh.portfolio.web.config.security.jwt.JwtProperty.JWT_EXCEPT
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException{
         JwtExceptionCode exceptionCode = (JwtExceptionCode) request.getAttribute(JWT_EXCEPTION);
-        response.sendRedirect("");
+        String encode = URLEncoder.encode(exceptionCode.getMessage(), "UTF-8");
+        response.sendRedirect(ApiPath.ERROR_AUTH + "?message=" + encode);
     }
 }

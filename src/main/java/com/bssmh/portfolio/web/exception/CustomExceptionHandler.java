@@ -11,9 +11,11 @@ public class CustomExceptionHandler {
     @ExceptionHandler(GeneralHttpException.class)
     public ResponseEntity<ErrorResponse> errorHandler(GeneralHttpException e) {
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .httpStatus(e.getHttpStatus())
+                .statusCode(e.getHttpStatus().value())
+                .reason(e.getHttpStatus().getReasonPhrase())
                 .message(e.getMessage())
                 .build();
         return new ResponseEntity<>(errorResponse, e.getHttpStatus());
     }
+
 }
