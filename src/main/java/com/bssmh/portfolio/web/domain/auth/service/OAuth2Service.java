@@ -26,19 +26,24 @@ public class OAuth2Service {
         ClientType clientType = rq.getClientType();
         String code = rq.getCode();
 
-        if (GOOGLE.equals(clientType)) {
-            return oAuth2GoogleService.getToken(code);
-        }
+        try {
+            if (GOOGLE.equals(clientType)) {
+                return oAuth2GoogleService.getToken(code);
+            }
 
-        if (KAKAO.equals(clientType)) {
-            return oAuth2KaKaoService.getToken(code);
-        }
+            if (KAKAO.equals(clientType)) {
+                return oAuth2KaKaoService.getToken(code);
+            }
 
-        if (BSM.equals(clientType)) {
-            return bsmOauthService.bsmLogin(code);
-        }
+            if (BSM.equals(clientType)) {
+                return bsmOauthService.bsmLogin(code);
+            }
 
-        throw new AuthenticationException();
+            throw new AuthenticationException();
+
+        } catch (Exception e) {
+            throw new AuthenticationException();
+        }
     }
 
 
