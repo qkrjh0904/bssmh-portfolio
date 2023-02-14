@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,8 +66,8 @@ public class FindPortfolioDetailRs {
     @Schema(description = "댓글수")
     private Long comments;
 
-    @Schema(description = "생성일", pattern = "yyyy-MM-dd")
-    private String createdDate;
+    @Schema(description = "생성일", pattern = "yyyy-MM-ddThh:mm:ss")
+    private LocalDateTime createdDate;
 
     public static FindPortfolioDetailRs create(Portfolio portfolio) {
         FindPortfolioDetailRs rs = new FindPortfolioDetailRs();
@@ -85,7 +86,7 @@ public class FindPortfolioDetailRs {
         rs.bookmarks = getBookmarks(portfolio);
         rs.views = portfolio.getViews();
         rs.comments = getComments(portfolio);
-        rs.createdDate = portfolio.getCreatedDate().toString();
+        rs.createdDate = portfolio.getCreatedDate();
         return rs;
     }
 

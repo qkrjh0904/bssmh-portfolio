@@ -38,12 +38,19 @@ public class SecurityConfig {
 
         http.authorizeRequests()
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
+                .antMatchers("/resources/**", "/").permitAll()
+                // 에러 핸들러
                 .antMatchers(ApiPath.ERROR_AUTH).permitAll()
+                // 인증
                 .antMatchers(ApiPath.BSM_OAUTH, ApiPath.LOGIN_OAUTH2, ApiPath.REFRESH_TOKEN).permitAll()
-                .antMatchers(ApiPath.COMMENT_PORTFOLIO_ID).permitAll()
-                .antMatchers(ApiPath.FILE_UPLOAD).permitAll()
+                // 댓글
+                .antMatchers(ApiPath.COMMENT_PORTFOLIO_ID_MATCHER).permitAll()
+                // 파일
+                .antMatchers(ApiPath.PORTFOLIO_ID_MATCHER, ApiPath.FILE_UPLOAD).permitAll()
+                // 포트폴리오
                 .antMatchers(ApiPath.PORTFOLIO_SEARCH).permitAll()
-                .antMatchers(ApiPath.MEMBER_ID).permitAll()
+                // 멤버
+                .antMatchers(ApiPath.MEMBER_ID_MATCHER).permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtOncePerRequestFilter, UsernamePasswordAuthenticationFilter.class)

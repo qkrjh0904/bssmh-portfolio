@@ -16,11 +16,13 @@ public class ApiPath {
     public static final String MEMBER = "/api/member";
     public static final String MEMBER_SELF = "/api/member/self";
     public static final String MEMBER_ID = "/api/member/{member-id}";
+    public static final String MEMBER_ID_MATCHER = "/api/member/{member-id:\\d+}";
 
     // portfolio
     public static final String PORTFOLIO = "/api/portfolio";
     public static final String PORTFOLIO_BOOKMARK = "/api/portfolio/bookmark";
     public static final String PORTFOLIO_ID = "/api/portfolio/{portfolio-id}";
+    public static final String PORTFOLIO_ID_MATCHER = "/api/portfolio/{portfolio-id:\\d+}";
     public static final String PORTFOLIO_SEARCH = "/api/portfolio/search";
     public static final String PORTFOLIO_MEMBER_ID = "/api/portfolio/member/{member-id}";
     public static final String PORTFOLIO_SELF = "/api/portfolio/self";
@@ -32,6 +34,7 @@ public class ApiPath {
     // comment
     public static final String COMMENT = "/api/comment";
     public static final String COMMENT_PORTFOLIO_ID = "/api/comment/{portfolio-id}";
+    public static final String COMMENT_PORTFOLIO_ID_MATCHER = "/api/comment/{portfolio-id:\\d+}";
 
     // skill
     public static final String SKILL = "/api/skill";
