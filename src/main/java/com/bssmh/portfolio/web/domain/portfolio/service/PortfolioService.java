@@ -11,12 +11,9 @@ import com.bssmh.portfolio.web.domain.portfolio.controller.rq.DeletePortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpsertPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.repository.PortfolioRepository;
 import com.bssmh.portfolio.web.exception.DoNotHavePermissionToModifyPortfolioException;
-import com.bssmh.portfolio.web.exception.NoSuchMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Objects;
 
 import static com.bssmh.portfolio.db.enums.MemberRoleType.ROLE_ADMIN;
 
@@ -38,14 +35,10 @@ public class PortfolioService {
     private final PortfolioRepository portfolioRepository;
 
     public void savePortfolio(MemberContext memberContext, UpsertPortfolioRq rq) {
-        String email = memberContext.getEmail();
-        Member member = findMemberService.findByEmailAndRegistrationIdOrElseNull(email, memberContext.getRegistrationId());
-        if(Objects.isNull(member)){
-            throw new NoSuchMemberException();
-        }
+        Member member = findMemberService.findLoginMember(memberContext);
 
-        AttachFile video = attachFileService.findByFileUid(rq.getVideoFileUid());
-        AttachFile thumbnail = attachFileService.findByFileUid(rq.getThumbnailFileUid());
+        AttachFile video = attachFileService.findByFileUidOrElseNull(rq.getVideoFileUid());
+        AttachFile thumbnail = attachFileService.findByFileUidOrElseNull(rq.getThumbnailFileUid());
 
         Portfolio portfolio = Portfolio.create(
                 rq.getPortfolioType(),
@@ -81,8 +74,8 @@ public class PortfolioService {
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(portfolioId);
         portfolioPermissionCheck(portfolio, member);
 
-        AttachFile video = attachFileService.findByFileUid(rq.getVideoFileUid());
-        AttachFile thumbnail = attachFileService.findByFileUid(rq.getThumbnailFileUid());
+        AttachFile video = attachFileService.findByFileUidOrElseThrow(rq.getVideoFileUid());
+        AttachFile thumbnail = attachFileService.findByFileUidOrElseThrow(rq.getThumbnailFileUid());
 
         portfolio.update(
                 rq.getTitle(),
@@ -98,13 +91,13 @@ public class PortfolioService {
     }
 
     private void portfolioPermissionCheck(Portfolio portfolio, Member member) {
-        if(ROLE_ADMIN.equals(member.getMemberRoleType())){
+        if (ROLE_ADMIN.equals(member.getMemberRoleType())) {
             return;
         }
 
         Long writerId = portfolio.getMember().getId();
         Long memberId = member.getId();
-        if(writerId.equals(memberId)){
+        if (writerId.equals(memberId)) {
             return;
         }
         throw new DoNotHavePermissionToModifyPortfolioException();

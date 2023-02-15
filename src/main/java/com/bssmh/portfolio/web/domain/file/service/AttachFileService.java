@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -15,9 +17,22 @@ public class AttachFileService {
 
     private final AttachFileRepository attachFileRepository;
 
-    public AttachFile findByFileUid(String fileUid) {
+    public AttachFile findByFileUidOrElseThrow(String fileUid) {
+        if (Objects.isNull(fileUid)) {
+            throw new NoSuchAttachFileException();
+        }
+
         return attachFileRepository.findByFileUid(fileUid)
                 .orElseThrow(NoSuchAttachFileException::new);
+    }
+
+    public AttachFile findByFileUidOrElseNull(String fileUid) {
+        if (Objects.isNull(fileUid)) {
+            return null;
+        }
+
+        return attachFileRepository.findByFileUid(fileUid)
+                .orElse(null);
     }
 
     public void save(AttachFileDto attachFileDto) {

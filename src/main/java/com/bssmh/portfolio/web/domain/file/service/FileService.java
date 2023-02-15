@@ -48,7 +48,7 @@ public class FileService {
 
     public ResponseEntity<byte[]> downloadFile(String fileUid) {
         try {
-            AttachFile attachFile = attachFileService.findByFileUid(fileUid);
+            AttachFile attachFile = attachFileService.findByFileUidOrElseThrow(fileUid);
             S3Object s3Object = awsS3Service.getS3Object(attachFile);
             S3ObjectInputStream objectContent = s3Object.getObjectContent();
             ObjectMetadata objectMetadata = s3Object.getObjectMetadata();
