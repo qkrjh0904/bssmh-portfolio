@@ -46,9 +46,9 @@ public class SecurityConfig {
                 // 댓글
                 .antMatchers(ApiPath.COMMENT_PORTFOLIO_ID_MATCHER).permitAll()
                 // 파일
-                .antMatchers(ApiPath.PORTFOLIO_ID_MATCHER, ApiPath.FILE_UPLOAD).permitAll()
+                .antMatchers(ApiPath.FILE_DOWNLOAD, ApiPath.FILE_UPLOAD).permitAll()
                 // 포트폴리오
-                .antMatchers(ApiPath.PORTFOLIO_SEARCH).permitAll()
+                .antMatchers(ApiPath.PORTFOLIO_ID_MATCHER, ApiPath.PORTFOLIO_SEARCH).permitAll()
                 // 멤버
                 .antMatchers(ApiPath.MEMBER_ID_MATCHER).permitAll()
                 .anyRequest().authenticated();
