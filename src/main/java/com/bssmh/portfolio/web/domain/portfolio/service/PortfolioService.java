@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
+import static com.bssmh.portfolio.db.enums.MemberRoleType.ROLE_ADMIN;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -96,6 +98,10 @@ public class PortfolioService {
     }
 
     private void portfolioPermissionCheck(Portfolio portfolio, Member member) {
+        if(ROLE_ADMIN.equals(member.getMemberRoleType())){
+            return;
+        }
+
         Long writerId = portfolio.getMember().getId();
         Long memberId = member.getId();
         if(writerId.equals(memberId)){
