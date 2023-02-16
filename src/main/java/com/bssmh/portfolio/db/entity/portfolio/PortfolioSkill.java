@@ -32,7 +32,7 @@ public class PortfolioSkill extends BaseTimeEntity {
     private String skillName;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "portfolio_id")
+    @JoinColumn(name = "portfolio_id", nullable = false)
     private Portfolio portfolio;
 
 

@@ -1,10 +1,7 @@
 package com.bssmh.portfolio.db.entity.follow;
 
-import com.bssmh.portfolio.db.entity.attachfile.AttachFile;
+import com.bssmh.portfolio.db.entity.common.BaseTimeEntity;
 import com.bssmh.portfolio.db.entity.member.Member;
-import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
-import com.bssmh.portfolio.db.enums.PortfolioScope;
-import com.bssmh.portfolio.db.enums.PortfolioType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,19 +28,18 @@ import static javax.persistence.FetchType.LAZY;
                         columnNames = {"from_member_id", "to_member_id"})
         }
 )
-public class Follow {
-
+public class Follow extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "follow_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "from_member_id")
+    @JoinColumn(name = "from_member_id", nullable = false)
     private Member fromMember;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "to_member_id")
+    @JoinColumn(name = "to_member_id", nullable = false)
     private Member toMember;
 
     public static Follow create(Member fromMember, Member toMember) {

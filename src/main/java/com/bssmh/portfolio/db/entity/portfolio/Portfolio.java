@@ -51,10 +51,11 @@ public class Portfolio extends BaseTimeEntity {
     private String description;
 
     @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "video_attach_file_id")
     private AttachFile video;
 
-    @Column(nullable = false)
     @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "thumbnail_attach_file_id", nullable = false)
     private AttachFile thumbnail;
 
     @Column(columnDefinition = "text")
@@ -71,7 +72,7 @@ public class Portfolio extends BaseTimeEntity {
     private Long views;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -125,6 +126,7 @@ public class Portfolio extends BaseTimeEntity {
         this.contributorList.clear();
         this.contributorList.addAll(contributorList);
     }
+
     public void addBookmarkList(Bookmark bookmark) {
         this.bookmarkList.add(bookmark);
     }
