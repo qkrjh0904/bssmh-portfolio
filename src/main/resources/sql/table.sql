@@ -41,7 +41,7 @@ create table portfolio
     title                    varchar(255) not null,
     views                    bigint       not null,
     member_id                bigint,
-    thumbnail_attach_file_id bigint,
+    thumbnail_attach_file_id bigint       not null,
     video_attach_file_id     bigint,
     primary key (portfolio_id),
     constraint fk_portfolio_member_id

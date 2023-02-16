@@ -53,6 +53,7 @@ public class Portfolio extends BaseTimeEntity {
     @OneToOne(fetch = FetchType.EAGER)
     private AttachFile video;
 
+    @Column(nullable = false)
     @OneToOne(fetch = FetchType.EAGER)
     private AttachFile thumbnail;
 
