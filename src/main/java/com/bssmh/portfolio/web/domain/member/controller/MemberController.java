@@ -54,4 +54,5 @@ public class MemberController {
                              @Validated @RequestBody SignupMemberRq rq) {
         memberService.signupMember(memberContext, rq);
     }
+
 }
