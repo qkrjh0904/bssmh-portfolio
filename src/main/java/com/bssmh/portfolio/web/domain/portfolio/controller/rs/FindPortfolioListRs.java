@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
@@ -40,6 +41,9 @@ public class FindPortfolioListRs {
     @Schema(description = "좋아요수")
     private Long bookmarks;
 
+    @Schema(description = "좋아요 여부")
+    private Boolean bookmarkYn;
+
     @Schema(description = "조회수")
     private Long views;
 
@@ -49,7 +53,7 @@ public class FindPortfolioListRs {
     @Schema(description = "생성일", pattern = "yyyy-MM-ddThh:mm:ss")
     private LocalDateTime createdDate;
 
-    public static FindPortfolioListRs create(Portfolio portfolio) {
+    public static FindPortfolioListRs create(Portfolio portfolio, Set<Long> bookmarkedPortfolioIdSet) {
         FindPortfolioListRs rs = new FindPortfolioListRs();
         rs.portfolioId = portfolio.getId();
         rs.writer = getWriter(portfolio.getMember());
@@ -58,6 +62,7 @@ public class FindPortfolioListRs {
         rs.skillList = getSkillList(portfolio.getPortfolioSkillList());
         rs.contributorList = getContributorList(portfolio.getContributorList());
         rs.bookmarks = getBookmarks(portfolio);
+        rs.bookmarkYn = bookmarkedPortfolioIdSet.contains(portfolio.getId());
         rs.views = portfolio.getViews();
         rs.comments = getComments(portfolio);
         rs.createdDate = portfolio.getCreatedDate();

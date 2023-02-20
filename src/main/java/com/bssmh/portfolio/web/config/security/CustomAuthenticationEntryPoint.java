@@ -20,7 +20,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException{
         JwtExceptionCode exceptionCode = (JwtExceptionCode) request.getAttribute(JWT_EXCEPTION);
-        String encode = URLEncoder.encode("에러 메시지가 없습니다.", "UTF-8");
+        String encode = URLEncoder.encode("비정상적인 접근입니다.", "UTF-8");
         if(Objects.nonNull(exceptionCode)){
             encode = URLEncoder.encode(exceptionCode.getMessage(), "UTF-8");
         }

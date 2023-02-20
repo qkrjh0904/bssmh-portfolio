@@ -4,12 +4,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.Objects;
+
 
 @Getter
 @NoArgsConstructor
 public class Pagination {
-    private Integer page = 1;
-    private Integer size = 10;
+    private Integer page;
+    private Integer size;
     private Long totalCount;
     private Integer totalPages;
 
@@ -20,11 +22,21 @@ public class Pagination {
     }
 
     private void validationCheck() {
+        if (Objects.isNull(page)) {
+            page = 1;
+        }
+
+        if (Objects.isNull(size)) {
+            size = 10;
+        }
+
         if (this.page < 1) {
             this.page = 1;
         }
 
-        this.size = 10;
+        if(size>100){
+            this.size = 100;
+        }
     }
 
     public void setTotalCount(long totalCount) {
