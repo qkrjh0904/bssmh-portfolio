@@ -5,7 +5,7 @@ import com.bssmh.portfolio.web.domain.follow.repository.controller.rq.FollowMemb
 import com.bssmh.portfolio.web.domain.follow.repository.controller.rq.UnFollowMemberRq;
 import com.bssmh.portfolio.web.domain.follow.repository.service.FindFollowService;
 import com.bssmh.portfolio.web.domain.follow.repository.service.FollowService;
-import com.bssmh.portfolio.web.domain.member.controller.rs.FindOtherMemberRs;
+import com.bssmh.portfolio.web.domain.member.controller.rs.FindFollowMemberRs;
 import com.bssmh.portfolio.web.endpoint.ListResponse;
 import com.bssmh.portfolio.web.path.ApiPath;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,25 +44,25 @@ public class FollowController {
 
     @Operation(summary = "내 팔로워 목록")
     @GetMapping(ApiPath.FOLLOWER_SELF)
-    public ListResponse<FindOtherMemberRs> findMyFollower(@AuthenticationPrincipal MemberContext memberContext) {
+    public ListResponse<FindFollowMemberRs> findMyFollower(@AuthenticationPrincipal MemberContext memberContext) {
         return findFollowService.findMyFollower(memberContext);
     }
 
     @Operation(summary = "내 팔로잉 목록")
     @GetMapping(ApiPath.FOLLOWING_SELF)
-    public ListResponse<FindOtherMemberRs> findMyFollowing(@AuthenticationPrincipal MemberContext memberContext) {
+    public ListResponse<FindFollowMemberRs> findMyFollowing(@AuthenticationPrincipal MemberContext memberContext) {
         return findFollowService.findMyFollowing(memberContext);
     }
 
     @Operation(summary = "다른 멤버 팔로워 목록")
     @GetMapping(ApiPath.FOLLOWER_MEMBER_ID)
-    public ListResponse<FindOtherMemberRs> findMemberFollower(@PathVariable("member-id") Long memberId) {
+    public ListResponse<FindFollowMemberRs> findMemberFollower(@PathVariable("member-id") Long memberId) {
         return findFollowService.findMemberFollower(memberId);
     }
 
     @Operation(summary = "다른 멤버 팔로잉 목록")
     @GetMapping(ApiPath.FOLLOWING_MEMBER_ID)
-    public ListResponse<FindOtherMemberRs> findMemberFollowing(@PathVariable("member-id") Long memberId) {
+    public ListResponse<FindFollowMemberRs> findMemberFollowing(@PathVariable("member-id") Long memberId) {
         return findFollowService.findMemberFollowing(memberId);
     }
 

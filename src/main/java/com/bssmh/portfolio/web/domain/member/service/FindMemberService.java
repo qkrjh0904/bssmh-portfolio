@@ -1,7 +1,9 @@
 package com.bssmh.portfolio.web.domain.member.service;
 
+import com.bssmh.portfolio.db.entity.follow.Follow;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
+import com.bssmh.portfolio.web.domain.follow.repository.FollowRepository;
 import com.bssmh.portfolio.web.domain.member.controller.rs.FindMemberSelfRs;
 import com.bssmh.portfolio.web.domain.member.controller.rs.FindOtherMemberRs;
 import com.bssmh.portfolio.web.domain.member.repository.MemberRepository;
@@ -18,6 +20,7 @@ import java.util.Objects;
 public class FindMemberService {
 
     private final MemberRepository memberRepository;
+    private final FollowRepository followRepository;
 
     public Member findByEmailAndRegistrationIdOrElseNull(String email, String registrationId) {
         return memberRepository.findByEmailAndRegistrationId(email, registrationId)
@@ -39,9 +42,12 @@ public class FindMemberService {
                 .orElseThrow(NoSuchMemberException::new);
     }
 
-    public FindOtherMemberRs findOtherMember(Long memberId) {
+    public FindOtherMemberRs findOtherMember(MemberContext memberContext, Long memberId) {
         Member member = this.findByIdOrElseThrow(memberId);
-        return FindOtherMemberRs.create(member);
+        Member loginMember = this.findLoginMember(memberContext);
+        Follow follow = followRepository.findByFromMemberAndToMember(loginMember, member)
+                .orElse(null);
+        return FindOtherMemberRs.create(member, Objects.nonNull(follow));
     }
 
     public Member findLoginMember(MemberContext memberContext) {

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class FindOtherMemberRs {
+public class FindFollowMemberRs {
 
     @Schema(description = "멤버 id")
     private Long memberId;
@@ -27,18 +27,14 @@ public class FindOtherMemberRs {
     @Schema(description = "직군, 직무, 작업 등")
     private String job;
 
-    @Schema(description = "팔로우 여부")
-    private Boolean followYn;
-
-    public static FindOtherMemberRs create(Member member, Boolean followYn) {
-        FindOtherMemberRs rs = new FindOtherMemberRs();
+    public static FindFollowMemberRs create(Member member) {
+        FindFollowMemberRs rs = new FindFollowMemberRs();
         rs.memberId = member.getId();
         rs.name = member.getName();
         rs.profileImageUrl = member.getProfileImageUrl();
         rs.email = member.getEmail();
         rs.description = member.getDescription();
         rs.job = member.getJob();
-        rs.followYn = followYn;
         return rs;
     }
 }

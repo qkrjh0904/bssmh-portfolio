@@ -4,7 +4,7 @@ import com.bssmh.portfolio.db.entity.follow.Follow;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.follow.repository.FollowRepository;
-import com.bssmh.portfolio.web.domain.member.controller.rs.FindOtherMemberRs;
+import com.bssmh.portfolio.web.domain.member.controller.rs.FindFollowMemberRs;
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
 import com.bssmh.portfolio.web.endpoint.ListResponse;
 import com.bssmh.portfolio.web.exception.AlreadyFollowedException;
@@ -37,43 +37,38 @@ public class FindFollowService {
                 .orElseThrow(NoSuchMemberException::new);
     }
 
-    public Follow findByEachMemberOrElseNull(Member fromMember, Member toMember) {
-        return followRepository.findByFromMemberAndToMember(fromMember, toMember)
-                .orElse(null);
-    }
-
-    public ListResponse<FindOtherMemberRs> findMyFollower(MemberContext memberContext) {
+    public ListResponse<FindFollowMemberRs> findMyFollower(MemberContext memberContext) {
         Member member = findMemberService.findLoginMember(memberContext);
         return toFollowerRsList(member);
     }
 
-    public ListResponse<FindOtherMemberRs> findMyFollowing(MemberContext memberContext) {
+    public ListResponse<FindFollowMemberRs> findMyFollowing(MemberContext memberContext) {
         Member member = findMemberService.findLoginMember(memberContext);
         return toFollowingRsList(member);
     }
 
-    public ListResponse<FindOtherMemberRs> findMemberFollower(Long memberId) {
+    public ListResponse<FindFollowMemberRs> findMemberFollower(Long memberId) {
         Member member = findMemberService.findByIdOrElseThrow(memberId);
         return toFollowerRsList(member);
     }
 
-    public ListResponse<FindOtherMemberRs> findMemberFollowing(Long memberId) {
+    public ListResponse<FindFollowMemberRs> findMemberFollowing(Long memberId) {
         Member member = findMemberService.findByIdOrElseThrow(memberId);
         return toFollowingRsList(member);
     }
 
-    private ListResponse<FindOtherMemberRs> toFollowingRsList(Member member) {
+    private ListResponse<FindFollowMemberRs> toFollowingRsList(Member member) {
         List<Follow> followingList = member.getFromMemberList();
-        List<FindOtherMemberRs> followingRsList = followingList.stream()
-                .map(follow -> FindOtherMemberRs.create(follow.getToMember()))
+        List<FindFollowMemberRs> followingRsList = followingList.stream()
+                .map(follow -> FindFollowMemberRs.create(follow.getToMember()))
                 .collect(Collectors.toList());
         return ListResponse.create(followingRsList);
     }
 
-    private ListResponse<FindOtherMemberRs> toFollowerRsList(Member member) {
+    private ListResponse<FindFollowMemberRs> toFollowerRsList(Member member) {
         List<Follow> followerList = member.getToMemberList();
-        List<FindOtherMemberRs> followerRsList = followerList.stream()
-                .map(follow -> FindOtherMemberRs.create(follow.getFromMember()))
+        List<FindFollowMemberRs> followerRsList = followerList.stream()
+                .map(follow -> FindFollowMemberRs.create(follow.getFromMember()))
                 .collect(Collectors.toList());
         return ListResponse.create(followerRsList);
     }
