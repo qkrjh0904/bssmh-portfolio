@@ -15,28 +15,32 @@ public class Pagination {
     private Long totalCount;
     private Integer totalPages;
 
-
-    public PageRequest toPageRequest() {
-        validationCheck();
-        return PageRequest.of(this.page - 1, this.size);
+    public static Pagination create(Integer page, Integer size) {
+        Pagination pagination = new Pagination();
+        pagination.page = checkPage(page);
+        pagination.size = checkSize(size);
+        return pagination;
     }
 
-    private void validationCheck() {
-        if (Objects.isNull(page)) {
-            page = 1;
+    private static Integer checkSize(Integer size) {
+        if (Objects.isNull(size) || size > 100) {
+            return 10;
         }
 
-        if (Objects.isNull(size)) {
-            size = 10;
+        return size;
+    }
+
+    private static Integer checkPage(Integer page) {
+        if (Objects.isNull(page) || page < 1) {
+            return 1;
         }
 
-        if (this.page < 1) {
-            this.page = 1;
-        }
+        return page;
+    }
 
-        if(size>100){
-            this.size = 100;
-        }
+
+    public PageRequest toPageRequest() {
+        return PageRequest.of(this.page - 1, this.size);
     }
 
     public void setTotalCount(long totalCount) {
