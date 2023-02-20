@@ -30,6 +30,15 @@ public class FindOtherMemberRs {
     @Schema(description = "팔로우 여부")
     private Boolean followYn;
 
+    @Schema(description = "포트폴리오 수")
+    private Integer portfolioCount;
+
+    @Schema(description = "팔로워 수")
+    private Integer followerCount;
+
+    @Schema(description = "팔로잉 수")
+    private Integer followingCount;
+
     public static FindOtherMemberRs create(Member member, Boolean followYn) {
         FindOtherMemberRs rs = new FindOtherMemberRs();
         rs.memberId = member.getId();
@@ -39,6 +48,9 @@ public class FindOtherMemberRs {
         rs.description = member.getDescription();
         rs.job = member.getJob();
         rs.followYn = followYn;
+        rs.portfolioCount = member.getPortfolioList().size();
+        rs.followerCount = member.getToMemberList().size();
+        rs.followingCount = member.getFromMemberList().size();
         return rs;
     }
 }

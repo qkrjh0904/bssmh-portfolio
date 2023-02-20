@@ -34,6 +34,15 @@ public class FindMemberSelfRs {
     @Schema(description = "직군, 직무, 작업 등")
     private String job;
 
+    @Schema(description = "포트폴리오 수")
+    private Integer portfolioCount;
+
+    @Schema(description = "팔로워 수")
+    private Integer followerCount;
+
+    @Schema(description = "팔로잉 수")
+    private Integer followingCount;
+    
     public static FindMemberSelfRs create(Member member) {
         FindMemberSelfRs rs = new FindMemberSelfRs();
         rs.memberId = member.getId();
@@ -44,6 +53,9 @@ public class FindMemberSelfRs {
         rs.description = member.getDescription();
         rs.memberRoleType = member.getMemberRoleType();
         rs.job = member.getJob();
+        rs.portfolioCount = member.getPortfolioList().size();
+        rs.followerCount = member.getToMemberList().size();
+        rs.followingCount = member.getFromMemberList().size();
         return rs;
     }
 }
