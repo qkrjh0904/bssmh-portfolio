@@ -23,7 +23,7 @@ public class Pagination {
     }
 
     private static Integer checkSize(Integer size) {
-        if (Objects.isNull(size) || size > 100) {
+        if (Objects.isNull(size) || size < 1 || size > 100) {
             return 10;
         }
 
