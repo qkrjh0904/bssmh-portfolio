@@ -17,4 +17,5 @@ public abstract class BaseCreateTimeEntity {
     @CreatedDate
     @Column(updatable = false, nullable = false)
     private LocalDateTime createdDate;
+
 }

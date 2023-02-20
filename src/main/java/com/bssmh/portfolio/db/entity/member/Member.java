@@ -5,6 +5,7 @@ import com.bssmh.portfolio.db.entity.common.BaseTimeEntity;
 import com.bssmh.portfolio.db.entity.follow.Follow;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.db.enums.MemberRoleType;
+import com.bssmh.portfolio.db.enums.MemberType;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,8 +22,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -57,12 +61,20 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private MemberRoleType memberRoleType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MemberType memberType;
+
     @Column(columnDefinition = "text")
     private String description;
 
     private String phone;
 
     private String job;
+
+    private String belong;
+
+    private LocalDate admissionDate;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Portfolio> portfolioList = new ArrayList<>();
@@ -76,15 +88,22 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "toMember", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Follow> toMemberList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberAgreement> memberAgreementList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberClassInfo> memberClassInfoArrayList = new ArrayList<>();
+
     @Builder(access = AccessLevel.PRIVATE)
     private Member(String email, String name, String nickName, String registrationId,
-                   String profileImageUrl, MemberRoleType memberRoleType) {
+                   String profileImageUrl, MemberRoleType memberRoleType, MemberType memberType) {
         this.email = email;
         this.name = name;
         this.nickName = nickName;
         this.registrationId = registrationId;
         this.profileImageUrl = profileImageUrl;
         this.memberRoleType = memberRoleType;
+        this.memberType = memberType;
     }
 
     public static Member ofNormal(String email, String name, String profileImageUrl, String registrationId) {
@@ -95,6 +114,7 @@ public class Member extends BaseTimeEntity {
                 .profileImageUrl(profileImageUrl)
                 .registrationId(registrationId)
                 .memberRoleType(MemberRoleType.ROLE_NORMAL)
+                .memberType(MemberType.EMPTY)
                 .build();
     }
 
@@ -102,10 +122,23 @@ public class Member extends BaseTimeEntity {
         this.profileImageUrl = profileImageUrl;
     }
 
-    public void update(String nickName, String description, String phone, String job) {
+    public void update(String nickName, String description, String phone, String job,
+                       MemberType memberType, String belong, String admissionDate) {
         this.nickName = nickName;
         this.description = description;
         this.phone = phone;
         this.job = job;
+        this.memberType = memberType;
+        this.belong = belong;
+        this.admissionDate = Objects.nonNull(admissionDate) ?
+                LocalDate.parse(admissionDate, DateTimeFormatter.ISO_LOCAL_DATE) : this.admissionDate;
+    }
+
+    public void update(MemberType memberType, String phone, String belong, String admissionDate) {
+        this.memberType = memberType;
+        this.phone = phone;
+        this.belong = belong;
+        this.admissionDate = Objects.nonNull(admissionDate) ?
+                LocalDate.parse(admissionDate, DateTimeFormatter.ISO_LOCAL_DATE) : this.admissionDate;
     }
 }

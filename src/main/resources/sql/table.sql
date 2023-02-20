@@ -17,12 +17,15 @@ create table member
     description        text,
     email              varchar(255) not null,
     member_role_type   varchar(255),
+    member_type        varchar(255) not null,
     name               varchar(255),
     nick_name          varchar(255),
     phone              varchar(255),
     profile_image_url  text,
     registration_id    varchar(255) not null,
     job                varchar(255),
+    belong             varchar(255),
+    admission_date     date,
     constraint uk_email_registration_id_on_member unique (email, registration_id)
 );
 
@@ -145,4 +148,26 @@ create table follow
         foreign key (from_member_id) references member (member_id),
     constraint fk_follow_to_member_id
         foreign key (to_member_id) references member (member_id)
+);
+
+create table member_agreement
+(
+    member_agreement_id bigint auto_increment primary key,
+    created_date        datetime not null,
+    member_id           bigint   not null,
+    constraint fk_member_agreement_member_id
+        foreign key (member_id) references member (member_id)
+);
+
+create table member_class_info
+(
+    member_class_info_id bigint auto_increment primary key,
+    created_date         datetime not null,
+    last_modified_date   datetime not null,
+    school_grade         int,
+    school_class         int,
+    school_number        int,
+    member_id            bigint   not null,
+    constraint fk_member_class_info_member_id
+        foreign key (member_id) references member (member_id)
 );

@@ -28,7 +28,7 @@ public class FileController {
     @PostMapping(ApiPath.FILE_UPLOAD)
     public UploadFileRs uploadFile(@AuthenticationPrincipal MemberContext memberContext,
                                    @RequestPart MultipartFile file) {
-        RoleCheckUtil.moreThanMember(memberContext.getRole());
+        RoleCheckUtil.moreThanMember(memberContext);
         return fileService.uploadFile(file);
     }
 

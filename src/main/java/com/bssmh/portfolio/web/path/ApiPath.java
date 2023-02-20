@@ -14,6 +14,7 @@ public class ApiPath {
 
     // member
     public static final String MEMBER = "/api/member";
+    public static final String MEMBER_SIGNUP = "/api/member/signup";
     public static final String MEMBER_SELF = "/api/member/self";
     public static final String MEMBER_ID = "/api/member/{member-id}";
     public static final String MEMBER_ID_MATCHER = "/api/member/{member-id:\\d+}";

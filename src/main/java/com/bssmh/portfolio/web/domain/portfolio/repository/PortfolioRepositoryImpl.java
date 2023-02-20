@@ -1,6 +1,5 @@
 package com.bssmh.portfolio.web.domain.portfolio.repository;
 
-import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.db.enums.PortfolioScope;
 import com.querydsl.core.types.dsl.BooleanExpression;
