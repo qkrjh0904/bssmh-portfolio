@@ -13,6 +13,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.bssmh.portfolio.db.entity.portfolio.QPortfolio.portfolio;
 import static com.bssmh.portfolio.db.enums.PortfolioScope.PUBLIC;
@@ -46,14 +47,15 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
         List<Portfolio> contents = jpaQueryFactory
                 .selectFrom(portfolio)
                 .where(portfolio.member.id.eq(memberId))
+                .orderBy(portfolio.sequence.asc(), portfolio.createdDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(portfolio.createdDate.desc())
                 .fetch();
 
         JPAQuery<Portfolio> countQuery = jpaQueryFactory
                 .selectFrom(portfolio)
-                .where(portfolio.member.id.eq(memberId));
+                .where(portfolio.member.id.eq(memberId))
+                .orderBy(portfolio.sequence.asc(), portfolio.createdDate.desc());
 
         return PageableExecutionUtils.getPage(contents, pageable, () -> countQuery.fetch().size());
     }
@@ -64,17 +66,29 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
                 .selectFrom(portfolio)
                 .where(portfolio.member.id.eq(memberId),
                         scopeEq(List.of(PUBLIC)))
+                .orderBy(portfolio.sequence.asc(), portfolio.createdDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(portfolio.createdDate.desc())
                 .fetch();
 
         JPAQuery<Portfolio> countQuery = jpaQueryFactory
                 .selectFrom(portfolio)
                 .where(portfolio.member.id.eq(memberId),
-                        scopeEq(List.of(PUBLIC)));
+                        scopeEq(List.of(PUBLIC)))
+                .orderBy(portfolio.sequence.asc(), portfolio.createdDate.desc());
 
         return PageableExecutionUtils.getPage(contents, pageable, () -> countQuery.fetch().size());
+    }
+
+    @Override
+    public Optional<Portfolio> findMyLastSequencePortfolio(Long memberId) {
+        return Optional.ofNullable(
+                jpaQueryFactory
+                        .selectFrom(portfolio)
+                        .where(portfolio.member.id.eq(memberId))
+                        .orderBy(portfolio.sequence.desc())
+                        .fetchFirst()
+        );
     }
 
     private BooleanExpression scopeEq(List<PortfolioScope> portfolioScopeList) {

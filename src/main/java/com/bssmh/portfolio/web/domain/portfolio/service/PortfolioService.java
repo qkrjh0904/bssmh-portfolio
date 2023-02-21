@@ -8,12 +8,22 @@ import com.bssmh.portfolio.web.domain.file.service.AttachFileService;
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.BookmarkPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.DeletePortfolioRq;
+import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpdatePortfolioSequenceRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpsertPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.repository.PortfolioRepository;
 import com.bssmh.portfolio.web.exception.DoNotHavePermissionToModifyPortfolioException;
+import com.bssmh.portfolio.web.exception.PortfolioSequenceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.bssmh.portfolio.db.enums.MemberRoleType.ROLE_ADMIN;
 
@@ -36,6 +46,8 @@ public class PortfolioService {
 
     public void savePortfolio(MemberContext memberContext, UpsertPortfolioRq rq) {
         Member member = findMemberService.findLoginMember(memberContext);
+        Portfolio myLastSequencePortfolio = findPortfolioService.findMyLastSequencePortfolio(member.getId());
+        int sequence = Objects.isNull(myLastSequencePortfolio) ? 1 : myLastSequencePortfolio.getSequence() + 1;
 
         AttachFile video = attachFileService.findByFileUidOrElseNull(rq.getVideoFileUid());
         AttachFile thumbnail = attachFileService.findByFileUidOrElseNull(rq.getThumbnailFileUid());
@@ -49,6 +61,7 @@ public class PortfolioService {
                 rq.getPortfolioUrl(),
                 rq.getGitUrl(),
                 rq.getPortfolioScope(),
+                sequence,
                 member);
         portfolioRepository.save(portfolio);
 
@@ -108,6 +121,42 @@ public class PortfolioService {
         Member member = findMemberService.findLoginMember(memberContext);
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(rq.getPortfolioId());
         bookmarkService.toggleBookmarkPortfolio(member, portfolio);
+    }
+
+    public void updatePortfolioSequence(MemberContext memberContext, UpdatePortfolioSequenceRq rq) {
+        List<Long> portfolioIdList = rq.getPortfolioIdList();
+        if (ObjectUtils.isEmpty(portfolioIdList)) {
+            return;
+        }
+
+        Member loginMember = findMemberService.findLoginMember(memberContext);
+        List<Portfolio> portfolioList = loginMember.getPortfolioList();
+
+        updatePortfolioSequenceValidationCheck(portfolioList, portfolioIdList);
+        Map<Long, Portfolio> portfolioMap = portfolioList.stream()
+                .collect(Collectors.toMap(Portfolio::getId, Function.identity()));
+
+        for (int index = 0; index < portfolioIdList.size(); ++index) {
+            Long portfolioId = portfolioIdList.get(index);
+            Portfolio portfolio = portfolioMap.get(portfolioId);
+            portfolio.updateSequence(index);
+        }
+    }
+
+    private void updatePortfolioSequenceValidationCheck(List<Portfolio> portfolioList, List<Long> portfolioIdList) {
+        Set<Long> portfolioIdSet = portfolioList.stream()
+                .map(Portfolio::getId)
+                .collect(Collectors.toSet());
+
+        if (portfolioIdSet.size() != portfolioIdList.size()) {
+            throw new PortfolioSequenceException();
+        }
+
+        portfolioIdList.forEach(portfolioId -> {
+            if (!portfolioIdSet.contains(portfolioId)) {
+                throw new PortfolioSequenceException();
+            }
+        });
     }
 
 }

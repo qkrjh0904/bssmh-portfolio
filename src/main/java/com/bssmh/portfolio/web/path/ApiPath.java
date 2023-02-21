@@ -21,6 +21,7 @@ public class ApiPath {
 
     // portfolio
     public static final String PORTFOLIO = "/api/portfolio";
+    public static final String PORTFOLIO_SEQUENCE = "/api/portfolio/sequence";
     public static final String PORTFOLIO_BOOKMARK = "/api/portfolio/bookmark";
     public static final String PORTFOLIO_ID = "/api/portfolio/{portfolio-id}";
     public static final String PORTFOLIO_ID_MATCHER = "/api/portfolio/{portfolio-id:\\d+}";

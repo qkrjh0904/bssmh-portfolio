@@ -127,4 +127,9 @@ public class FindPortfolioService {
                 .map(Bookmark::getId)
                 .collect(Collectors.toSet());
     }
+
+    public Portfolio findMyLastSequencePortfolio(Long memberId) {
+        return portfolioRepository.findMyLastSequencePortfolio(memberId)
+                .orElse(null);
+    }
 }

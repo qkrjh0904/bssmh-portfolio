@@ -71,6 +71,9 @@ public class Portfolio extends BaseTimeEntity {
     @Column(nullable = false)
     private Long views;
 
+    @Column(nullable = false)
+    private Integer sequence;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -89,7 +92,7 @@ public class Portfolio extends BaseTimeEntity {
 
     public static Portfolio create(PortfolioType portfolioType, String title, String description,
                                    AttachFile video, AttachFile thumbnail, String portfolioUrl, String gitUrl,
-                                   PortfolioScope portfolioScope, Member member) {
+                                   PortfolioScope portfolioScope, Integer sequence, Member member) {
         Portfolio portfolio = new Portfolio();
         portfolio.portfolioType = portfolioType;
         portfolio.title = title;
@@ -100,6 +103,7 @@ public class Portfolio extends BaseTimeEntity {
         portfolio.gitUrl = gitUrl;
         portfolio.portfolioScope = portfolioScope;
         portfolio.views = 0L;
+        portfolio.sequence = sequence;
         portfolio.member = member;
         return portfolio;
     }
@@ -131,4 +135,7 @@ public class Portfolio extends BaseTimeEntity {
         this.bookmarkList.add(bookmark);
     }
 
+    public void updateSequence(Integer sequence) {
+        this.sequence = sequence;
+    }
 }

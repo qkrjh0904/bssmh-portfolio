@@ -3,6 +3,7 @@ package com.bssmh.portfolio.web.domain.portfolio.controller;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.BookmarkPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.DeletePortfolioRq;
+import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpdatePortfolioSequenceRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpsertPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.service.PortfolioService;
 import com.bssmh.portfolio.web.path.ApiPath;
@@ -46,12 +47,19 @@ public class PortfolioController {
         portfolioService.updatePortfolio(memberContext, rq);
     }
 
-    @Operation(summary = "포트폴리오 좋아요",
-            description = "toggle 방식")
+    @Operation(summary = "포트폴리오 좋아요", description = "toggle 방식")
     @PutMapping(ApiPath.PORTFOLIO_BOOKMARK)
     public void bookmarkPortfolio(@AuthenticationPrincipal MemberContext memberContext,
                                   @Validated @RequestBody BookmarkPortfolioRq rq) {
         portfolioService.bookmarkPortfolio(memberContext, rq);
     }
+
+    @Operation(summary = "포트폴리오 순서 정렬")
+    @PutMapping(ApiPath.PORTFOLIO_SEQUENCE)
+    public void updatePortfolioSequence(@AuthenticationPrincipal MemberContext memberContext,
+                                        @Validated @RequestBody UpdatePortfolioSequenceRq rq) {
+        portfolioService.updatePortfolioSequence(memberContext, rq);
+    }
+
 
 }
