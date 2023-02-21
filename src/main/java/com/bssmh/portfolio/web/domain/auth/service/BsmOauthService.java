@@ -7,14 +7,15 @@ import com.bssmh.portfolio.web.exception.AuthenticationException;
 import com.bssmh.portfolio.web.exception.InvalidBsmOauthClientException;
 import com.bssmh.portfolio.web.exception.NoSuchBsmAuthCodeException;
 import com.bssmh.portfolio.web.security.OAuthAttributes;
+import com.bssmh.portfolio.web.security.PrincipalConstants;
 import leehj050211.bsmOauth.BsmOauth;
-import leehj050211.bsmOauth.dto.response.BsmResourceResponse;
-import leehj050211.bsmOauth.dto.response.BsmStudentResponse;
-import leehj050211.bsmOauth.dto.response.BsmTeacherResponse;
-import leehj050211.bsmOauth.exceptions.BsmAuthCodeNotFoundException;
-import leehj050211.bsmOauth.exceptions.BsmAuthInvalidClientException;
-import leehj050211.bsmOauth.exceptions.BsmAuthTokenNotFoundException;
-import leehj050211.bsmOauth.type.BsmAuthUserRole;
+import leehj050211.bsmOauth.dto.resource.BsmStudent;
+import leehj050211.bsmOauth.dto.resource.BsmTeacher;
+import leehj050211.bsmOauth.dto.resource.BsmUserResource;
+import leehj050211.bsmOauth.exception.BsmOAuthCodeNotFoundException;
+import leehj050211.bsmOauth.exception.BsmOAuthInvalidClientException;
+import leehj050211.bsmOauth.exception.BsmOAuthTokenNotFoundException;
+import leehj050211.bsmOauth.type.BsmUserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +40,7 @@ public class BsmOauthService {
 
     public JwtTokenDto bsmLogin(String code) {
         try {
-            BsmResourceResponse resource = getResource(code);
+            BsmUserResource resource = getResource(code);
 
             Map<String, Object> attributes = toAttributes(resource);
             OAuthAttributes oAuthAttributes = OAuthAttributes.create(BSM.getClientId(), attributes);
@@ -52,39 +53,38 @@ public class BsmOauthService {
         }
     }
 
-    private BsmResourceResponse getResource(String authCode) throws IOException {
+    private BsmUserResource getResource(String authCode) throws IOException {
         try {
             String token = bsmOauth.getToken(authCode);
             return bsmOauth.getResource(token);
-        } catch (BsmAuthCodeNotFoundException | BsmAuthTokenNotFoundException e) {
+        } catch (BsmOAuthCodeNotFoundException | BsmOAuthTokenNotFoundException e) {
             throw new NoSuchBsmAuthCodeException();
-        } catch (BsmAuthInvalidClientException e) {
+        } catch (BsmOAuthInvalidClientException e) {
             throw new InvalidBsmOauthClientException();
         }
     }
 
-    private Map<String, Object> toAttributes(BsmResourceResponse resource) {
+    private Map<String, Object> toAttributes(BsmUserResource resource) {
         Map<String, Object> attributes = new HashMap<>();
+        attributes.put(PrincipalConstants.EMAIL, resource.getEmail());
+        attributes.put(PrincipalConstants.PICTURE, resource.getProfileUrl());
 
-        attributes.put("code", resource.getUserCode());
-        attributes.put("email", resource.getEmail());
-
-        if (resource.getRole().equals(BsmAuthUserRole.STUDENT)) {
+        if (resource.getRole().equals(BsmUserRole.STUDENT)) {
             ofStudent(resource.getStudent(), attributes);
         }
-        if (resource.getRole().equals(BsmAuthUserRole.TEACHER)) {
+        if (resource.getRole().equals(BsmUserRole.TEACHER)) {
             ofTeacher(resource.getTeacher(), attributes);
         }
 
         return attributes;
     }
 
-    private void ofStudent(BsmStudentResponse student, Map<String, Object> attributes) {
-        attributes.put("name", student.getName());
+    private void ofStudent(BsmStudent student, Map<String, Object> attributes) {
+        attributes.put(PrincipalConstants.NAME, student.getName());
     }
 
-    private void ofTeacher(BsmTeacherResponse teacher, Map<String, Object> attributes) {
-        attributes.put("name", teacher.getName());
+    private void ofTeacher(BsmTeacher teacher, Map<String, Object> attributes) {
+        attributes.put(PrincipalConstants.NAME, teacher.getName());
     }
 
 }
