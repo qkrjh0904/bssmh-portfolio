@@ -9,6 +9,7 @@ import com.bssmh.portfolio.db.enums.PortfolioScope;
 import com.bssmh.portfolio.db.enums.PortfolioType;
 import com.bssmh.portfolio.web.domain.dto.AttachFileDto;
 import com.bssmh.portfolio.web.domain.dto.MemberDto;
+import com.bssmh.portfolio.web.domain.dto.PortfolioSkillDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -52,7 +53,7 @@ public class FindPortfolioDetailRs {
     private String gitUrl;
 
     @Schema(description = "기술스택 리스트")
-    private List<String> skillList;
+    private List<PortfolioSkillDto> skillList;
 
     @Schema(description = "참여자 멤버 리스트")
     private List<MemberDto> contributorList;
@@ -109,9 +110,9 @@ public class FindPortfolioDetailRs {
                 .collect(Collectors.toList());
     }
 
-    private static List<String> getSkillList(List<PortfolioSkill> portfolioSkillList) {
+    private static List<PortfolioSkillDto> getSkillList(List<PortfolioSkill> portfolioSkillList) {
         return portfolioSkillList.stream()
-                .map(PortfolioSkill::getSkillName)
+                .map(PortfolioSkillDto::create)
                 .collect(Collectors.toList());
     }
 
