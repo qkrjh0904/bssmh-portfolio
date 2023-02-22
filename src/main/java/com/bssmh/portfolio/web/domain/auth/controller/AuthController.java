@@ -1,10 +1,8 @@
 package com.bssmh.portfolio.web.domain.auth.controller;
 
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
-import com.bssmh.portfolio.web.domain.auth.controller.rq.BsmOauthRq;
 import com.bssmh.portfolio.web.domain.auth.controller.rq.OAuth2Rq;
 import com.bssmh.portfolio.web.domain.auth.service.AuthService;
-import com.bssmh.portfolio.web.domain.auth.service.BsmOauthService;
 import com.bssmh.portfolio.web.domain.auth.service.OAuth2Service;
 import com.bssmh.portfolio.web.domain.dto.JwtTokenDto;
 import com.bssmh.portfolio.web.path.ApiPath;
@@ -22,16 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final BsmOauthService bsmOauthService;
     private final OAuth2Service oAuth2Service;
     private final AuthService authService;
-
-    @Deprecated
-    @Operation(summary = "BSM OAuth 로그인")
-    @PostMapping(ApiPath.BSM_OAUTH)
-    public JwtTokenDto bsmLogin(@Validated @RequestBody BsmOauthRq rq) {
-        return bsmOauthService.bsmLogin(rq.getAuthCode());
-    }
 
     @Operation(summary = "OAuth 로그인")
     @PostMapping(ApiPath.LOGIN_OAUTH2)
