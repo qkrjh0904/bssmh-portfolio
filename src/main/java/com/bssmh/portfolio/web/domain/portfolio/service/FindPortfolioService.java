@@ -1,10 +1,12 @@
 package com.bssmh.portfolio.web.domain.portfolio.service;
 
 import com.bssmh.portfolio.db.entity.bookmark.Bookmark;
+import com.bssmh.portfolio.db.entity.follow.Follow;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.db.enums.PortfolioScope;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
+import com.bssmh.portfolio.web.domain.follow.repository.FollowRepository;
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rs.FindPortfolioDetailRs;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rs.FindPortfolioListRs;
@@ -33,11 +35,29 @@ public class FindPortfolioService {
     private final PortfolioRepository portfolioRepository;
     private final FindMemberService findMemberService;
     private final FindBookmarkService findBookmarkService;
+    private final FollowRepository followRepository;
 
     public FindPortfolioDetailRs findPortfolio(MemberContext memberContext, Long portfolioId) {
         Portfolio portfolio = findByIdOrElseThrow(portfolioId);
         validationCheck(memberContext, portfolio);
-        return FindPortfolioDetailRs.create(portfolio);
+        Boolean bookmarkYn = getBookmarkYn(memberContext, portfolio);
+        Boolean followYn = getFollowYn(memberContext, portfolio.getMember());
+        return FindPortfolioDetailRs.create(portfolio, bookmarkYn, followYn);
+    }
+
+    private Boolean getBookmarkYn(MemberContext memberContext, Portfolio portfolio) {
+        Set<Long> bookmarkedPortfolioIdSet = getMyBookmarkedPortfolioIdSet(memberContext);
+        return bookmarkedPortfolioIdSet.contains(portfolio.getId());
+    }
+
+    private Boolean getFollowYn(MemberContext memberContext, Member writer) {
+        if (Objects.isNull(memberContext)) {
+            return false;
+        }
+
+        Member loginMember = findMemberService.findLoginMember(memberContext);
+        Follow follow = followRepository.findByFromMemberAndToMember(loginMember, writer).orElse(null);
+        return Objects.nonNull(follow);
     }
 
     /**
@@ -83,7 +103,7 @@ public class FindPortfolioService {
     }
 
     private Set<Long> getMyBookmarkedPortfolioIdSet(MemberContext memberContext) {
-        if(Objects.isNull(memberContext)){
+        if (Objects.isNull(memberContext)) {
             return new HashSet<>();
         }
 

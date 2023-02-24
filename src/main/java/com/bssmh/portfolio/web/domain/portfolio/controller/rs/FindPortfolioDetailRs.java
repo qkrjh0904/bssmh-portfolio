@@ -61,6 +61,12 @@ public class FindPortfolioDetailRs {
     @Schema(description = "좋아요수")
     private Long bookmarks;
 
+    @Schema(description = "좋아요 여부")
+    private Boolean bookmarkYn;
+
+    @Schema(description = "팔로우 여부")
+    private Boolean followYn;
+
     @Schema(description = "조회수")
     private Long views;
 
@@ -70,7 +76,7 @@ public class FindPortfolioDetailRs {
     @Schema(description = "생성일", pattern = "yyyy-MM-ddThh:mm:ss")
     private LocalDateTime createdDate;
 
-    public static FindPortfolioDetailRs create(Portfolio portfolio) {
+    public static FindPortfolioDetailRs create(Portfolio portfolio, Boolean bookmarkYn, Boolean followYn) {
         FindPortfolioDetailRs rs = new FindPortfolioDetailRs();
         rs.portfolioId = portfolio.getId();
         rs.writer = getWriter(portfolio.getMember());
@@ -85,6 +91,8 @@ public class FindPortfolioDetailRs {
         rs.skillList = getSkillList(portfolio.getPortfolioSkillList());
         rs.contributorList = getContributorList(portfolio.getContributorList());
         rs.bookmarks = getBookmarks(portfolio);
+        rs.bookmarkYn = bookmarkYn;
+        rs.followYn = followYn;
         rs.views = portfolio.getViews();
         rs.comments = getComments(portfolio);
         rs.createdDate = portfolio.getCreatedDate();
