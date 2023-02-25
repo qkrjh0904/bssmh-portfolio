@@ -34,7 +34,7 @@ public class ProductionDataSourceConfig {
         hikariConfig.setJdbcUrl(jdbcUrl);
         hikariConfig.setUsername(username);
         hikariConfig.setPassword(password);
-        hikariConfig.setMaximumPoolSize(51);
+        hikariConfig.setMaximumPoolSize(21);
         return hikariConfig;
     }
 }
