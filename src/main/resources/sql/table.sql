@@ -6,7 +6,7 @@ create table attach_file
     file_name          varchar(255) not null,
     file_path          varchar(255) not null,
     file_size          bigint       not null,
-    file_uid           varchar(255) not null unique,
+    file_uid           varchar(255) not null unique
 );
 
 create table member
