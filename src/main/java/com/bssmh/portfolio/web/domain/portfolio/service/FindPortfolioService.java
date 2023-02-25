@@ -62,13 +62,14 @@ public class FindPortfolioService {
 
     /**
      * 자신의 글이 아니라면 protected 까지 공개
+     * 로그인 안했으면 protected 까지 공개
      */
     private void validationCheck(MemberContext memberContext, Portfolio portfolio) {
-        // 로그인 안했으면 public 만 가능
+        if (PortfolioScope.getMoreThanProtected(portfolio.getPortfolioScope())) {
+            return;
+        }
+
         if (Objects.isNull(memberContext)) {
-            if (PortfolioScope.getMoreThanProtected(portfolio.getPortfolioScope())) {
-                return;
-            }
             throw new AccessDeniedException();
         }
 

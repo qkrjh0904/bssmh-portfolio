@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
@@ -100,6 +101,9 @@ public class FindPortfolioDetailRs {
     }
 
     private static AttachFileDto getVideo(AttachFile video) {
+        if (Objects.isNull(video)) {
+            return null;
+        }
         return AttachFileDto.create(video);
     }
 

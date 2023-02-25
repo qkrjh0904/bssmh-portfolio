@@ -3,6 +3,7 @@ package com.bssmh.portfolio.web.domain.portfolio.service;
 import com.bssmh.portfolio.db.entity.attachfile.AttachFile;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
+import com.bssmh.portfolio.db.enums.PortfolioType;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.file.service.AttachFileService;
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
@@ -12,11 +13,14 @@ import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpdatePortfolioSeq
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpsertPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.repository.PortfolioRepository;
 import com.bssmh.portfolio.web.exception.DoNotHavePermissionToModifyPortfolioException;
+import com.bssmh.portfolio.web.exception.NoSuchAttachFileException;
 import com.bssmh.portfolio.web.exception.PortfolioSequenceException;
+import com.bssmh.portfolio.web.exception.PortfolioUrlEmptyException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +30,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.bssmh.portfolio.db.enums.MemberRoleType.ROLE_ADMIN;
+import static com.bssmh.portfolio.db.enums.PortfolioType.URL;
 
 @Service
 @RequiredArgsConstructor
@@ -45,12 +50,13 @@ public class PortfolioService {
     private final PortfolioRepository portfolioRepository;
 
     public void savePortfolio(MemberContext memberContext, UpsertPortfolioRq rq) {
+        validationCheck(rq);
         Member member = findMemberService.findLoginMember(memberContext);
         Portfolio myLastSequencePortfolio = findPortfolioService.findMyLastSequencePortfolio(member.getId());
         int sequence = Objects.isNull(myLastSequencePortfolio) ? 1 : myLastSequencePortfolio.getSequence() + 1;
 
         AttachFile video = attachFileService.findByFileUidOrElseNull(rq.getVideoFileUid());
-        AttachFile thumbnail = attachFileService.findByFileUidOrElseNull(rq.getThumbnailFileUid());
+        AttachFile thumbnail = attachFileService.findByFileUidOrElseThrow(rq.getThumbnailFileUid());
 
         Portfolio portfolio = Portfolio.create(
                 rq.getPortfolioType(),
@@ -68,6 +74,17 @@ public class PortfolioService {
         upsertRelationShip(rq, portfolio);
     }
 
+    private void validationCheck(UpsertPortfolioRq rq) {
+        PortfolioType portfolioType = rq.getPortfolioType();
+        if (URL.equals(portfolioType) && !StringUtils.hasText(rq.getPortfolioUrl())) {
+            throw new PortfolioUrlEmptyException();
+        }
+
+        if (Objects.isNull(rq.getThumbnailFileUid())) {
+            throw new NoSuchAttachFileException();
+        }
+    }
+
     private void upsertRelationShip(UpsertPortfolioRq rq, Portfolio portfolio) {
         portfolioSkillService.upsert(rq.getSkillList(), portfolio);
         contributorService.upsert(rq.getContributorIdList(), portfolio);
@@ -82,6 +99,7 @@ public class PortfolioService {
     }
 
     public void updatePortfolio(MemberContext memberContext, UpsertPortfolioRq rq) {
+        validationCheck(rq);
         Member member = findMemberService.findLoginMember(memberContext);
         Long portfolioId = rq.getPortfolioId();
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(portfolioId);
