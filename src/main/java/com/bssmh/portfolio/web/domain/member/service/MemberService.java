@@ -35,7 +35,7 @@ public class MemberService {
                 rq.getJob(),
                 rq.getMemberType(),
                 rq.getBelong(),
-                rq.getAdmissionDate());
+                rq.getAdmissionYear());
 
         MemberClassInfo memberClassInfo = memberClassInfoService.
                 findByMemberIdAndSchoolGradeOrElseNull(member.getId(), rq.getSchoolGrade());
@@ -49,7 +49,7 @@ public class MemberService {
                 rq.getMemberType(),
                 rq.getPhone(),
                 rq.getBelong(),
-                rq.getAdmissionDate());
+                rq.getAdmissionYear());
 
         memberClassInfoService.save(rq.getSchoolGrade(), rq.getSchoolClass(), rq.getSchoolNumber(), member);
         memberAgreementService.save(member);

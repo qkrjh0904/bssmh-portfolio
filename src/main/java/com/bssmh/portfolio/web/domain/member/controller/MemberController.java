@@ -3,10 +3,12 @@ package com.bssmh.portfolio.web.domain.member.controller;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.member.controller.rq.SignupMemberRq;
 import com.bssmh.portfolio.web.domain.member.controller.rq.UpdateMemberRq;
+import com.bssmh.portfolio.web.domain.member.controller.rs.FindMemberListByNameRs;
 import com.bssmh.portfolio.web.domain.member.controller.rs.FindMemberSelfRs;
 import com.bssmh.portfolio.web.domain.member.controller.rs.FindOtherMemberRs;
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
 import com.bssmh.portfolio.web.domain.member.service.MemberService;
+import com.bssmh.portfolio.web.endpoint.ListResponse;
 import com.bssmh.portfolio.web.path.ApiPath;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "멤버")
@@ -32,6 +35,13 @@ public class MemberController {
     @GetMapping(ApiPath.MEMBER_SELF)
     public FindMemberSelfRs findMemberSelf(@AuthenticationPrincipal MemberContext memberContext) {
         return findMemberService.findMemberSelf(memberContext);
+    }
+
+    @Operation(summary = "이름으로 멤버 조회")
+    @GetMapping(ApiPath.MEMBER_NAME)
+    public ListResponse<FindMemberListByNameRs> findMemberListByName(@AuthenticationPrincipal MemberContext memberContext,
+                                                                     @RequestParam("name") String name) {
+        return findMemberService.findMemberListByName(memberContext, name);
     }
 
     @Operation(summary = "다른 멤버 조회", description = "일부 정보만 제공")

@@ -22,8 +22,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -74,7 +72,7 @@ public class Member extends BaseTimeEntity {
 
     private String belong;
 
-    private LocalDate admissionDate;
+    private Integer admissionYear;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Portfolio> portfolioList = new ArrayList<>();
@@ -123,22 +121,20 @@ public class Member extends BaseTimeEntity {
     }
 
     public void update(String nickName, String description, String phone, String job,
-                       MemberType memberType, String belong, String admissionDate) {
+                       MemberType memberType, String belong, Integer admissionYear) {
         this.nickName = nickName;
         this.description = description;
         this.phone = phone;
         this.job = job;
         this.memberType = memberType;
         this.belong = belong;
-        this.admissionDate = Objects.nonNull(admissionDate) ?
-                LocalDate.parse(admissionDate, DateTimeFormatter.ISO_LOCAL_DATE) : this.admissionDate;
+        this.admissionYear = Objects.isNull(admissionYear) ? this.admissionYear : admissionYear;
     }
 
-    public void update(MemberType memberType, String phone, String belong, String admissionDate) {
+    public void update(MemberType memberType, String phone, String belong, Integer admissionYear) {
         this.memberType = memberType;
         this.phone = phone;
         this.belong = belong;
-        this.admissionDate = Objects.nonNull(admissionDate) ?
-                LocalDate.parse(admissionDate, DateTimeFormatter.ISO_LOCAL_DATE) : this.admissionDate;
+        this.admissionYear = Objects.isNull(admissionYear) ? this.admissionYear : admissionYear;
     }
 }

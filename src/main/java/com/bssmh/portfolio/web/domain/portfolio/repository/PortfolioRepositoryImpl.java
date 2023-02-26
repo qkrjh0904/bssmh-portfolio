@@ -2,6 +2,12 @@ package com.bssmh.portfolio.web.domain.portfolio.repository;
 
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.db.enums.PortfolioScope;
+import com.bssmh.portfolio.db.enums.PortfolioSortType;
+import com.bssmh.portfolio.db.enums.SortDirectionType;
+import com.bssmh.portfolio.db.enums.UploadDateType;
+import com.bssmh.portfolio.web.domain.portfolio.controller.rq.SearchPortfolioFilterRq;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -12,11 +18,15 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.bssmh.portfolio.db.entity.portfolio.QPortfolio.portfolio;
 import static com.bssmh.portfolio.db.enums.PortfolioScope.PUBLIC;
+import static com.bssmh.portfolio.db.enums.SortDirectionType.ASC;
 
 @RequiredArgsConstructor
 public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
@@ -24,22 +34,82 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<Portfolio> findPortfolioListBySearch(String search, Pageable pageable) {
+    public Page<Portfolio> findPortfolioListBySearch(SearchPortfolioFilterRq filter, Pageable pageable) {
         List<Portfolio> contents = jpaQueryFactory
                 .selectFrom(portfolio)
-                .where(searchEq(search),
+                .where(searchEq(filter.getSearch()),
+                        uploadDateEq(filter.getUploadDateType()),
+                        schoolGradeEq(filter.getSchoolGrade()),
                         scopeEq(List.of(PUBLIC)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(portfolio.views.desc(), portfolio.createdDate.desc())
+                .orderBy(getOrderBy(filter.getSortType(), filter.getSortDirectionType()))
                 .fetch();
 
         JPAQuery<Portfolio> countQuery = jpaQueryFactory
                 .selectFrom(portfolio)
-                .where(searchEq(search),
+                .where(searchEq(filter.getSearch()),
                         scopeEq(List.of(PUBLIC)));
 
         return PageableExecutionUtils.getPage(contents, pageable, () -> countQuery.fetch().size());
+    }
+
+    private OrderSpecifier<?>[] getOrderBy(PortfolioSortType sortType, SortDirectionType sortDirectionType) {
+        List<OrderSpecifier<?>> orderSpecifierList = new ArrayList<>();
+        if (Objects.isNull(sortType)) {
+            orderSpecifierList.add(new OrderSpecifier<>(Order.DESC, portfolio.views).nullsLast());
+            orderSpecifierList.add(new OrderSpecifier<>(Order.DESC, portfolio.createdDate).nullsLast());
+            return orderSpecifierList.toArray(OrderSpecifier<?>[]::new);
+        }
+
+        Order order = (Objects.nonNull(sortDirectionType) && ASC.equals(sortDirectionType)) ? Order.ASC : Order.DESC;
+
+        switch (sortType) {
+            case UPLOAD_DATE:
+                orderSpecifierList.add(new OrderSpecifier<>(order, portfolio.createdDate).nullsLast());
+                break;
+            case VIEWS:
+            case RANK:
+                orderSpecifierList.add(new OrderSpecifier<>(order, portfolio.views).nullsLast());
+                break;
+            case BOOKMARKS:
+                orderSpecifierList.add(new OrderSpecifier<>(order, portfolio.bookmarkList.size()).nullsLast());
+                break;
+            case COMMENTS:
+                orderSpecifierList.add(new OrderSpecifier<>(order, portfolio.commentList.size()).nullsLast());
+                break;
+        }
+
+        orderSpecifierList.add(new OrderSpecifier<>(Order.DESC, portfolio.views).nullsLast());
+        orderSpecifierList.add(new OrderSpecifier<>(Order.DESC, portfolio.createdDate).nullsLast());
+        return orderSpecifierList.toArray(OrderSpecifier<?>[]::new);
+    }
+
+    private BooleanExpression schoolGradeEq(Integer schoolGrade) {
+        if (Objects.isNull(schoolGrade)) {
+            return null;
+        }
+        return portfolio.schoolGrade.eq(schoolGrade);
+    }
+
+    private BooleanExpression uploadDateEq(UploadDateType uploadDateType) {
+        if (Objects.isNull(uploadDateType)) {
+            return null;
+        }
+        switch (uploadDateType) {
+            case AN_HOUR_AGO:
+                return portfolio.createdDate.before(LocalDateTime.now().plusHours(1));
+            case TODAY:
+                return portfolio.createdDate.before(LocalDateTime.now().plusDays(1));
+            case THIS_WEEK:
+                return portfolio.createdDate.before(LocalDateTime.now().plusWeeks(1));
+            case THIS_MONTH:
+                return portfolio.createdDate.before(LocalDateTime.now().plusMonths(1));
+            case THIS_YEAR:
+                return portfolio.createdDate.before(LocalDateTime.now().plusYears(1));
+            default:
+                return null;
+        }
     }
 
     @Override

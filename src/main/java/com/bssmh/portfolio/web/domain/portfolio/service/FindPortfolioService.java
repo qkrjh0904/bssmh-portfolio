@@ -8,6 +8,7 @@ import com.bssmh.portfolio.db.enums.PortfolioScope;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.follow.repository.FollowRepository;
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
+import com.bssmh.portfolio.web.domain.portfolio.controller.rq.SearchPortfolioFilterRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rs.FindPortfolioDetailRs;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rs.FindPortfolioListRs;
 import com.bssmh.portfolio.web.domain.portfolio.repository.PortfolioRepository;
@@ -42,6 +43,7 @@ public class FindPortfolioService {
         validationCheck(memberContext, portfolio);
         Boolean bookmarkYn = getBookmarkYn(memberContext, portfolio);
         Boolean followYn = getFollowYn(memberContext, portfolio.getMember());
+        portfolio.plusViewsCount();
         return FindPortfolioDetailRs.create(portfolio, bookmarkYn, followYn);
     }
 
@@ -90,10 +92,10 @@ public class FindPortfolioService {
     }
 
 
-    public PagedResponse<FindPortfolioListRs> searchPortfolioList(MemberContext memberContext, Pagination pagination, String search) {
+    public PagedResponse<FindPortfolioListRs> searchPortfolioList(MemberContext memberContext, Pagination pagination, SearchPortfolioFilterRq filter) {
         Set<Long> bookmarkedPortfolioIdSet = getMyBookmarkedPortfolioIdSet(memberContext);
         PageRequest pageRequest = pagination.toPageRequest();
-        Page<Portfolio> portfolioListBySearch = portfolioRepository.findPortfolioListBySearch(search, pageRequest);
+        Page<Portfolio> portfolioListBySearch = portfolioRepository.findPortfolioListBySearch(filter, pageRequest);
         List<FindPortfolioListRs> findPortfolioListRsList = portfolioListBySearch.getContent().stream()
                 .map(portfolio -> FindPortfolioListRs.create(portfolio, bookmarkedPortfolioIdSet))
                 .collect(Collectors.toList());

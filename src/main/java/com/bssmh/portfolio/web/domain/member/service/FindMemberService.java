@@ -4,15 +4,19 @@ import com.bssmh.portfolio.db.entity.follow.Follow;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.follow.repository.FollowRepository;
+import com.bssmh.portfolio.web.domain.member.controller.rs.FindMemberListByNameRs;
 import com.bssmh.portfolio.web.domain.member.controller.rs.FindMemberSelfRs;
 import com.bssmh.portfolio.web.domain.member.controller.rs.FindOtherMemberRs;
 import com.bssmh.portfolio.web.domain.member.repository.MemberRepository;
+import com.bssmh.portfolio.web.endpoint.ListResponse;
 import com.bssmh.portfolio.web.exception.NoSuchMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -58,5 +62,13 @@ public class FindMemberService {
         String email = memberContext.getEmail();
         String registrationId = memberContext.getRegistrationId();
         return this.findByEmailAndRegistrationIdOrElseThrow(email, registrationId);
+    }
+
+    public ListResponse<FindMemberListByNameRs> findMemberListByName(MemberContext memberContext, String name) {
+        Member loginMember = findLoginMember(memberContext);
+        List<FindMemberListByNameRs> findMemberListByNameRsList = memberRepository.findMemberListByName(loginMember, name).stream()
+                .map(FindMemberListByNameRs::create)
+                .collect(Collectors.toList());
+        return ListResponse.create(findMemberListByNameRsList);
     }
 }

@@ -13,9 +13,8 @@ import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpdatePortfolioSeq
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpsertPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.repository.PortfolioRepository;
 import com.bssmh.portfolio.web.exception.DoNotHavePermissionToModifyPortfolioException;
-import com.bssmh.portfolio.web.exception.NoSuchAttachFileException;
+import com.bssmh.portfolio.web.exception.PortfolioEmptyException;
 import com.bssmh.portfolio.web.exception.PortfolioSequenceException;
-import com.bssmh.portfolio.web.exception.PortfolioUrlEmptyException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,11 +76,7 @@ public class PortfolioService {
     private void validationCheck(UpsertPortfolioRq rq) {
         PortfolioType portfolioType = rq.getPortfolioType();
         if (URL.equals(portfolioType) && !StringUtils.hasText(rq.getPortfolioUrl())) {
-            throw new PortfolioUrlEmptyException();
-        }
-
-        if (Objects.isNull(rq.getThumbnailFileUid())) {
-            throw new NoSuchAttachFileException();
+            throw new PortfolioEmptyException("Portfolio URL");
         }
     }
 

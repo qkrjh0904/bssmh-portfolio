@@ -41,7 +41,7 @@ public class FindPortfolioController {
                                                                   @Validated @RequestBody SearchPortfolioListRq rq) {
         PaginationRq paginationRq = rq.getPagination();
         Pagination pagination = Pagination.create(paginationRq.getPage(), paginationRq.getSize());
-        return findPortfolioService.searchPortfolioList(memberContext, pagination, rq.getFilter().getSearch());
+        return findPortfolioService.searchPortfolioList(memberContext, pagination, rq.getFilter());
     }
 
     @Operation(summary = "내 포트폴리오 리스트 조회", description = "PUBLIC/PRIVATE/PROTECTED 포트폴리오 모두 조회")

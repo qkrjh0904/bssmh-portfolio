@@ -6,6 +6,7 @@ import com.bssmh.portfolio.web.domain.dto.PortfolioSkillDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -14,7 +15,8 @@ public class UpsertPortfolioRq {
 
     @Schema(description = "포트폴리오 id")
     private Long portfolioId;
-    
+
+    @NotEmpty
     @Schema(description = "제목")
     private String title;
     
@@ -27,6 +29,7 @@ public class UpsertPortfolioRq {
     @Schema(description = "포트폴리오 url")
     private String portfolioUrl;
 
+    @NotEmpty
     @Schema(description = "포트폴리오 썸네일 uid")
     private String thumbnailFileUid;
 

@@ -74,6 +74,8 @@ public class Portfolio extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer sequence;
 
+    private Integer schoolGrade;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -131,11 +133,11 @@ public class Portfolio extends BaseTimeEntity {
         this.contributorList.addAll(contributorList);
     }
 
-    public void addBookmarkList(Bookmark bookmark) {
-        this.bookmarkList.add(bookmark);
-    }
-
     public void updateSequence(Integer sequence) {
         this.sequence = sequence;
+    }
+
+    public void plusViewsCount() {
+        this.views += 1;
     }
 }

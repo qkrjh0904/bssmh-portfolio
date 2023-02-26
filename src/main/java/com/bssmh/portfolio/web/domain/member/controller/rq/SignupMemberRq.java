@@ -28,7 +28,7 @@ public class SignupMemberRq {
     @Schema(description = "번호")
     private Integer schoolNumber;
 
-    @Schema(description = "입학년도 yyyy-MM-dd")
-    private String admissionDate;
+    @Schema(description = "입학년도 yyyy")
+    private Integer admissionYear;
 
 }
