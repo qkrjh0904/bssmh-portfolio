@@ -42,4 +42,14 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> runtimeExceptionHandler(RuntimeException e) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .reason("알 수 없는 에러입니다. 관리자에게 문의하세요.")
+                .message(e.getMessage())
+                .build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }
