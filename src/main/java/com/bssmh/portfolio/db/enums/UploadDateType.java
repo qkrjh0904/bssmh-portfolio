@@ -7,11 +7,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum UploadDateType {
 
-    AN_HOUR_AGO("업로드 날짜"),
-    TODAY("조회수"),
-    THIS_WEEK("좋아요 수"),
-    THIS_MONTH("댓글 수"),
-    THIS_YEAR("랭킹순");
+    AN_HOUR_AGO("1시간 전"),
+    TODAY("오늘"),
+    THIS_WEEK("이번주"),
+    THIS_MONTH("이번달"),
+    THIS_YEAR("올해");
 
 
     private final String name;

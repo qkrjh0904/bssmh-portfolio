@@ -69,7 +69,6 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
                 orderSpecifierList.add(new OrderSpecifier<>(order, portfolio.createdDate).nullsLast());
                 break;
             case VIEWS:
-            case RANK:
                 orderSpecifierList.add(new OrderSpecifier<>(order, portfolio.views).nullsLast());
                 break;
             case BOOKMARKS:
@@ -98,15 +97,15 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
         }
         switch (uploadDateType) {
             case AN_HOUR_AGO:
-                return portfolio.createdDate.before(LocalDateTime.now().plusHours(1));
+                return portfolio.createdDate.after(LocalDateTime.now().minusHours(1));
             case TODAY:
-                return portfolio.createdDate.before(LocalDateTime.now().plusDays(1));
+                return portfolio.createdDate.after(LocalDateTime.now().minusDays(1));
             case THIS_WEEK:
-                return portfolio.createdDate.before(LocalDateTime.now().plusWeeks(1));
+                return portfolio.createdDate.after(LocalDateTime.now().minusWeeks(1));
             case THIS_MONTH:
-                return portfolio.createdDate.before(LocalDateTime.now().plusMonths(1));
+                return portfolio.createdDate.after(LocalDateTime.now().minusMonths(1));
             case THIS_YEAR:
-                return portfolio.createdDate.before(LocalDateTime.now().plusYears(1));
+                return portfolio.createdDate.after(LocalDateTime.now().minusYears(1));
             default:
                 return null;
         }
