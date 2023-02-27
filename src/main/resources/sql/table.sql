@@ -1,62 +1,136 @@
 create table attach_file
 (
-    attach_file_id     bigint auto_increment primary key,
+    attach_file_id     bigint auto_increment
+        primary key,
     created_date       datetime     not null,
     last_modified_date datetime     not null,
     file_name          varchar(255) not null,
     file_path          varchar(255) not null,
     file_size          bigint       not null,
-    file_uid           varchar(255) not null unique
+    file_uid           varchar(255) not null,
+    constraint file_uid
+        unique (file_uid)
 );
+
+create index idx_file_uid
+    on attach_file (file_uid);
 
 create table member
 (
-    member_id          bigint auto_increment primary key,
-    created_date       datetime     not null,
-    last_modified_date datetime     not null,
-    description        text,
-    email              varchar(255) not null,
-    member_role_type   varchar(255),
-    member_type        varchar(255) not null,
-    name               varchar(255),
-    nick_name          varchar(255),
-    phone              varchar(255),
-    profile_image_url  text,
-    registration_id    varchar(255) not null,
-    job                varchar(255),
-    belong             varchar(255),
-    admission_date     date,
-    constraint uk_email_registration_id_on_member unique (email, registration_id)
+    member_id          bigint auto_increment
+        primary key,
+    created_date       datetime                     not null,
+    last_modified_date datetime                     not null,
+    description        text                         null,
+    email              varchar(255)                 not null,
+    member_role_type   varchar(255)                 null,
+    name               varchar(255)                 null,
+    nick_name          varchar(255)                 null,
+    phone              varchar(255)                 null,
+    profile_image_url  text                         null,
+    registration_id    varchar(255)                 not null,
+    job                varchar(255)                 null,
+    member_type        varchar(255) default 'EMPTY' not null,
+    belong             varchar(255)                 null,
+    admission_year     int                          null,
+    constraint uk_email_registration_id_on_member
+        unique (email, registration_id)
+);
+
+create table follow
+(
+    follow_id          bigint auto_increment
+        primary key,
+    created_date       datetime not null,
+    last_modified_date datetime not null,
+    from_member_id     bigint   not null,
+    to_member_id       bigint   not null,
+    constraint uk_from_member_id_to_member_id_on_follow
+        unique (from_member_id, to_member_id),
+    constraint fk_follow_from_member_id
+        foreign key (from_member_id) references member (member_id),
+    constraint fk_follow_to_member_id
+        foreign key (to_member_id) references member (member_id)
+);
+
+create table member_agreement
+(
+    member_agreement_id bigint auto_increment
+        primary key,
+    created_date        datetime not null,
+    member_id           bigint   not null,
+    constraint fk_member_agreement_member_id
+        foreign key (member_id) references member (member_id)
+);
+
+create table member_class_info
+(
+    member_class_info_id bigint auto_increment
+        primary key,
+    created_date         datetime not null,
+    last_modified_date   datetime not null,
+    school_grade         int      null,
+    school_class         int      null,
+    school_number        int      null,
+    member_id            bigint   not null,
+    constraint fk_member_class_info_member_id
+        foreign key (member_id) references member (member_id)
+);
+
+create table member_login_log
+(
+    member_login_log_id bigint auto_increment
+        primary key,
+    created_date        datetime     not null,
+    email               varchar(255) null,
+    name                varchar(255) null,
+    member_id           bigint       not null,
+    constraint fk_member_login_log_member_id
+        foreign key (member_id) references member (member_id)
+);
+
+create table member_sign_up_log
+(
+    member_sign_up_id bigint auto_increment
+        primary key,
+    created_date      datetime     not null,
+    email             varchar(255) null,
+    name              varchar(255) null,
+    member_id         bigint       not null,
+    constraint fk_member_sign_up_log_member_id
+        foreign key (member_id) references member (member_id)
 );
 
 create table portfolio
 (
-    portfolio_id             bigint auto_increment primary key,
+    portfolio_id             bigint auto_increment
+        primary key,
     created_date             datetime          not null,
     last_modified_date       datetime          not null,
-    description              text,
-    git_url                  text,
+    description              text              null,
+    git_url                  text              null,
     portfolio_scope          varchar(255)      not null,
     portfolio_type           varchar(255)      not null,
-    portfolio_url            text,
+    portfolio_url            text              null,
     title                    varchar(255)      not null,
     views                    bigint            not null,
-    sequence                 int default 99999 not null,
     member_id                bigint            not null,
     thumbnail_attach_file_id bigint            not null,
-    video_attach_file_id     bigint,
+    video_attach_file_id     bigint            null,
+    sequence                 int default 99999 not null,
+    school_grade             int               null,
     constraint fk_portfolio_member_id
         foreign key (member_id) references member (member_id),
     constraint fk_portfolio_thumbnail_attach_file_id
         foreign key (thumbnail_attach_file_id) references attach_file (attach_file_id),
     constraint fk_portfolio_video_attach_file_id
         foreign key (video_attach_file_id) references attach_file (attach_file_id)
-
 );
 
 create table bookmark
 (
-    bookmark_id        bigint auto_increment primary key,
+    bookmark_id        bigint auto_increment
+        primary key,
     created_date       datetime not null,
     last_modified_date datetime not null,
     member_id          bigint   not null,
@@ -69,7 +143,8 @@ create table bookmark
 
 create table comment
 (
-    comment_id         bigint auto_increment primary key,
+    comment_id         bigint auto_increment
+        primary key,
     created_date       datetime not null,
     last_modified_date datetime not null,
     content            text     not null,
@@ -83,7 +158,8 @@ create table comment
 
 create table contributor
 (
-    contributor_id     bigint auto_increment primary key,
+    contributor_id     bigint auto_increment
+        primary key,
     created_date       datetime not null,
     last_modified_date datetime not null,
     member_id          bigint   not null,
@@ -94,81 +170,26 @@ create table contributor
         foreign key (portfolio_id) references portfolio (portfolio_id)
 );
 
-create table member_login_log
-(
-    member_login_log_id bigint auto_increment primary key,
-    created_date        datetime not null,
-    email               varchar(255),
-    name                varchar(255),
-    member_id           bigint   not null,
-    constraint fk_member_login_log_member_id
-        foreign key (member_id) references member (member_id)
-);
-
-create table member_sign_up_log
-(
-    member_sign_up_id bigint auto_increment primary key,
-    created_date      datetime not null,
-    email             varchar(255),
-    name              varchar(255),
-    member_id         bigint   not null,
-    constraint fk_member_sign_up_log_member_id
-        foreign key (member_id) references member (member_id)
-);
-
-
-
 create table portfolio_skill
 (
-    portfolio_skill_id bigint auto_increment primary key,
+    portfolio_skill_id bigint auto_increment
+        primary key,
     created_date       datetime     not null,
     last_modified_date datetime     not null,
-    skill_id           bigint,
+    skill_id           bigint       null,
     skill_name         varchar(255) not null,
-    portfolio_id       bigint,
+    portfolio_id       bigint       not null,
     constraint fk_portfolio_skill_portfolio_id
         foreign key (portfolio_id) references portfolio (portfolio_id)
 );
 
 create table skill
 (
-    skill_id     bigint auto_increment primary key,
+    skill_id     bigint auto_increment
+        primary key,
     created_date datetime     not null,
-    name         varchar(255) not null unique,
+    name         varchar(255) not null,
+    constraint name
+        unique (name)
 );
 
-create table follow
-(
-    follow_id          bigint auto_increment primary key,
-    created_date       datetime not null,
-    last_modified_date datetime not null,
-    from_member_id     bigint   not null,
-    to_member_id       bigint   not null,
-    constraint uk_from_member_id_to_member_id_on_follow unique (from_member_id, to_member_id),
-    constraint fk_follow_from_member_id
-        foreign key (from_member_id) references member (member_id),
-    constraint fk_follow_to_member_id
-        foreign key (to_member_id) references member (member_id)
-);
-
-create table member_agreement
-(
-    member_agreement_id bigint auto_increment primary key,
-    created_date        datetime not null,
-    member_id           bigint   not null,
-    constraint fk_member_agreement_member_id
-        foreign key (member_id) references member (member_id)
-);
-
-create table member_class_info
-(
-    member_class_info_id bigint auto_increment primary key,
-    created_date         datetime not null,
-    last_modified_date   datetime not null,
-    school_grade         int,
-    school_class         int,
-    school_number        int,
-    member_id            bigint   not null,
-    constraint fk_member_class_info_member_id
-        foreign key (member_id) references member (member_id)
-);
