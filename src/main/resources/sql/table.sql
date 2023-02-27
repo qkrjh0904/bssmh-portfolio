@@ -10,7 +10,7 @@ create table attach_file
     file_uid           varchar(255) not null,
     constraint file_uid
         unique (file_uid)
-);
+)DEFAULT CHARACTER SET UTF8MB4;
 
 create index idx_file_uid
     on attach_file (file_uid);
@@ -35,7 +35,7 @@ create table member
     admission_year     int                          null,
     constraint uk_email_registration_id_on_member
         unique (email, registration_id)
-);
+)DEFAULT CHARACTER SET UTF8MB4;
 
 create table follow
 (
@@ -51,7 +51,7 @@ create table follow
         foreign key (from_member_id) references member (member_id),
     constraint fk_follow_to_member_id
         foreign key (to_member_id) references member (member_id)
-);
+)DEFAULT CHARACTER SET UTF8MB4;
 
 create table member_agreement
 (
@@ -61,7 +61,7 @@ create table member_agreement
     member_id           bigint   not null,
     constraint fk_member_agreement_member_id
         foreign key (member_id) references member (member_id)
-);
+)DEFAULT CHARACTER SET UTF8MB4;
 
 create table member_class_info
 (
@@ -75,7 +75,7 @@ create table member_class_info
     member_id            bigint   not null,
     constraint fk_member_class_info_member_id
         foreign key (member_id) references member (member_id)
-);
+)DEFAULT CHARACTER SET UTF8MB4;
 
 create table member_login_log
 (
@@ -87,7 +87,7 @@ create table member_login_log
     member_id           bigint       not null,
     constraint fk_member_login_log_member_id
         foreign key (member_id) references member (member_id)
-);
+)DEFAULT CHARACTER SET UTF8MB4;
 
 create table member_sign_up_log
 (
@@ -99,7 +99,7 @@ create table member_sign_up_log
     member_id         bigint       not null,
     constraint fk_member_sign_up_log_member_id
         foreign key (member_id) references member (member_id)
-);
+)DEFAULT CHARACTER SET UTF8MB4;
 
 create table portfolio
 (
@@ -125,7 +125,7 @@ create table portfolio
         foreign key (thumbnail_attach_file_id) references attach_file (attach_file_id),
     constraint fk_portfolio_video_attach_file_id
         foreign key (video_attach_file_id) references attach_file (attach_file_id)
-);
+)DEFAULT CHARACTER SET UTF8MB4;
 
 create table bookmark
 (
@@ -139,7 +139,7 @@ create table bookmark
         foreign key (member_id) references member (member_id),
     constraint fk_bookmark_portfolio_id
         foreign key (portfolio_id) references portfolio (portfolio_id)
-);
+)DEFAULT CHARACTER SET UTF8MB4;
 
 create table comment
 (
@@ -154,7 +154,7 @@ create table comment
         foreign key (member_id) references member (member_id),
     constraint fk_comment_portfolio_id
         foreign key (portfolio_id) references portfolio (portfolio_id)
-);
+)DEFAULT CHARACTER SET UTF8MB4;
 
 create table contributor
 (
@@ -168,7 +168,7 @@ create table contributor
         foreign key (member_id) references member (member_id),
     constraint fk_contributor_portfolio_id
         foreign key (portfolio_id) references portfolio (portfolio_id)
-);
+)DEFAULT CHARACTER SET UTF8MB4;
 
 create table portfolio_skill
 (
@@ -181,7 +181,7 @@ create table portfolio_skill
     portfolio_id       bigint       not null,
     constraint fk_portfolio_skill_portfolio_id
         foreign key (portfolio_id) references portfolio (portfolio_id)
-);
+)DEFAULT CHARACTER SET UTF8MB4;
 
 create table skill
 (
@@ -191,5 +191,5 @@ create table skill
     name         varchar(255) not null,
     constraint name
         unique (name)
-);
+)DEFAULT CHARACTER SET UTF8MB4;
 
