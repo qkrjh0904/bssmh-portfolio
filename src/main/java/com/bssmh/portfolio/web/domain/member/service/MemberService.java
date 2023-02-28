@@ -33,14 +33,11 @@ public class MemberService {
                 rq.getDescription(),
                 rq.getPhone(),
                 rq.getJob(),
-                rq.getMemberType(),
                 rq.getBelong(),
                 rq.getAdmissionYear());
 
-        MemberClassInfo memberClassInfo = memberClassInfoService.
-                findByMemberIdAndSchoolGradeOrElseNull(member.getId(), rq.getSchoolGrade());
-        memberClassInfoService.upsert(memberClassInfo, rq.getSchoolGrade(), rq.getSchoolClass(),
-                rq.getSchoolNumber(), member);
+        MemberClassInfo memberClassInfo = memberClassInfoService.findByMemberIdAndSchoolGradeOrElseNull(member.getId(), rq.getSchoolGrade());
+        memberClassInfoService.upsert(member.getMemberType(), memberClassInfo, rq.getSchoolGrade(), rq.getSchoolClass(), rq.getSchoolNumber(), member);
     }
 
     public void signupMember(MemberContext memberContext, SignupMemberRq rq) {
@@ -51,7 +48,8 @@ public class MemberService {
                 rq.getBelong(),
                 rq.getAdmissionYear());
 
-        memberClassInfoService.save(rq.getSchoolGrade(), rq.getSchoolClass(), rq.getSchoolNumber(), member);
+        MemberClassInfo memberClassInfo = memberClassInfoService.findByMemberIdAndSchoolGradeOrElseNull(member.getId(), rq.getSchoolGrade());
+        memberClassInfoService.upsert(rq.getMemberType(), memberClassInfo, rq.getSchoolGrade(), rq.getSchoolClass(), rq.getSchoolNumber(), member);
         memberAgreementService.save(member);
     }
 }

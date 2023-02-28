@@ -66,6 +66,7 @@ public class PortfolioService {
                 rq.getPortfolioUrl(),
                 rq.getGitUrl(),
                 rq.getPortfolioScope(),
+                rq.getPortfolioTheme(),
                 sequence,
                 member);
         portfolioRepository.save(portfolio);
@@ -111,6 +112,7 @@ public class PortfolioService {
                 rq.getPortfolioUrl(),
                 rq.getPortfolioScope(),
                 rq.getPortfolioType(),
+                rq.getPortfolioTheme(),
                 rq.getGitUrl());
 
         upsertRelationShip(rq, portfolio);

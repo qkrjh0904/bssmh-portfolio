@@ -112,7 +112,7 @@ public class Member extends BaseTimeEntity {
                 .profileImageUrl(profileImageUrl)
                 .registrationId(registrationId)
                 .memberRoleType(MemberRoleType.ROLE_NORMAL)
-                .memberType(MemberType.EMPTY)
+                .memberType(MemberType.STUDENT)
                 .build();
     }
 
@@ -121,12 +121,11 @@ public class Member extends BaseTimeEntity {
     }
 
     public void update(String nickName, String description, String phone, String job,
-                       MemberType memberType, String belong, Integer admissionYear) {
+                       String belong, Integer admissionYear) {
         this.nickName = nickName;
         this.description = description;
         this.phone = phone;
         this.job = job;
-        this.memberType = memberType;
         this.belong = belong;
         this.admissionYear = Objects.isNull(admissionYear) ? this.admissionYear : admissionYear;
     }

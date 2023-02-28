@@ -5,6 +5,8 @@ import com.bssmh.portfolio.db.entity.contributor.Contributor;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.db.entity.portfolio.PortfolioSkill;
+import com.bssmh.portfolio.db.enums.PortfolioTheme;
+import com.bssmh.portfolio.db.enums.PortfolioType;
 import com.bssmh.portfolio.web.domain.dto.AttachFileDto;
 import com.bssmh.portfolio.web.domain.dto.MemberDto;
 import com.bssmh.portfolio.web.domain.dto.PortfolioSkillDto;
@@ -23,6 +25,12 @@ public class FindPortfolioListRs {
 
     @Schema(description = "포트폴리오 id")
     private Long portfolioId;
+
+    @Schema(description = "포트폴리오 타입")
+    private PortfolioType portfolioType;
+
+    @Schema(description = "포트폴리오 테마")
+    private PortfolioTheme portfolioTheme;
 
     @Schema(description = "작성자")
     private MemberDto writer;
@@ -67,6 +75,8 @@ public class FindPortfolioListRs {
         rs.views = portfolio.getViews();
         rs.comments = getComments(portfolio);
         rs.createdDate = portfolio.getCreatedDate();
+        rs.portfolioType = portfolio.getPortfolioType();
+        rs.portfolioTheme = portfolio.getPortfolioTheme();
         return rs;
     }
 

@@ -1,6 +1,7 @@
 package com.bssmh.portfolio.web.domain.portfolio.controller.rq;
 
 import com.bssmh.portfolio.db.enums.PortfolioScope;
+import com.bssmh.portfolio.db.enums.PortfolioTheme;
 import com.bssmh.portfolio.db.enums.PortfolioType;
 import com.bssmh.portfolio.web.domain.dto.PortfolioSkillDto;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -40,6 +41,10 @@ public class UpsertPortfolioRq {
     @NotNull
     @Schema(description = "포트폴리오 게시 타입")
     private PortfolioType portfolioType;
+
+    @NotNull
+    @Schema(description = "포트폴리오 테마")
+    private PortfolioTheme portfolioTheme;
 
     @Schema(description = "포트폴리오 git url")
     private String gitUrl;

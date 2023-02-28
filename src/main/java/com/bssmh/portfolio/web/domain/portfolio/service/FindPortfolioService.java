@@ -1,6 +1,7 @@
 package com.bssmh.portfolio.web.domain.portfolio.service;
 
 import com.bssmh.portfolio.db.entity.bookmark.Bookmark;
+import com.bssmh.portfolio.db.entity.contributor.Contributor;
 import com.bssmh.portfolio.db.entity.follow.Follow;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
@@ -36,6 +37,7 @@ public class FindPortfolioService {
     private final PortfolioRepository portfolioRepository;
     private final FindMemberService findMemberService;
     private final FindBookmarkService findBookmarkService;
+    private final ContributorService contributorService;
     private final FollowRepository followRepository;
 
     public FindPortfolioDetailRs findPortfolio(MemberContext memberContext, Long portfolioId) {
@@ -119,9 +121,11 @@ public class FindPortfolioService {
 
     public PagedResponse<FindPortfolioListRs> findMyPortfolio(MemberContext memberContext, Pagination pagination) {
         Member member = findMemberService.findLoginMember(memberContext);
-        Set<Long> bookmarkedPortfolioIdSet = getMyBookmarkedPortfolioIdSet(member);
+        Set<Long> contributedPortfolioIdSet = findContributedPortfolioIdSet(member);
         PageRequest pageRequest = pagination.toPageRequest();
-        Page<Portfolio> myPortfolioList = portfolioRepository.findMyPortfolio(member.getId(), pageRequest);
+        Page<Portfolio> myPortfolioList = portfolioRepository.findMyPortfolio(member.getId(), contributedPortfolioIdSet, pageRequest);
+
+        Set<Long> bookmarkedPortfolioIdSet = getMyBookmarkedPortfolioIdSet(member);
         List<FindPortfolioListRs> findPortfolioListRsList = myPortfolioList.stream()
                 .map(portfolio -> FindPortfolioListRs.create(portfolio, bookmarkedPortfolioIdSet))
                 .collect(Collectors.toList());
@@ -133,9 +137,11 @@ public class FindPortfolioService {
 
     public PagedResponse<FindPortfolioListRs> findMemberPortfolio(MemberContext memberContext, Long memberId, Pagination pagination) {
         Member member = findMemberService.findByIdOrElseThrow(memberId);
-        Set<Long> bookmarkedPortfolioIdSet = getMyBookmarkedPortfolioIdSet(memberContext);
+        Set<Long> contributedPortfolioIdSet = findContributedPortfolioIdSet(member);
         PageRequest pageRequest = pagination.toPageRequest();
-        Page<Portfolio> memberPortfolioList = portfolioRepository.findMemberPortfolio(member.getId(), pageRequest);
+        Page<Portfolio> memberPortfolioList = portfolioRepository.findMemberPortfolio(member.getId(), contributedPortfolioIdSet, pageRequest);
+
+        Set<Long> bookmarkedPortfolioIdSet = getMyBookmarkedPortfolioIdSet(memberContext);
         List<FindPortfolioListRs> findPortfolioListRsList = memberPortfolioList.stream()
                 .map(portfolio -> FindPortfolioListRs.create(portfolio, bookmarkedPortfolioIdSet))
                 .collect(Collectors.toList());
@@ -143,6 +149,13 @@ public class FindPortfolioService {
         pagination.setTotalCount(memberPortfolioList.getTotalElements());
         pagination.setTotalPages(memberPortfolioList.getTotalPages());
         return PagedResponse.create(pagination, findPortfolioListRsList);
+    }
+
+    private Set<Long> findContributedPortfolioIdSet(Member member) {
+        return contributorService.findByMember(member).stream()
+                .map(Contributor::getPortfolio)
+                .map(Portfolio::getId)
+                .collect(Collectors.toSet());
     }
 
     private Set<Long> getMyBookmarkedPortfolioIdSet(Member loginMember) {

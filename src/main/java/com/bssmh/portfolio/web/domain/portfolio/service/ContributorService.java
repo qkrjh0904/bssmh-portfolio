@@ -22,7 +22,7 @@ public class ContributorService {
     private final ContributorRepository contributorRepository;
 
     public void upsert(List<Long> contributorIdList, Portfolio portfolio) {
-        if(ObjectUtils.isEmpty(contributorIdList)){
+        if (ObjectUtils.isEmpty(contributorIdList)) {
             return;
         }
 
@@ -31,5 +31,9 @@ public class ContributorService {
                 .map(member -> Contributor.create(portfolio, member))
                 .collect(Collectors.toList());
         portfolio.upsertContributorList(contributorList);
+    }
+
+    public List<Contributor> findByMember(Member member) {
+        return contributorRepository.findByMember(member);
     }
 }

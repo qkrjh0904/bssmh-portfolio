@@ -5,10 +5,11 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum MemberType {
-
-    STUDENT("학생"),
-    TEACHER("선생님");
+public enum PortfolioTheme {
+    WEB("웹"),
+    APP("앱"),
+    EMBEDDED("임베디드"),
+    ROBOT("로봇");
 
     private final String name;
 

@@ -7,6 +7,7 @@ import com.bssmh.portfolio.db.entity.common.BaseTimeEntity;
 import com.bssmh.portfolio.db.entity.contributor.Contributor;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.enums.PortfolioScope;
+import com.bssmh.portfolio.db.enums.PortfolioTheme;
 import com.bssmh.portfolio.db.enums.PortfolioType;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,6 +26,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +45,10 @@ public class Portfolio extends BaseTimeEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PortfolioType portfolioType;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PortfolioTheme portfolioTheme;
 
     @Column(nullable = false)
     private String title;
@@ -94,9 +100,10 @@ public class Portfolio extends BaseTimeEntity {
 
     public static Portfolio create(PortfolioType portfolioType, String title, String description,
                                    AttachFile video, AttachFile thumbnail, String portfolioUrl, String gitUrl,
-                                   PortfolioScope portfolioScope, Integer sequence, Member member) {
+                                   PortfolioScope portfolioScope, PortfolioTheme portfolioTheme, Integer sequence, Member member) {
         Portfolio portfolio = new Portfolio();
         portfolio.portfolioType = portfolioType;
+        portfolio.portfolioTheme = portfolioTheme;
         portfolio.title = title;
         portfolio.description = description;
         portfolio.video = video;
@@ -112,8 +119,9 @@ public class Portfolio extends BaseTimeEntity {
 
     public void update(String title, String description, AttachFile video, AttachFile thumbnail,
                        String portfolioUrl, PortfolioScope portfolioScope,
-                       PortfolioType portfolioType, String gitUrl) {
+                       PortfolioType portfolioType, PortfolioTheme portfolioTheme, String gitUrl) {
         this.portfolioType = portfolioType;
+        this.portfolioTheme = portfolioTheme;
         this.title = title;
         this.description = description;
         this.video = video;

@@ -1,8 +1,6 @@
 package com.bssmh.portfolio.web.domain.member.controller.rq;
 
-import com.bssmh.portfolio.db.enums.MemberType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -19,9 +17,6 @@ public class UpdateMemberRq {
 
     @Schema(description = "직군, 직무, 전공 등")
     private String job;
-
-    @Schema(description = "학생/선생님")
-    private MemberType memberType;
 
     @Schema(description = "소속")
     private String belong;

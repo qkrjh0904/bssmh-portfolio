@@ -3,6 +3,7 @@ package com.bssmh.portfolio.web.domain.portfolio.repository;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.db.enums.PortfolioScope;
 import com.bssmh.portfolio.db.enums.PortfolioSortType;
+import com.bssmh.portfolio.db.enums.PortfolioTheme;
 import com.bssmh.portfolio.db.enums.SortDirectionType;
 import com.bssmh.portfolio.db.enums.UploadDateType;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.SearchPortfolioFilterRq;
@@ -20,9 +21,11 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.bssmh.portfolio.db.entity.portfolio.QPortfolio.portfolio;
 import static com.bssmh.portfolio.db.enums.PortfolioScope.PUBLIC;
@@ -40,6 +43,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
                 .where(searchEq(filter.getSearch()),
                         uploadDateEq(filter.getUploadDateType()),
                         schoolGradeEq(filter.getSchoolGrade()),
+                        portfolioThemeEq(filter.getPortfolioTheme()),
                         scopeEq(List.of(PUBLIC)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -49,9 +53,19 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
         JPAQuery<Portfolio> countQuery = jpaQueryFactory
                 .selectFrom(portfolio)
                 .where(searchEq(filter.getSearch()),
+                        uploadDateEq(filter.getUploadDateType()),
+                        schoolGradeEq(filter.getSchoolGrade()),
+                        portfolioThemeEq(filter.getPortfolioTheme()),
                         scopeEq(List.of(PUBLIC)));
 
         return PageableExecutionUtils.getPage(contents, pageable, () -> countQuery.fetch().size());
+    }
+
+    private BooleanExpression portfolioThemeEq(PortfolioTheme portfolioTheme) {
+        if (Objects.isNull(portfolioTheme)) {
+            return null;
+        }
+        return portfolio.portfolioTheme.eq(portfolioTheme);
     }
 
     private OrderSpecifier<?>[] getOrderBy(PortfolioSortType sortType, SortDirectionType sortDirectionType) {
@@ -112,10 +126,10 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
     }
 
     @Override
-    public Page<Portfolio> findMyPortfolio(Long memberId, Pageable pageable) {
+    public Page<Portfolio> findMyPortfolio(Long memberId, Set<Long> contributedPortfolioIdSet, Pageable pageable) {
         List<Portfolio> contents = jpaQueryFactory
                 .selectFrom(portfolio)
-                .where(portfolio.member.id.eq(memberId))
+                .where(portfolio.member.id.eq(memberId).or(portfolio.id.in(contributedPortfolioIdSet)))
                 .orderBy(portfolio.sequence.asc(), portfolio.createdDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -123,18 +137,18 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
 
         JPAQuery<Portfolio> countQuery = jpaQueryFactory
                 .selectFrom(portfolio)
-                .where(portfolio.member.id.eq(memberId))
+                .where(portfolio.member.id.eq(memberId).or(portfolio.id.in(contributedPortfolioIdSet)))
                 .orderBy(portfolio.sequence.asc(), portfolio.createdDate.desc());
 
         return PageableExecutionUtils.getPage(contents, pageable, () -> countQuery.fetch().size());
     }
 
     @Override
-    public Page<Portfolio> findMemberPortfolio(Long memberId, Pageable pageable) {
+    public Page<Portfolio> findMemberPortfolio(Long memberId, Collection<Long> contributedPortfolioIdSet, Pageable pageable) {
         List<Portfolio> contents = jpaQueryFactory
                 .selectFrom(portfolio)
-                .where(portfolio.member.id.eq(memberId),
-                        scopeEq(List.of(PUBLIC)))
+                .where(memberIdEq(memberId)
+                        .or(contributedPortfolioIdSetEq(contributedPortfolioIdSet)))
                 .orderBy(portfolio.sequence.asc(), portfolio.createdDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -142,11 +156,19 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
 
         JPAQuery<Portfolio> countQuery = jpaQueryFactory
                 .selectFrom(portfolio)
-                .where(portfolio.member.id.eq(memberId),
-                        scopeEq(List.of(PUBLIC)))
+                .where(memberIdEq(memberId)
+                        .or(contributedPortfolioIdSetEq(contributedPortfolioIdSet)))
                 .orderBy(portfolio.sequence.asc(), portfolio.createdDate.desc());
 
         return PageableExecutionUtils.getPage(contents, pageable, () -> countQuery.fetch().size());
+    }
+
+    private BooleanExpression contributedPortfolioIdSetEq(Collection<Long> contributedPortfolioIdSet) {
+        return portfolio.id.in(contributedPortfolioIdSet).and(scopeEq(List.of(PUBLIC)));
+    }
+
+    private BooleanExpression memberIdEq(Long memberId) {
+        return portfolio.member.id.eq(memberId).and(scopeEq(List.of(PUBLIC)));
     }
 
     @Override
