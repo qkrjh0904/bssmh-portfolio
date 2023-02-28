@@ -45,7 +45,6 @@ public class FindPortfolioService {
         validationCheck(memberContext, portfolio);
         Boolean bookmarkYn = getBookmarkYn(memberContext, portfolio);
         Boolean followYn = getFollowYn(memberContext, portfolio.getMember());
-        portfolio.plusViewsCount();
         return FindPortfolioDetailRs.create(portfolio, bookmarkYn, followYn);
     }
 

@@ -26,7 +26,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,7 +144,7 @@ public class Portfolio extends BaseTimeEntity {
         this.sequence = sequence;
     }
 
-    public void plusViewsCount() {
+    public void addViewsCount() {
         this.views += 1;
     }
 }

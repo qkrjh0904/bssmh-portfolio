@@ -1,6 +1,7 @@
 package com.bssmh.portfolio.web.domain.portfolio.controller;
 
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
+import com.bssmh.portfolio.web.domain.portfolio.controller.rq.AddPortfolioViewsCountRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.BookmarkPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.DeletePortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpdatePortfolioSequenceRq;
@@ -61,5 +62,10 @@ public class PortfolioController {
         portfolioService.updatePortfolioSequence(memberContext, rq);
     }
 
+    @Operation(summary = "포트폴리오 조회수 추가")
+    @PutMapping(ApiPath.PORTFOLIO_VIEWS_ADD)
+    public void addPortfolioViewsCount(@Validated @RequestBody AddPortfolioViewsCountRq rq) {
+        portfolioService.addPortfolioViewsCount(rq);
+    }
 
 }

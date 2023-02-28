@@ -7,6 +7,7 @@ import com.bssmh.portfolio.db.enums.PortfolioType;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.file.service.AttachFileService;
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
+import com.bssmh.portfolio.web.domain.portfolio.controller.rq.AddPortfolioViewsCountRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.BookmarkPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.DeletePortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpdatePortfolioSequenceRq;
@@ -174,4 +175,8 @@ public class PortfolioService {
         });
     }
 
+    public void addPortfolioViewsCount(AddPortfolioViewsCountRq rq) {
+        Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(rq.getPortfolioId());
+        portfolio.addViewsCount();
+    }
 }
