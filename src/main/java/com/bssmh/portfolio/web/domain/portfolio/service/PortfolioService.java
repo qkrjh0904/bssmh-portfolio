@@ -3,6 +3,8 @@ package com.bssmh.portfolio.web.domain.portfolio.service;
 import com.bssmh.portfolio.db.entity.attachfile.AttachFile;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
+import com.bssmh.portfolio.db.enums.MemberRoleType;
+import com.bssmh.portfolio.db.enums.MemberType;
 import com.bssmh.portfolio.db.enums.PortfolioType;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.file.service.AttachFileService;
@@ -16,6 +18,7 @@ import com.bssmh.portfolio.web.domain.portfolio.repository.PortfolioRepository;
 import com.bssmh.portfolio.web.exception.DoNotHavePermissionToModifyPortfolioException;
 import com.bssmh.portfolio.web.exception.PortfolioEmptyException;
 import com.bssmh.portfolio.web.exception.PortfolioSequenceException;
+import com.bssmh.portfolio.web.exception.TeacherCannotCreatePortfolio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,8 +53,8 @@ public class PortfolioService {
     private final PortfolioRepository portfolioRepository;
 
     public void savePortfolio(MemberContext memberContext, UpsertPortfolioRq rq) {
-        validationCheck(rq);
         Member member = findMemberService.findLoginMember(memberContext);
+        validationCheck(member, rq);
         Portfolio myLastSequencePortfolio = findPortfolioService.findMyLastSequencePortfolio(member.getId());
         int sequence = Objects.isNull(myLastSequencePortfolio) ? 1 : myLastSequencePortfolio.getSequence() + 1;
 
@@ -75,7 +78,11 @@ public class PortfolioService {
         upsertRelationShip(rq, portfolio);
     }
 
-    private void validationCheck(UpsertPortfolioRq rq) {
+    private void validationCheck(Member member, UpsertPortfolioRq rq) {
+        if (MemberType.TEACHER.equals(member.getMemberType())){
+            throw new TeacherCannotCreatePortfolio();
+        }
+
         PortfolioType portfolioType = rq.getPortfolioType();
         if (URL.equals(portfolioType) && !StringUtils.hasText(rq.getPortfolioUrl())) {
             throw new PortfolioEmptyException("Portfolio URL");
@@ -96,8 +103,8 @@ public class PortfolioService {
     }
 
     public void updatePortfolio(MemberContext memberContext, UpsertPortfolioRq rq) {
-        validationCheck(rq);
         Member member = findMemberService.findLoginMember(memberContext);
+        validationCheck(member, rq);
         Long portfolioId = rq.getPortfolioId();
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(portfolioId);
         portfolioPermissionCheck(portfolio, member);

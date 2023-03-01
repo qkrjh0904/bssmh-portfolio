@@ -113,6 +113,7 @@ public class Portfolio extends BaseTimeEntity {
         portfolio.views = 0L;
         portfolio.sequence = sequence;
         portfolio.member = member;
+        portfolio.schoolGrade = member.getMemberClassInfoArrayList().get(0).getSchoolGrade();
         return portfolio;
     }
 

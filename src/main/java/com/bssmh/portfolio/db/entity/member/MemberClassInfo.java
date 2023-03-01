@@ -32,7 +32,7 @@ public class MemberClassInfo extends BaseTimeEntity {
     private Integer schoolNumber;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false, unique = true)
     private Member member;
 
     public static MemberClassInfo create(Integer schoolGrade, Integer schoolClass, Integer schoolNumber, Member member) {
@@ -44,7 +44,8 @@ public class MemberClassInfo extends BaseTimeEntity {
         return memberClassInfo;
     }
 
-    public void update(Integer schoolClass, Integer schoolNumber) {
+    public void update(Integer schoolGrade, Integer schoolClass, Integer schoolNumber) {
+        this.schoolGrade = schoolGrade;
         this.schoolClass = schoolClass;
         this.schoolNumber = schoolNumber;
     }

@@ -36,7 +36,7 @@ public class MemberService {
                 rq.getBelong(),
                 rq.getAdmissionYear());
 
-        MemberClassInfo memberClassInfo = memberClassInfoService.findByMemberIdAndSchoolGradeOrElseNull(member.getId(), rq.getSchoolGrade());
+        MemberClassInfo memberClassInfo = memberClassInfoService.findByMemberIdOrElseNull(member.getId());
         memberClassInfoService.upsert(member.getMemberType(), memberClassInfo, rq.getSchoolGrade(), rq.getSchoolClass(), rq.getSchoolNumber(), member);
     }
 
@@ -48,7 +48,7 @@ public class MemberService {
                 rq.getBelong(),
                 rq.getAdmissionYear());
 
-        MemberClassInfo memberClassInfo = memberClassInfoService.findByMemberIdAndSchoolGradeOrElseNull(member.getId(), rq.getSchoolGrade());
+        MemberClassInfo memberClassInfo = memberClassInfoService.findByMemberIdOrElseNull(member.getId());
         memberClassInfoService.upsert(rq.getMemberType(), memberClassInfo, rq.getSchoolGrade(), rq.getSchoolClass(), rq.getSchoolNumber(), member);
         memberAgreementService.save(member);
     }

@@ -21,8 +21,8 @@ public class MemberClassInfoService {
 
     private final MemberClassInfoRepository memberClassInfoRepository;
 
-    public MemberClassInfo findByMemberIdAndSchoolGradeOrElseNull(Long memberId, Integer schoolGrade) {
-        return memberClassInfoRepository.findByMemberIdAndSchoolGrade(memberId, schoolGrade)
+    public MemberClassInfo findByMemberIdOrElseNull(Long memberId) {
+        return memberClassInfoRepository.findByMemberId(memberId)
                 .orElse(null);
     }
 
@@ -38,7 +38,7 @@ public class MemberClassInfoService {
             return;
         }
 
-        memberClassInfo.update(schoolClass, schoolNumber);
+        memberClassInfo.update(schoolGrade, schoolClass, schoolNumber);
     }
 
     private void save(Integer schoolGrade, Integer schoolClass, Integer schoolNumber, Member member) {
