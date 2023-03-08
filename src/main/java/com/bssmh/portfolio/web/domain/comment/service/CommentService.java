@@ -32,7 +32,6 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     public void saveComment(MemberContext memberContext, SaveCommentRq rq) {
-        String email = memberContext.getEmail();
         Member member = findMemberService.findLoginMember(memberContext);
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(rq.getPortfolioId());
 
@@ -41,7 +40,7 @@ public class CommentService {
         if (rq.getParentId() != null) {
             parent = findCommentService.findByIdOrElseThrow(rq.getParentId());
             // 부모댓글의 게시글 번호와 자식 댓글의 게시글 번호 같은지 체크
-            if (parent.getPortfolio().getId() != rq.getPortfolioId()) {
+            if (!parent.getPortfolio().getId().equals(rq.getPortfolioId())) {
                 throw new NotMatchedParentChildPortfolioIdException();
             }
         }
