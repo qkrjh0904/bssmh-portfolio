@@ -6,6 +6,8 @@ import com.bssmh.portfolio.web.domain.dto.MemberDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -17,6 +19,12 @@ public class FindCommentRs {
     @Schema(description = "댓글 id")
     private Long commentId;
 
+    @Schema(description = "부모 댓글 id")
+    private Long parentId;
+
+    @Schema(description = "자식 댓글")
+    private List<FindCommentRs> children = new ArrayList<>();
+
     @Schema(description = "내용")
     private String content;
 
@@ -25,6 +33,7 @@ public class FindCommentRs {
 
     @Schema(description = "수정가능 여부")
     private Boolean editable;
+
 
     public static FindCommentRs create(Comment comment, Member member) {
         FindCommentRs rs = new FindCommentRs();

@@ -10,6 +10,7 @@ import com.bssmh.portfolio.web.domain.comment.controller.rq.UpdateCommentRq;
 import com.bssmh.portfolio.web.domain.comment.repository.CommentRepository;
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
 import com.bssmh.portfolio.web.domain.portfolio.service.FindPortfolioService;
+import com.bssmh.portfolio.web.exception.DepthLimitExceededException;
 import com.bssmh.portfolio.web.exception.DoNotHavePermissionToModifyCommentException;
 import com.bssmh.portfolio.web.exception.NotMatchedParentChildPortfolioIdException;
 import lombok.RequiredArgsConstructor;
@@ -39,9 +40,13 @@ public class CommentService {
         // 자식 댓글인 경우
         if (rq.getParentId() != null) {
             parent = findCommentService.findByIdOrElseThrow(rq.getParentId());
-            // 부모댓글의 게시글 번호와 자식 댓글의 게시글 번호 같은지 체크
+            // 부모 댓글의 포트폴리오 번호와 자식 댓글의 포트폴리오 번호가 같지 않다면
             if (!parent.getPortfolio().getId().equals(rq.getPortfolioId())) {
                 throw new NotMatchedParentChildPortfolioIdException();
+            }
+            // 댓글의 깊이가 제한을 초과했을 때
+            if (parent.getParent() != null) {
+                throw new DepthLimitExceededException();
             }
         }
 
