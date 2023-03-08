@@ -11,6 +11,7 @@ import com.bssmh.portfolio.web.domain.comment.repository.CommentRepository;
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
 import com.bssmh.portfolio.web.domain.portfolio.service.FindPortfolioService;
 import com.bssmh.portfolio.web.exception.DepthLimitExceededException;
+import com.bssmh.portfolio.web.exception.DoNotHavePermissionToDeleteCommentException;
 import com.bssmh.portfolio.web.exception.DoNotHavePermissionToModifyCommentException;
 import com.bssmh.portfolio.web.exception.NotMatchedParentChildPortfolioIdException;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +65,7 @@ public class CommentService {
         Member member = findMemberService.findLoginMember(memberContext);
         Long commentId = rq.getCommentId();
         Comment comment = findCommentService.findByIdOrElseThrow(commentId);
-        commentPermissionCheck(comment, member);
+        commentDeletePermissionCheck(comment, member);
         commentRepository.delete(comment);
     }
 
@@ -72,18 +73,27 @@ public class CommentService {
         Member member = findMemberService.findLoginMember(memberContext);
         Long commentId = rq.getCommentId();
         Comment comment = findCommentService.findByIdOrElseThrow(commentId);
-        commentPermissionCheck(comment, member);
+        commentModifyPermissionCheck(comment, member);
         comment.update(rq.getContent());
     }
 
-    private void commentPermissionCheck(Comment comment, Member member) {
+    private void commentModifyPermissionCheck(Comment comment, Member member) {
+        Long writerId = comment.getMember().getId();
+        Long memberId = member.getId();
+        if (writerId.equals(memberId)) {
+            return;
+        }
+        throw new DoNotHavePermissionToModifyCommentException();
+    }
+
+    private void commentDeletePermissionCheck(Comment comment, Member member) {
         Long writerId = comment.getMember().getId();
         Long memberId = member.getId();
         Long portfolioWriterId = comment.getPortfolio().getMember().getId();
         if (portfolioWriterId.equals(memberId) || writerId.equals(memberId)) {
             return;
         }
-        throw new DoNotHavePermissionToModifyCommentException();
+        throw new DoNotHavePermissionToDeleteCommentException();
     }
 
 }
