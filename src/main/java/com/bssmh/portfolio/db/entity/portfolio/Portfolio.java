@@ -49,6 +49,7 @@ public class Portfolio extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private PortfolioTheme portfolioTheme;
 
+    @Column(nullable = false)
     private String title;
 
     @Column(columnDefinition = "text")
