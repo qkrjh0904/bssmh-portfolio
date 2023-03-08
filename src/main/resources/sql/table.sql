@@ -150,6 +150,9 @@ create table comment
     content            text     not null,
     member_id          bigint   not null,
     portfolio_id       bigint   not null,
+    parent_id          bigint,
+    constraint fk_comment_parent_id
+        foreign key (parent_id) references comment (comment_id),
     constraint fk_comment_member_id
         foreign key (member_id) references member (member_id),
     constraint fk_comment_portfolio_id

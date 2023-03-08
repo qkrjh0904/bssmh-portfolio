@@ -11,6 +11,7 @@ import com.bssmh.portfolio.web.domain.comment.repository.CommentRepository;
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
 import com.bssmh.portfolio.web.domain.portfolio.service.FindPortfolioService;
 import com.bssmh.portfolio.web.exception.DoNotHavePermissionToModifyCommentException;
+import com.bssmh.portfolio.web.exception.NotMatchedParentChildPortfolioIdException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,10 +35,22 @@ public class CommentService {
         String email = memberContext.getEmail();
         Member member = findMemberService.findLoginMember(memberContext);
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(rq.getPortfolioId());
+
+        Comment parent = null;
+        // 자식 댓글인 경우
+        if (rq.getParentId() != null) {
+            parent = findCommentService.findByIdOrElseThrow(rq.getParentId());
+            // 부모댓글의 게시글 번호와 자식 댓글의 게시글 번호 같은지 체크
+            if (parent.getPortfolio().getId() != rq.getPortfolioId()) {
+                throw new NotMatchedParentChildPortfolioIdException();
+            }
+        }
+
         Comment comment = Comment.create(
                 rq.getContent(),
                 portfolio,
-                member);
+                member,
+                parent);
         commentRepository.save(comment);
     }
 
