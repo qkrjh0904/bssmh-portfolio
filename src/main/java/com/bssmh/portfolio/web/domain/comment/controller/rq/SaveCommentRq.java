@@ -5,7 +5,6 @@ import lombok.Data;
 import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotNull;
-import java.util.Optional;
 
 @Data
 public class SaveCommentRq {

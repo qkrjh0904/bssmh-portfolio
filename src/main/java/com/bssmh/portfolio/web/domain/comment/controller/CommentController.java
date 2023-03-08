@@ -9,7 +9,6 @@ import com.bssmh.portfolio.web.domain.comment.service.CommentService;
 import com.bssmh.portfolio.web.domain.comment.service.FindCommentService;
 import com.bssmh.portfolio.web.endpoint.ListResponse;
 import com.bssmh.portfolio.web.path.ApiPath;
-import com.bssmh.portfolio.web.utils.RoleCheckUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

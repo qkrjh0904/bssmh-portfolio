@@ -10,7 +10,6 @@ import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
 import com.bssmh.portfolio.web.domain.portfolio.service.FindPortfolioService;
 import com.bssmh.portfolio.web.endpoint.ListResponse;
 import com.bssmh.portfolio.web.exception.NoSuchCommentException;
-import com.mysql.cj.x.protobuf.MysqlxCrud;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
