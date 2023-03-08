@@ -2,6 +2,7 @@ package com.bssmh.portfolio.web.domain.comment.controller.rs;
 
 import com.bssmh.portfolio.db.entity.comment.Comment;
 import com.bssmh.portfolio.db.entity.member.Member;
+import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.web.domain.dto.MemberDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -34,6 +35,8 @@ public class FindCommentRs {
     @Schema(description = "수정가능 여부")
     private Boolean editable;
 
+    @Schema(description = "삭제가능 여부")
+    private Boolean deletable;
 
     public static FindCommentRs create(Comment comment, Member member) {
         FindCommentRs rs = new FindCommentRs();
@@ -42,12 +45,24 @@ public class FindCommentRs {
         rs.content = comment.getContent();
         rs.createdDate = comment.getCreatedDate().toString();
         rs.editable = getEditable(rs.writer.getMemberId(), member);
+        rs.deletable = getDeletable(rs.writer.getMemberId(), member, comment.getPortfolio());
         return rs;
     }
 
     private static boolean getEditable(Long writerId, Member member) {
         if (Objects.isNull(member)) {
             return false;
+        }
+        return member.getId().equals(writerId);
+    }
+
+    private static boolean getDeletable(Long writerId, Member member, Portfolio portfolio) {
+        if (Objects.isNull(member)){
+            return false;
+        }
+        // 포트폴리오 작성자가 본인일 때
+        if (Objects.equals(portfolio.getMember().getId(), member.getId())) {
+            return true;
         }
         return member.getId().equals(writerId);
     }
