@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -77,7 +79,8 @@ public class CommentService {
     private void commentPermissionCheck(Comment comment, Member member) {
         Long writerId = comment.getMember().getId();
         Long memberId = member.getId();
-        if (writerId.equals(memberId)) {
+        Long portfolioWriterId = comment.getPortfolio().getMember().getId();
+        if (portfolioWriterId.equals(memberId) || writerId.equals(memberId)) {
             return;
         }
         throw new DoNotHavePermissionToModifyCommentException();
