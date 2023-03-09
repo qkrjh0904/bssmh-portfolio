@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface CommentRepositoryCustom {
 
-    List<Comment> findCommentAllByPortfolio(Portfolio portfolio);
+    List<Comment> findParentCommentByPortfolio(Portfolio portfolio);
 
 }

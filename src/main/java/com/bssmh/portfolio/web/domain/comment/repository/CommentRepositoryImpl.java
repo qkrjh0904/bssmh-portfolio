@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.bssmh.portfolio.db.entity.comment.QComment.comment;
 
@@ -14,11 +15,12 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Comment> findCommentAllByPortfolio(Portfolio portfolio){
+    public List<Comment> findParentCommentByPortfolio(Portfolio portfolio){
         return jpaQueryFactory.selectFrom(comment)
                 .leftJoin(comment.parent)
                 .fetchJoin()
-                .where(comment.portfolio.id.eq(portfolio.getId()))
+                .where(comment.portfolio.id.eq(portfolio.getId())
+                        .and(comment.parent.isNull()))
                 .orderBy(comment.parent.id.asc().nullsFirst(), comment.createdDate.asc())
                 .fetch();
     }

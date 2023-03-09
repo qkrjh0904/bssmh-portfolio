@@ -46,6 +46,12 @@ public class FindCommentRs {
         rs.createdDate = comment.getCreatedDate().toString();
         rs.editable = getEditable(rs.writer.getMemberId(), member);
         rs.deletable = getDeletable(rs.writer.getMemberId(), member, comment.getPortfolio());
+
+        for (Comment childComment: comment.getChildren()) {
+            FindCommentRs childCommentRs = create(childComment, member);
+            rs.children.add(childCommentRs);
+        }
+
         return rs;
     }
 

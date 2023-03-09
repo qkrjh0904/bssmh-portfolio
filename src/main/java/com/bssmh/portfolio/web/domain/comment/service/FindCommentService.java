@@ -33,27 +33,14 @@ public class FindCommentService {
 
     public ListResponse<FindCommentRs> findCommentByPortfolioId(MemberContext memberContext, Long portfolioId) {
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(portfolioId);
-        List<Comment> commentList = commentRepository.findCommentAllByPortfolio(portfolio);
+        List<Comment> commentList = commentRepository.findParentCommentByPortfolio(portfolio);
         Member member = findMemberService.findLoginMember(memberContext);
 
         List<FindCommentRs> commentRsList = new ArrayList<>();
-        Map<Long, FindCommentRs> commentMap = new HashMap<>();
-
         for (Comment comment: commentList) {
             FindCommentRs commentRs = FindCommentRs.create(comment, member);
-            if (comment.getParent() != null) {
-                commentRs.setParentId(comment.getParent().getId());
-            }
-            commentMap.put(commentRs.getCommentId(), commentRs);
-            // 만약 자식 댓글이면
-            if (comment.getParent() != null) {
-                // 부모 댓글에 자식 댓글 추가
-                commentMap.get(comment.getParent().getId()).getChildren().add(commentRs);
-                continue;
-            }
             commentRsList.add(commentRs);
         }
-
         return ListResponse.create(commentRsList);
     }
 
