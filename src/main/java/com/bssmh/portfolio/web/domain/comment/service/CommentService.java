@@ -39,18 +39,24 @@ public class CommentService {
         Member member = findMemberService.findLoginMember(memberContext);
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(rq.getPortfolioId());
 
-        Comment parent = null;
-        // 자식 댓글인 경우
-        if (rq.getParentId() != null) {
-            parent = findCommentService.findByIdOrElseThrow(rq.getParentId());
+        Long parentId = rq.getParentId();
+        Comment parent = getCommentParent(parentId);
+
+        // 자식 댓글인 경우 예외처리
+        if (Objects.nonNull(parentId)) {
+
+            Long childPortfolioId = rq.getPortfolioId();
+            Long parentPortfolioId = parent.getPortfolio().getId();
             // 부모 댓글의 포트폴리오 번호와 자식 댓글의 포트폴리오 번호가 같지 않다면
-            if (!parent.getPortfolio().getId().equals(rq.getPortfolioId())) {
+            if (!parentPortfolioId.equals(childPortfolioId)) {
                 throw new NotMatchedParentChildPortfolioIdException();
             }
+
             // 댓글의 깊이가 제한을 초과했을 때
-            if (parent.getParent() != null) {
+            if (Objects.nonNull(parent.getParent())) {
                 throw new DepthLimitExceededException();
             }
+
         }
 
         Comment comment = Comment.create(
@@ -94,6 +100,14 @@ public class CommentService {
             return;
         }
         throw new DoNotHavePermissionToDeleteCommentException();
+    }
+
+    private Comment getCommentParent(Long parentId) {
+        // 자식 댓글의 경우
+        if (Objects.nonNull(parentId))  {
+            return findCommentService.findByIdOrElseThrow(parentId);
+        }
+        return null;
     }
 
 }
