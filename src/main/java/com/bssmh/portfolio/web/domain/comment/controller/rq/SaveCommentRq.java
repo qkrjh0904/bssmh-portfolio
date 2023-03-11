@@ -2,7 +2,6 @@ package com.bssmh.portfolio.web.domain.comment.controller.rq;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotNull;
 

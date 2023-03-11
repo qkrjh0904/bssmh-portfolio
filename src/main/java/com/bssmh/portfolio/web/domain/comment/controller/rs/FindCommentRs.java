@@ -10,6 +10,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Data
 public class FindCommentRs {
@@ -38,7 +39,13 @@ public class FindCommentRs {
     @Schema(description = "삭제가능 여부")
     private Boolean deletable;
 
-    public static FindCommentRs create(Comment comment, Member member) {
+    @Schema(description = "좋아요수")
+    private Long bookmarks;
+
+    @Schema(description = "좋아요 여부")
+    private Boolean bookmarkYn;
+
+    public static FindCommentRs create(Comment comment, Member member, Set<Long> bookmarkedCommentIdSet) {
         FindCommentRs rs = new FindCommentRs();
         rs.writer = MemberDto.create(comment.getMember());
         rs.commentId = comment.getId();
@@ -46,9 +53,12 @@ public class FindCommentRs {
         rs.createdDate = comment.getCreatedDate().toString();
         rs.editable = getEditable(rs.writer.getMemberId(), member);
         rs.deletable = getDeletable(rs.writer.getMemberId(), member, comment.getPortfolio());
+        rs.bookmarks = getBookmarks(comment);
+        rs.bookmarkYn = getBookmarkYn(comment, bookmarkedCommentIdSet);
 
+        // 모든 자식 댓글에 대해 rs 생성
         for (Comment childComment: comment.getChildren()) {
-            FindCommentRs childCommentRs = create(childComment, member);
+            FindCommentRs childCommentRs = create(childComment, member, bookmarkedCommentIdSet);
             rs.children.add(childCommentRs);
         }
 
@@ -71,6 +81,14 @@ public class FindCommentRs {
             return true;
         }
         return member.getId().equals(writerId);
+    }
+
+    private static Long getBookmarks(Comment comment) {
+        return (long) comment.getBookmarkList().size();
+    }
+
+    private static Boolean getBookmarkYn(Comment comment, Set<Long> bookmarkedCommentIdSet) {
+        return bookmarkedCommentIdSet.contains(comment.getId());
     }
 
 }

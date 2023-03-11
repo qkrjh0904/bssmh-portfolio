@@ -8,7 +8,6 @@ import com.bssmh.portfolio.web.domain.comment.controller.rq.UpdateCommentRq;
 import com.bssmh.portfolio.web.domain.comment.controller.rs.FindCommentRs;
 import com.bssmh.portfolio.web.domain.comment.service.CommentService;
 import com.bssmh.portfolio.web.domain.comment.service.FindCommentService;
-import com.bssmh.portfolio.web.domain.portfolio.controller.rq.BookmarkPortfolioRq;
 import com.bssmh.portfolio.web.endpoint.ListResponse;
 import com.bssmh.portfolio.web.path.ApiPath;
 import io.swagger.v3.oas.annotations.Operation;
