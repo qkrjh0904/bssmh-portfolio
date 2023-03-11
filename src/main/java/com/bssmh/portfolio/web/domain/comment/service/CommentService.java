@@ -4,6 +4,7 @@ import com.bssmh.portfolio.db.entity.comment.Comment;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
+import com.bssmh.portfolio.web.domain.comment.controller.rq.BookmarkCommentRq;
 import com.bssmh.portfolio.web.domain.comment.controller.rq.DeleteCommentRq;
 import com.bssmh.portfolio.web.domain.comment.controller.rq.SaveCommentRq;
 import com.bssmh.portfolio.web.domain.comment.controller.rq.UpdateCommentRq;
@@ -31,6 +32,8 @@ public class CommentService {
     private final FindPortfolioService findPortfolioService;
 
     private final FindCommentService findCommentService;
+
+    private final CommentBookmarkService commentBookmarkService;
 
     // repository
     private final CommentRepository commentRepository;
@@ -110,4 +113,9 @@ public class CommentService {
         return null;
     }
 
+    public void bookmarkPortfolio(MemberContext memberContext, BookmarkCommentRq rq) {
+        Member member = findMemberService.findLoginMember(memberContext);
+        Comment comment = findCommentService.findByIdOrElseThrow(rq.getCommentId());
+        commentBookmarkService.toggleBookmarkComment(member, comment);
+    }
 }

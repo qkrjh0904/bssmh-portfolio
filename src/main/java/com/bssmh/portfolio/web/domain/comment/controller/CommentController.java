@@ -1,12 +1,14 @@
 package com.bssmh.portfolio.web.domain.comment.controller;
 
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
+import com.bssmh.portfolio.web.domain.comment.controller.rq.BookmarkCommentRq;
 import com.bssmh.portfolio.web.domain.comment.controller.rq.DeleteCommentRq;
 import com.bssmh.portfolio.web.domain.comment.controller.rq.SaveCommentRq;
 import com.bssmh.portfolio.web.domain.comment.controller.rq.UpdateCommentRq;
 import com.bssmh.portfolio.web.domain.comment.controller.rs.FindCommentRs;
 import com.bssmh.portfolio.web.domain.comment.service.CommentService;
 import com.bssmh.portfolio.web.domain.comment.service.FindCommentService;
+import com.bssmh.portfolio.web.domain.portfolio.controller.rq.BookmarkPortfolioRq;
 import com.bssmh.portfolio.web.endpoint.ListResponse;
 import com.bssmh.portfolio.web.path.ApiPath;
 import io.swagger.v3.oas.annotations.Operation;
@@ -56,6 +58,13 @@ public class CommentController {
                               @Validated @RequestBody DeleteCommentRq rq) {
         commentService.deleteComment(memberContext, rq);
 
+    }
+
+    @Operation(summary = "댓글 좋아요", description = "toggle 방식")
+    @PutMapping(ApiPath.COMMENT_BOOKMARK)
+    public void bookmarkPortfolio(@AuthenticationPrincipal MemberContext memberContext,
+                                  @Validated @RequestBody BookmarkCommentRq rq) {
+        commentService.bookmarkPortfolio(memberContext, rq);
     }
 
 }
