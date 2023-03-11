@@ -127,7 +127,7 @@ create table portfolio
         foreign key (video_attach_file_id) references attach_file (attach_file_id)
 )DEFAULT CHARACTER SET UTF8MB4;
 
-create table bookmark
+create table portfolio_bookmark
 (
     bookmark_id        bigint auto_increment
         primary key,
@@ -135,10 +135,24 @@ create table bookmark
     last_modified_date datetime not null,
     member_id          bigint   not null,
     portfolio_id       bigint   not null,
-    constraint fk_bookmark_member_id
+    constraint fk_portfolio_bookmark_member_id
         foreign key (member_id) references member (member_id),
     constraint fk_bookmark_portfolio_id
         foreign key (portfolio_id) references portfolio (portfolio_id)
+)DEFAULT CHARACTER SET UTF8MB4;
+
+create table comment_bookmark
+(
+    bookmark_id        bigint auto_increment
+        primary key,
+    created_date       datetime not null,
+    last_modified_date datetime not null,
+    member_id          bigint   not null,
+    comment_id       bigint   not null,
+    constraint fk_comment_bookmark_member_id
+        foreign key (member_id) references member (member_id),
+    constraint fk_bookmark_comment_id
+        foreign key (comment_id) references comment (comment_id)
 )DEFAULT CHARACTER SET UTF8MB4;
 
 create table comment

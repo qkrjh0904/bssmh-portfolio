@@ -2,7 +2,7 @@ package com.bssmh.portfolio.db.entity.bookmark;
 
 import com.bssmh.portfolio.db.entity.common.BaseTimeEntity;
 import com.bssmh.portfolio.db.entity.member.Member;
-import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
+import com.bssmh.portfolio.db.entity.comment.Comment;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +20,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Bookmark extends BaseTimeEntity {
+public class CommentBookmark extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,16 +28,16 @@ public class Bookmark extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "portfolio_id", nullable = false)
-    private Portfolio portfolio;
+    @JoinColumn(name = "comment_id", nullable = false)
+    private Comment comment;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    public static Bookmark create(Portfolio portfolio, Member member) {
-        Bookmark bookmark = new Bookmark();
-        bookmark.portfolio = portfolio;
+    public static CommentBookmark create(Comment comment, Member member) {
+        CommentBookmark bookmark = new CommentBookmark();
+        bookmark.comment = comment;
         bookmark.member = member;
         return bookmark;
     }

@@ -3,7 +3,6 @@ package com.bssmh.portfolio.web.domain.portfolio.service;
 import com.bssmh.portfolio.db.entity.attachfile.AttachFile;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
-import com.bssmh.portfolio.db.enums.MemberRoleType;
 import com.bssmh.portfolio.db.enums.MemberType;
 import com.bssmh.portfolio.db.enums.PortfolioType;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
@@ -47,7 +46,7 @@ public class PortfolioService {
     private final ContributorService contributorService;
     private final FindPortfolioService findPortfolioService;
 
-    private final BookmarkService bookmarkService;
+    private final PortfolioBookmarkService bookmarkService;
 
     // repository
     private final PortfolioRepository portfolioRepository;

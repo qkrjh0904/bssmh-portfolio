@@ -1,5 +1,7 @@
 package com.bssmh.portfolio.db.entity.comment;
 
+import com.bssmh.portfolio.db.entity.bookmark.CommentBookmark;
+import com.bssmh.portfolio.db.entity.bookmark.PortfolioBookmark;
 import com.bssmh.portfolio.db.entity.common.BaseTimeEntity;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
@@ -50,6 +52,9 @@ public class Comment extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> children = new ArrayList<>();
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentBookmark> bookmarkList = new ArrayList<>();
 
     public static Comment create(String content, Portfolio portfolio, Member member, Comment parent) {
         Comment comment = new Comment();
