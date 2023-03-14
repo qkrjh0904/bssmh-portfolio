@@ -22,6 +22,7 @@ public class ApiPath {
 
     // portfolio
     public static final String PORTFOLIO = "/api/portfolio";
+    public static final String PORTFOLIO_RECOMMEND = "/api/portfolio/recommend";
     public static final String PORTFOLIO_SEQUENCE = "/api/portfolio/sequence";
     public static final String PORTFOLIO_VIEWS_ADD = "/api/portfolio/views/add";
     public static final String PORTFOLIO_BOOKMARK = "/api/portfolio/bookmark";

@@ -5,6 +5,7 @@ import com.bssmh.portfolio.db.entity.contributor.Contributor;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.db.entity.portfolio.PortfolioSkill;
+import com.bssmh.portfolio.db.enums.PortfolioRecommendStatus;
 import com.bssmh.portfolio.db.enums.PortfolioScope;
 import com.bssmh.portfolio.db.enums.PortfolioTheme;
 import com.bssmh.portfolio.db.enums.PortfolioType;
@@ -78,6 +79,9 @@ public class FindPortfolioDetailRs {
     @Schema(description = "댓글수")
     private Long comments;
 
+    @Schema(description = "추천 여부")
+    private PortfolioRecommendStatus recommendType;
+
     @Schema(description = "생성일", pattern = "yyyy-MM-ddThh:mm:ss")
     private LocalDateTime createdDate;
 
@@ -101,6 +105,7 @@ public class FindPortfolioDetailRs {
         rs.followYn = followYn;
         rs.views = portfolio.getViews();
         rs.comments = getComments(portfolio);
+        rs.recommendType = portfolio.getRecommendStatus();
         rs.createdDate = portfolio.getCreatedDate();
         return rs;
     }
