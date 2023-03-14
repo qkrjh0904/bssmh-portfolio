@@ -61,7 +61,7 @@ public class FindPortfolioListRs {
     private Long comments;
 
     @Schema(description = "추천 여부")
-    private PortfolioRecommendStatus recommendType;
+    private PortfolioRecommendStatus recommendStatus;
 
     @Schema(description = "생성일", pattern = "yyyy-MM-ddThh:mm:ss")
     private LocalDateTime createdDate;
@@ -81,7 +81,7 @@ public class FindPortfolioListRs {
         rs.createdDate = portfolio.getCreatedDate();
         rs.portfolioType = portfolio.getPortfolioType();
         rs.portfolioTheme = portfolio.getPortfolioTheme();
-        rs.recommendType = portfolio.getRecommendStatus();
+        rs.recommendStatus = portfolio.getRecommendStatus();
         return rs;
     }
 

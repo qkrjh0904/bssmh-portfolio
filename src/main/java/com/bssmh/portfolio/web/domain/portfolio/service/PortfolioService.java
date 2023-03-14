@@ -12,7 +12,7 @@ import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.AddPortfolioViewsCountRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.BookmarkPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.DeletePortfolioRq;
-import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpdatePortfolioRecommendTypeRq;
+import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpdatePortfolioRecommendStatusRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpdatePortfolioSequenceRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpsertPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.repository.PortfolioRepository;
@@ -189,7 +189,7 @@ public class PortfolioService {
         portfolio.addViewsCount();
     }
 
-    public void updatePortfolioRecommendType(MemberContext memberContext, UpdatePortfolioRecommendTypeRq rq) {
+    public void updatePortfolioRecommendStatus(MemberContext memberContext, UpdatePortfolioRecommendStatusRq rq) {
         Member loginMember = findMemberService.findLoginMember(memberContext);
         if (!ROLE_ADMIN.equals(loginMember.getMemberRoleType())) {
             throw new AccessDeniedException();
@@ -198,6 +198,6 @@ public class PortfolioService {
         Long portfolioId = rq.getPortfolioId();
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(portfolioId);
         PortfolioRecommendStatus recommendStatus = PortfolioRecommendStatus.getOppositeStatus(portfolio.getRecommendStatus());
-        portfolio.updateRecommendType(recommendStatus);
+        portfolio.updateRecommendStatus(recommendStatus);
     }
 }

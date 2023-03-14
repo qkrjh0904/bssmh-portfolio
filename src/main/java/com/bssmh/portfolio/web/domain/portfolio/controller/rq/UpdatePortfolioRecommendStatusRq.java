@@ -6,7 +6,7 @@ import lombok.Getter;
 import javax.validation.constraints.NotNull;
 
 @Getter
-public class UpdatePortfolioRecommendTypeRq {
+public class UpdatePortfolioRecommendStatusRq {
 
     @NotNull
     @Schema(description = "포트폴리오 id")

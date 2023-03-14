@@ -156,7 +156,7 @@ public class Portfolio extends BaseTimeEntity {
         this.views += 1;
     }
 
-    public void updateRecommendType(PortfolioRecommendStatus recommendStatus) {
+    public void updateRecommendStatus(PortfolioRecommendStatus recommendStatus) {
         this.recommendStatus = recommendStatus;
     }
 }
