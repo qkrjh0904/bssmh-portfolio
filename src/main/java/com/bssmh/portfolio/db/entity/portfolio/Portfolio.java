@@ -83,6 +83,8 @@ public class Portfolio extends BaseTimeEntity {
 
     private Integer schoolGrade;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private PortfolioRecommendStatus recommendStatus;
 
     @ManyToOne(fetch = LAZY)
