@@ -25,7 +25,7 @@ public class FindCommentRs {
     private Long parentId;
 
     @Schema(description = "자식 댓글")
-    private List<FindCommentRs> children = new ArrayList<>();
+    private List<FindCommentRs> replyList = new ArrayList<>();
 
     @Schema(description = "내용")
     private String content;
@@ -59,7 +59,7 @@ public class FindCommentRs {
         // 모든 자식 댓글에 대해 rs 생성
         for (Comment childComment: comment.getChildren()) {
             FindCommentRs childCommentRs = create(childComment, member, bookmarkedCommentIdSet);
-            rs.children.add(childCommentRs);
+            rs.replyList.add(childCommentRs);
         }
 
         return rs;
