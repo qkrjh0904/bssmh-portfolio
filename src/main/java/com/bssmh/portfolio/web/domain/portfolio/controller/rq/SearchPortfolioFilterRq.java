@@ -1,5 +1,6 @@
 package com.bssmh.portfolio.web.domain.portfolio.controller.rq;
 
+import com.bssmh.portfolio.db.enums.PortfolioRecommendStatus;
 import com.bssmh.portfolio.db.enums.PortfolioSortType;
 import com.bssmh.portfolio.db.enums.PortfolioTheme;
 import com.bssmh.portfolio.db.enums.SortDirectionType;
@@ -27,5 +28,8 @@ public class SearchPortfolioFilterRq {
 
     @Schema(description = "정렬방향")
     private SortDirectionType sortDirectionType;
+
+    @Schema(description = "추천 상태")
+    private PortfolioRecommendStatus recommendStatus;
 
 }

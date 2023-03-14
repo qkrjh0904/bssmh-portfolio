@@ -6,6 +6,7 @@ import com.bssmh.portfolio.db.entity.comment.Comment;
 import com.bssmh.portfolio.db.entity.common.BaseTimeEntity;
 import com.bssmh.portfolio.db.entity.contributor.Contributor;
 import com.bssmh.portfolio.db.entity.member.Member;
+import com.bssmh.portfolio.db.enums.PortfolioRecommendStatus;
 import com.bssmh.portfolio.db.enums.PortfolioScope;
 import com.bssmh.portfolio.db.enums.PortfolioTheme;
 import com.bssmh.portfolio.db.enums.PortfolioType;
@@ -29,6 +30,7 @@ import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bssmh.portfolio.db.enums.PortfolioRecommendStatus.NONE;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
@@ -81,6 +83,8 @@ public class Portfolio extends BaseTimeEntity {
 
     private Integer schoolGrade;
 
+    private PortfolioRecommendStatus recommendStatus;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -114,6 +118,7 @@ public class Portfolio extends BaseTimeEntity {
         portfolio.sequence = sequence;
         portfolio.member = member;
         portfolio.schoolGrade = member.getMemberClassInfoArrayList().get(0).getSchoolGrade();
+        portfolio.recommendStatus = NONE;
         return portfolio;
     }
 
@@ -147,5 +152,9 @@ public class Portfolio extends BaseTimeEntity {
 
     public void addViewsCount() {
         this.views += 1;
+    }
+
+    public void updateRecommendType(PortfolioRecommendStatus recommendStatus) {
+        this.recommendStatus = recommendStatus;
     }
 }

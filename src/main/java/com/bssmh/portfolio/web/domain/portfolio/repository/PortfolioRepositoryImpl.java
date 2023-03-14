@@ -1,6 +1,7 @@
 package com.bssmh.portfolio.web.domain.portfolio.repository;
 
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
+import com.bssmh.portfolio.db.enums.PortfolioRecommendStatus;
 import com.bssmh.portfolio.db.enums.PortfolioScope;
 import com.bssmh.portfolio.db.enums.PortfolioSortType;
 import com.bssmh.portfolio.db.enums.PortfolioTheme;
@@ -44,6 +45,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
                         uploadDateEq(filter.getUploadDateType()),
                         schoolGradeEq(filter.getSchoolGrade()),
                         portfolioThemeEq(filter.getPortfolioTheme()),
+                        portfolioRecommendStatusEq(filter.getRecommendStatus()),
                         scopeEq(List.of(PUBLIC)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -56,9 +58,17 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
                         uploadDateEq(filter.getUploadDateType()),
                         schoolGradeEq(filter.getSchoolGrade()),
                         portfolioThemeEq(filter.getPortfolioTheme()),
+                        portfolioRecommendStatusEq(filter.getRecommendStatus()),
                         scopeEq(List.of(PUBLIC)));
 
         return PageableExecutionUtils.getPage(contents, pageable, () -> countQuery.fetch().size());
+    }
+
+    private BooleanExpression portfolioRecommendStatusEq(PortfolioRecommendStatus recommendStatus) {
+        if (Objects.isNull(recommendStatus)) {
+            return null;
+        }
+        return portfolio.recommendStatus.eq(recommendStatus);
     }
 
     private BooleanExpression portfolioThemeEq(PortfolioTheme portfolioTheme) {
