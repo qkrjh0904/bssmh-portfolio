@@ -113,9 +113,4 @@ public class CommentService {
         return null;
     }
 
-    public void bookmarkPortfolio(MemberContext memberContext, BookmarkCommentRq rq) {
-        Member member = findMemberService.findLoginMember(memberContext);
-        Comment comment = findCommentService.findByIdOrElseThrow(rq.getCommentId());
-        commentBookmarkService.toggleBookmarkComment(member, comment);
-    }
 }

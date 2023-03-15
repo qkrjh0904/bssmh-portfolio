@@ -1,7 +1,6 @@
 package com.bssmh.portfolio.db.entity.comment;
 
 import com.bssmh.portfolio.db.entity.bookmark.CommentBookmark;
-import com.bssmh.portfolio.db.entity.bookmark.PortfolioBookmark;
 import com.bssmh.portfolio.db.entity.common.BaseTimeEntity;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;

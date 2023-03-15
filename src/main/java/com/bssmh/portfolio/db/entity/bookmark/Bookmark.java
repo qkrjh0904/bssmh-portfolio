@@ -20,7 +20,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PortfolioBookmark extends BaseTimeEntity {
+public class Bookmark extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,8 +35,8 @@ public class PortfolioBookmark extends BaseTimeEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    public static PortfolioBookmark create(Portfolio portfolio, Member member) {
-        PortfolioBookmark bookmark = new PortfolioBookmark();
+    public static Bookmark create(Portfolio portfolio, Member member) {
+        Bookmark bookmark = new Bookmark();
         bookmark.portfolio = portfolio;
         bookmark.member = member;
         return bookmark;

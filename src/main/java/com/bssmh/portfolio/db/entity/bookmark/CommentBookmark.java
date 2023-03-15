@@ -24,7 +24,7 @@ public class CommentBookmark extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "bookmark_id")
+    @Column(name = "comment_bookmark_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)
@@ -36,10 +36,10 @@ public class CommentBookmark extends BaseTimeEntity {
     private Member member;
 
     public static CommentBookmark create(Comment comment, Member member) {
-        CommentBookmark bookmark = new CommentBookmark();
-        bookmark.comment = comment;
-        bookmark.member = member;
-        return bookmark;
+        CommentBookmark commentBookmark = new CommentBookmark();
+        commentBookmark.comment = comment;
+        commentBookmark.member = member;
+        return commentBookmark;
     }
 
 }

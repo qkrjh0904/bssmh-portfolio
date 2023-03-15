@@ -15,12 +15,11 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
 
     @Override
     public List<Comment> findParentCommentByPortfolio(Portfolio portfolio){
-        return jpaQueryFactory.selectFrom(comment)
-                .leftJoin(comment.parent)
-                .fetchJoin()
-                .where(comment.portfolio.id.eq(portfolio.getId())
-                        .and(comment.parent.isNull()))
-                .orderBy(comment.parent.id.asc().nullsFirst(), comment.createdDate.asc())
+        return jpaQueryFactory
+                .selectFrom(comment)
+                .where(comment.portfolio.id.eq(portfolio.getId()),
+                        comment.parent.id.isNull())
+                .orderBy(comment.createdDate.desc())
                 .fetch();
     }
 

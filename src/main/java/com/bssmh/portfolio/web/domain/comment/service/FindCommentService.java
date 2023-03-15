@@ -33,21 +33,18 @@ public class FindCommentService {
     // service
     private final FindMemberService findMemberService;
     private final FindPortfolioService findPortfolioService;
-    private final FindCommentBookmarkService findCommentBookmarkService;
+    private final CommentBookmarkService findCommentBookmarkService;
 
     public ListResponse<FindCommentRs> findCommentByPortfolioId(MemberContext memberContext, Long portfolioId) {
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(portfolioId);
         List<Comment> commentList = commentRepository.findParentCommentByPortfolio(portfolio);
-        Member member = findMemberService.findLoginMember(memberContext);
+        Member loginMember = findMemberService.findLoginMember(memberContext);
         Set<Long> bookmarkedCommentIdSet = getMyBookmarkedCommentIdSet(memberContext);
 
-        List<FindCommentRs> commentRsList = new ArrayList<>();
-        for (Comment comment: commentList) {
-            FindCommentRs commentRs = FindCommentRs.create(comment, member, bookmarkedCommentIdSet);
-            commentRsList.add(commentRs);
-        }
-
-        return ListResponse.create(commentRsList);
+        List<FindCommentRs> findCommentRsList = commentList.stream()
+                .map(comment -> FindCommentRs.create(comment, loginMember, bookmarkedCommentIdSet))
+                .collect(Collectors.toList());
+        return ListResponse.create(findCommentRsList);
     }
 
     public Comment findByIdOrElseThrow(Long commentId) {

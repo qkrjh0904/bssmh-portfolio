@@ -1,7 +1,7 @@
 package com.bssmh.portfolio.db.entity.portfolio;
 
 import com.bssmh.portfolio.db.entity.attachfile.AttachFile;
-import com.bssmh.portfolio.db.entity.bookmark.PortfolioBookmark;
+import com.bssmh.portfolio.db.entity.bookmark.Bookmark;
 import com.bssmh.portfolio.db.entity.comment.Comment;
 import com.bssmh.portfolio.db.entity.common.BaseTimeEntity;
 import com.bssmh.portfolio.db.entity.contributor.Contributor;
@@ -95,7 +95,7 @@ public class Portfolio extends BaseTimeEntity {
     private List<PortfolioSkill> portfolioSkillList = new ArrayList<>();
 
     @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PortfolioBookmark> bookmarkList = new ArrayList<>();
+    private List<Bookmark> bookmarkList = new ArrayList<>();
 
     public static Portfolio create(PortfolioType portfolioType, String title, String description,
                                    AttachFile video, AttachFile thumbnail, String portfolioUrl, String gitUrl,

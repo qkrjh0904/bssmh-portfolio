@@ -1,6 +1,6 @@
 package com.bssmh.portfolio.web.domain.portfolio.service;
 
-import com.bssmh.portfolio.db.entity.bookmark.PortfolioBookmark;
+import com.bssmh.portfolio.db.entity.bookmark.Bookmark;
 import com.bssmh.portfolio.db.entity.contributor.Contributor;
 import com.bssmh.portfolio.db.entity.follow.Follow;
 import com.bssmh.portfolio.db.entity.member.Member;
@@ -113,7 +113,7 @@ public class FindPortfolioService {
 
         Member loginMember = findMemberService.findLoginMember(memberContext);
         return findPortfolioBookmarkService.findByMember(loginMember).stream()
-                .map(PortfolioBookmark::getPortfolio)
+                .map(Bookmark::getPortfolio)
                 .map(Portfolio::getId)
                 .collect(Collectors.toSet());
     }
@@ -159,7 +159,7 @@ public class FindPortfolioService {
 
     private Set<Long> getMyBookmarkedPortfolioIdSet(Member loginMember) {
         return findPortfolioBookmarkService.findByMember(loginMember).stream()
-                .map(PortfolioBookmark::getId)
+                .map(Bookmark::getId)
                 .collect(Collectors.toSet());
     }
 

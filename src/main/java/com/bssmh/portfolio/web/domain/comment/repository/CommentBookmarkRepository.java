@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CommentBookmarkRepository extends JpaRepository<CommentBookmark, Long> {
+
     Optional<CommentBookmark> findByMemberAndComment(Member member, Comment comment);
+
     List<CommentBookmark> findByMember(Member member);
 
 }

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 public class FindCommentRs {
@@ -20,12 +21,6 @@ public class FindCommentRs {
 
     @Schema(description = "댓글 id")
     private Long commentId;
-
-    @Schema(description = "부모 댓글 id")
-    private Long parentId;
-
-    @Schema(description = "자식 댓글")
-    private List<FindCommentRs> replyList = new ArrayList<>();
 
     @Schema(description = "내용")
     private String content;
@@ -45,47 +40,58 @@ public class FindCommentRs {
     @Schema(description = "좋아요 여부")
     private Boolean bookmarkYn;
 
-    public static FindCommentRs create(Comment comment, Member member, Set<Long> bookmarkedCommentIdSet) {
+    @Schema(description = "부모 댓글 id")
+    private Long parentId;
+
+    @Schema(description = "자식 댓글")
+    private List<FindCommentRs> replyList = new ArrayList<>();
+
+    public static FindCommentRs create(Comment comment, Member loginMember, Set<Long> bookmarkedCommentIdSet) {
         FindCommentRs rs = new FindCommentRs();
         rs.writer = MemberDto.create(comment.getMember());
         rs.commentId = comment.getId();
         rs.content = comment.getContent();
         rs.createdDate = comment.getCreatedDate().toString();
-        rs.editable = getEditable(rs.writer.getMemberId(), member);
-        rs.deletable = getDeletable(rs.writer.getMemberId(), member, comment.getPortfolio());
+        rs.editable = getEditable(rs.writer.getMemberId(), loginMember);
+        rs.deletable = getDeletable(rs.writer.getMemberId(), loginMember, comment.getPortfolio());
         rs.bookmarks = getBookmarks(comment);
         rs.bookmarkYn = getBookmarkYn(comment, bookmarkedCommentIdSet);
-
-        // 부모 댓글이 존재하면 프로퍼티 추가
-        if (Objects.nonNull(comment.getParent())) {
-            rs.parentId = comment.getParent().getId();
-        }
-
-        // 모든 자식 댓글에 대해 rs 생성
-        for (Comment childComment : comment.getChildren()) {
-            FindCommentRs childCommentRs = create(childComment, member, bookmarkedCommentIdSet);
-            rs.replyList.add(childCommentRs);
-        }
-
+        rs.parentId = getParentId(comment);
+        rs.replyList = getReplyList(comment, loginMember, bookmarkedCommentIdSet);
         return rs;
     }
 
-    private static boolean getEditable(Long writerId, Member member) {
-        if (Objects.isNull(member)) {
-            return false;
-        }
-        return member.getId().equals(writerId);
+    private static List<FindCommentRs> getReplyList(Comment comment, Member loginMember, Set<Long> bookmarkedCommentIdSet) {
+        List<Comment> children = comment.getChildren();
+        return children.stream()
+                .map(child -> FindCommentRs.create(child, loginMember, bookmarkedCommentIdSet))
+                .collect(Collectors.toList());
     }
 
-    private static boolean getDeletable(Long writerId, Member member, Portfolio portfolio) {
-        if (Objects.isNull(member)){
+    private static Long getParentId(Comment comment) {
+        Comment parent = comment.getParent();
+        if (Objects.isNull(parent)) {
+            return null;
+        }
+        return parent.getId();
+    }
+
+    private static boolean getEditable(Long writerId, Member loginMember) {
+        if (Objects.isNull(loginMember)) {
+            return false;
+        }
+        return loginMember.getId().equals(writerId);
+    }
+
+    private static boolean getDeletable(Long writerId, Member loginMember, Portfolio portfolio) {
+        if (Objects.isNull(loginMember)) {
             return false;
         }
         // 포트폴리오 작성자가 본인일 때
-        if (Objects.equals(portfolio.getMember().getId(), member.getId())) {
+        if (Objects.equals(portfolio.getMember().getId(), loginMember.getId())) {
             return true;
         }
-        return member.getId().equals(writerId);
+        return loginMember.getId().equals(writerId);
     }
 
     private static Long getBookmarks(Comment comment) {

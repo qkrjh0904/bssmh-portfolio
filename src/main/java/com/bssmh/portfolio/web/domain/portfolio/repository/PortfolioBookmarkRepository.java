@@ -1,6 +1,6 @@
 package com.bssmh.portfolio.web.domain.portfolio.repository;
 
-import com.bssmh.portfolio.db.entity.bookmark.PortfolioBookmark;
+import com.bssmh.portfolio.db.entity.bookmark.Bookmark;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface PortfolioBookmarkRepository extends JpaRepository<PortfolioBookmark, Long> {
-    Optional<PortfolioBookmark> findByMemberAndPortfolio(Member member, Portfolio portfolio);
-    List<PortfolioBookmark> findByMember(Member member);
+public interface PortfolioBookmarkRepository extends JpaRepository<Bookmark, Long> {
+    Optional<Bookmark> findByMemberAndPortfolio(Member member, Portfolio portfolio);
+    List<Bookmark> findByMember(Member member);
 
 }
