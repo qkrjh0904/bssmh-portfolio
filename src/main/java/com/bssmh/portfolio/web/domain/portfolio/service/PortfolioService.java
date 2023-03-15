@@ -4,6 +4,7 @@ import com.bssmh.portfolio.db.entity.attachfile.AttachFile;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.db.enums.MemberType;
+import com.bssmh.portfolio.db.enums.PortfolioRecommendStatus;
 import com.bssmh.portfolio.db.enums.PortfolioType;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.file.service.AttachFileService;
@@ -11,9 +12,11 @@ import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.AddPortfolioViewsCountRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.BookmarkPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.DeletePortfolioRq;
+import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpdatePortfolioRecommendStatusRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpdatePortfolioSequenceRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpsertPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.repository.PortfolioRepository;
+import com.bssmh.portfolio.web.exception.AccessDeniedException;
 import com.bssmh.portfolio.web.exception.DoNotHavePermissionToModifyPortfolioException;
 import com.bssmh.portfolio.web.exception.PortfolioEmptyException;
 import com.bssmh.portfolio.web.exception.PortfolioSequenceException;
@@ -77,7 +80,7 @@ public class PortfolioService {
     }
 
     private void validationCheck(Member member, UpsertPortfolioRq rq) {
-        if (MemberType.TEACHER.equals(member.getMemberType())){
+        if (MemberType.TEACHER.equals(member.getMemberType())) {
             throw new TeacherCannotCreatePortfolio();
         }
 
@@ -183,5 +186,17 @@ public class PortfolioService {
     public void addPortfolioViewsCount(AddPortfolioViewsCountRq rq) {
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(rq.getPortfolioId());
         portfolio.addViewsCount();
+    }
+
+    public void updatePortfolioRecommendStatus(MemberContext memberContext, UpdatePortfolioRecommendStatusRq rq) {
+        Member loginMember = findMemberService.findLoginMember(memberContext);
+        if (!ROLE_ADMIN.equals(loginMember.getMemberRoleType())) {
+            throw new AccessDeniedException();
+        }
+
+        Long portfolioId = rq.getPortfolioId();
+        Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(portfolioId);
+        PortfolioRecommendStatus recommendStatus = PortfolioRecommendStatus.getOppositeStatus(portfolio.getRecommendStatus());
+        portfolio.updateRecommendStatus(recommendStatus);
     }
 }

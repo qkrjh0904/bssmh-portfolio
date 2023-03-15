@@ -210,3 +210,5 @@ create table skill
         unique (name)
 )DEFAULT CHARACTER SET UTF8MB4;
 
+alter table portfolio
+    add recommend_status varchar(255) default 'NONE' not null;

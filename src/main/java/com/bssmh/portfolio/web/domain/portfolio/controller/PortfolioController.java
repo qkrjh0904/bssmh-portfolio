@@ -4,6 +4,7 @@ import com.bssmh.portfolio.web.config.security.context.MemberContext;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.AddPortfolioViewsCountRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.BookmarkPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.DeletePortfolioRq;
+import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpdatePortfolioRecommendStatusRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpdatePortfolioSequenceRq;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpsertPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.service.PortfolioService;
@@ -68,4 +69,10 @@ public class PortfolioController {
         portfolioService.addPortfolioViewsCount(rq);
     }
 
+    @Operation(summary = "포트폴리오 추천 (toggle 방식)")
+    @PutMapping(ApiPath.PORTFOLIO_RECOMMEND)
+    public void updatePortfolioRecommendStatus(@AuthenticationPrincipal MemberContext memberContext,
+                                               @Validated @RequestBody UpdatePortfolioRecommendStatusRq rq) {
+        portfolioService.updatePortfolioRecommendStatus(memberContext, rq);
+    }
 }
