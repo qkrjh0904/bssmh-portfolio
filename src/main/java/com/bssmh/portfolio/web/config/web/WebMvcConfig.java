@@ -13,7 +13,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
                 .allowedMethods("*")
-                .allowedOriginPatterns(CORS_LOCAL, CORS_LOCAL_IP, CORS_BSSM_PR, CORS_BSSM_PR_FE);
+                .allowedOriginPatterns(CORS_LOCAL, CORS_BSSM_PR, CORS_BSSM_PR_FE);
     }
 
 }
