@@ -21,11 +21,8 @@ public class FindCommentRs {
     @Schema(description = "댓글 id")
     private Long commentId;
 
-    @Schema(description = "부모 댓글 id")
-    private Long parentId;
-
     @Schema(description = "자식 댓글")
-    private List<FindCommentRs> replyList = new ArrayList<>();
+    private List<FindCommentRs> replyList;
 
     @Schema(description = "내용")
     private String content;
@@ -49,7 +46,6 @@ public class FindCommentRs {
         FindCommentRs rs = new FindCommentRs();
         rs.writer = MemberDto.create(comment.getMember());
         rs.commentId = comment.getId();
-        rs.parentId = comment.getParent().getId();
         rs.content = comment.getContent();
         rs.createdDate = comment.getCreatedDate().toString();
         rs.editable = getEditable(rs.writer.getMemberId(), member);
@@ -57,10 +53,15 @@ public class FindCommentRs {
         rs.bookmarks = getBookmarks(comment);
         rs.bookmarkYn = getBookmarkYn(comment, bookmarkedCommentIdSet);
 
-        // 모든 자식 댓글에 대해 rs 생성
-        for (Comment childComment: comment.getChildren()) {
-            FindCommentRs childCommentRs = create(childComment, member, bookmarkedCommentIdSet);
-            rs.replyList.add(childCommentRs);
+        // 자식 댓글이 없는 경우 프로퍼티 null 처리
+        if (!comment.getChildren().isEmpty()) {
+            rs.replyList = new ArrayList<>();
+
+            // 모든 자식 댓글에 대해 rs 생성
+            for (Comment childComment: comment.getChildren()) {
+                FindCommentRs childCommentRs = create(childComment, member, bookmarkedCommentIdSet);
+                rs.replyList.add(childCommentRs);
+            }
         }
 
         return rs;
