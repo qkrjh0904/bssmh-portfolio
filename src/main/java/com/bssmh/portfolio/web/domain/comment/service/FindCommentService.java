@@ -33,13 +33,13 @@ public class FindCommentService {
     // service
     private final FindMemberService findMemberService;
     private final FindPortfolioService findPortfolioService;
-    private final CommentBookmarkService findCommentBookmarkService;
+    private final FindCommentBookmarkService findCommentBookmarkService;
 
     public ListResponse<FindCommentRs> findCommentByPortfolioId(MemberContext memberContext, Long portfolioId) {
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(portfolioId);
         List<Comment> commentList = commentRepository.findParentCommentByPortfolio(portfolio);
         Member loginMember = findMemberService.findLoginMember(memberContext);
-        Set<Long> bookmarkedCommentIdSet = getMyBookmarkedCommentIdSet(memberContext);
+        Set<Long> bookmarkedCommentIdSet = getMyBookmarkedCommentIdSet(loginMember);
 
         List<FindCommentRs> findCommentRsList = commentList.stream()
                 .map(comment -> FindCommentRs.create(comment, loginMember, bookmarkedCommentIdSet))
@@ -52,12 +52,11 @@ public class FindCommentService {
                 .orElseThrow(NoSuchCommentException::new);
     }
 
-    private Set<Long> getMyBookmarkedCommentIdSet(MemberContext memberContext) {
-        if (Objects.isNull(memberContext)) {
+    public Set<Long> getMyBookmarkedCommentIdSet(Member loginMember) {
+        if (Objects.isNull(loginMember)) {
             return new HashSet<>();
         }
 
-        Member loginMember = findMemberService.findLoginMember(memberContext);
         return findCommentBookmarkService.findByMember(loginMember).stream()
                 .map(CommentBookmark::getComment)
                 .map(Comment::getId)

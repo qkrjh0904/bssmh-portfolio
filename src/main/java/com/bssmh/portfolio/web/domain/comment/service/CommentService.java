@@ -4,7 +4,6 @@ import com.bssmh.portfolio.db.entity.comment.Comment;
 import com.bssmh.portfolio.db.entity.member.Member;
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
 import com.bssmh.portfolio.web.config.security.context.MemberContext;
-import com.bssmh.portfolio.web.domain.comment.controller.rq.BookmarkCommentRq;
 import com.bssmh.portfolio.web.domain.comment.controller.rq.DeleteCommentRq;
 import com.bssmh.portfolio.web.domain.comment.controller.rq.SaveCommentRq;
 import com.bssmh.portfolio.web.domain.comment.controller.rq.UpdateCommentRq;
@@ -33,41 +32,42 @@ public class CommentService {
 
     private final FindCommentService findCommentService;
 
-    private final CommentBookmarkService commentBookmarkService;
-
     // repository
     private final CommentRepository commentRepository;
 
     public void saveComment(MemberContext memberContext, SaveCommentRq rq) {
-        Member member = findMemberService.findLoginMember(memberContext);
-        Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(rq.getPortfolioId());
+        Long portfolioId = rq.getPortfolioId();
+        Member loginMember = findMemberService.findLoginMember(memberContext);
+        Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(portfolioId);
 
         Long parentId = rq.getParentId();
         Comment parent = getCommentParent(parentId);
 
-        // 자식 댓글인 경우 예외처리
-        if (Objects.nonNull(parentId)) {
-
-            Long childPortfolioId = rq.getPortfolioId();
-            Long parentPortfolioId = parent.getPortfolio().getId();
-            // 부모 댓글의 포트폴리오 번호와 자식 댓글의 포트폴리오 번호가 같지 않다면
-            if (!parentPortfolioId.equals(childPortfolioId)) {
-                throw new NotMatchedParentChildPortfolioIdException();
-            }
-
-            // 댓글의 깊이가 제한을 초과했을 때
-            if (Objects.nonNull(parent.getParent())) {
-                throw new DepthLimitExceededException();
-            }
-
-        }
+        validationCheck(parent, portfolioId);
 
         Comment comment = Comment.create(
                 rq.getContent(),
                 portfolio,
-                member,
+                loginMember,
                 parent);
         commentRepository.save(comment);
+    }
+
+    private void validationCheck(Comment parent, Long portfolioId) {
+        if (Objects.isNull(parent)) {
+            return;
+        }
+
+        Long parentPortfolioId = parent.getPortfolio().getId();
+        // 부모 댓글의 포트폴리오 번호와 자식 댓글의 포트폴리오 번호가 같지 않다면
+        if (!parentPortfolioId.equals(portfolioId)) {
+            throw new NotMatchedParentChildPortfolioIdException();
+        }
+
+        // 댓글의 깊이가 제한을 초과했을 때
+        if (Objects.nonNull(parent.getParent())) {
+            throw new DepthLimitExceededException();
+        }
     }
 
     public void deleteComment(MemberContext memberContext, DeleteCommentRq rq) {
@@ -106,11 +106,11 @@ public class CommentService {
     }
 
     private Comment getCommentParent(Long parentId) {
-        // 자식 댓글의 경우
-        if (Objects.nonNull(parentId))  {
-            return findCommentService.findByIdOrElseThrow(parentId);
+        if (Objects.isNull(parentId)) {
+            return null;
         }
-        return null;
+        return findCommentService.findByIdOrElseThrow(parentId);
+
     }
 
 }

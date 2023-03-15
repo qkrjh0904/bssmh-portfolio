@@ -9,9 +9,8 @@ import com.bssmh.portfolio.web.domain.comment.repository.CommentBookmarkReposito
 import com.bssmh.portfolio.web.domain.member.service.FindMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -44,7 +43,4 @@ public class CommentBookmarkService {
                 .orElse(null);
     }
 
-    public List<CommentBookmark> findByMember(Member member) {
-        return commentBookmarkRepository.findByMember(member);
-    }
 }
