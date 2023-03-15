@@ -49,6 +49,7 @@ public class FindCommentRs {
         FindCommentRs rs = new FindCommentRs();
         rs.writer = MemberDto.create(comment.getMember());
         rs.commentId = comment.getId();
+        rs.parentId = comment.getParent().getId();
         rs.content = comment.getContent();
         rs.createdDate = comment.getCreatedDate().toString();
         rs.editable = getEditable(rs.writer.getMemberId(), member);
