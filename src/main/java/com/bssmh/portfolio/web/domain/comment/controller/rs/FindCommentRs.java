@@ -21,6 +21,9 @@ public class FindCommentRs {
     @Schema(description = "댓글 id")
     private Long commentId;
 
+    @Schema(description = "부모 댓글 id")
+    private Long parentId;
+
     @Schema(description = "자식 댓글")
     private List<FindCommentRs> replyList = new ArrayList<>();
 
@@ -52,6 +55,11 @@ public class FindCommentRs {
         rs.deletable = getDeletable(rs.writer.getMemberId(), member, comment.getPortfolio());
         rs.bookmarks = getBookmarks(comment);
         rs.bookmarkYn = getBookmarkYn(comment, bookmarkedCommentIdSet);
+
+        // 부모 댓글이 존재하면 프로퍼티 추가
+        if (Objects.nonNull(comment.getParent())) {
+            rs.parentId = comment.getParent().getId();
+        }
 
         // 모든 자식 댓글에 대해 rs 생성
         for (Comment childComment : comment.getChildren()) {
