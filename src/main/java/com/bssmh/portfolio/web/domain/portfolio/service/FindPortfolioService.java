@@ -36,7 +36,7 @@ public class FindPortfolioService {
 
     private final PortfolioRepository portfolioRepository;
     private final FindMemberService findMemberService;
-    private final FindBookmarkService findBookmarkService;
+    private final FindPortfolioBookmarkService findPortfolioBookmarkService;
     private final ContributorService contributorService;
     private final FollowRepository followRepository;
 
@@ -112,7 +112,7 @@ public class FindPortfolioService {
         }
 
         Member loginMember = findMemberService.findLoginMember(memberContext);
-        return findBookmarkService.findByMember(loginMember).stream()
+        return findPortfolioBookmarkService.findByMember(loginMember).stream()
                 .map(Bookmark::getPortfolio)
                 .map(Portfolio::getId)
                 .collect(Collectors.toSet());
@@ -158,7 +158,7 @@ public class FindPortfolioService {
     }
 
     private Set<Long> getMyBookmarkedPortfolioIdSet(Member loginMember) {
-        return findBookmarkService.findByMember(loginMember).stream()
+        return findPortfolioBookmarkService.findByMember(loginMember).stream()
                 .map(Bookmark::getId)
                 .collect(Collectors.toSet());
     }

@@ -48,8 +48,7 @@ public class PortfolioService {
     private final PortfolioSkillService portfolioSkillService;
     private final ContributorService contributorService;
     private final FindPortfolioService findPortfolioService;
-
-    private final BookmarkService bookmarkService;
+    private final PortfolioBookmarkService portfolioBookmarkService;
 
     // repository
     private final PortfolioRepository portfolioRepository;
@@ -145,7 +144,7 @@ public class PortfolioService {
     public void bookmarkPortfolio(MemberContext memberContext, BookmarkPortfolioRq rq) {
         Member member = findMemberService.findLoginMember(memberContext);
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(rq.getPortfolioId());
-        bookmarkService.toggleBookmarkPortfolio(member, portfolio);
+        portfolioBookmarkService.toggleBookmarkPortfolio(member, portfolio);
     }
 
     public void updatePortfolioSequence(MemberContext memberContext, UpdatePortfolioSequenceRq rq) {

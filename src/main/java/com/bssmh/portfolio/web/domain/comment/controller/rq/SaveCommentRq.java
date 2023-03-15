@@ -15,5 +15,8 @@ public class SaveCommentRq {
     @NotNull
     @Schema(description = "댓글 내용")
     private String content;
+    
+    @Schema(description = "부모 댓글")
+    private Long parentId;
 
 }

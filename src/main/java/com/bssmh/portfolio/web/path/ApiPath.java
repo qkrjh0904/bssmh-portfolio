@@ -41,6 +41,8 @@ public class ApiPath {
     public static final String COMMENT_PORTFOLIO_ID = "/api/comment/{portfolio-id}";
     public static final String COMMENT_PORTFOLIO_ID_MATCHER = "/api/comment/{portfolio-id:\\d+}";
 
+    public static final String COMMENT_BOOKMARK = "/api/comment/bookmark";
+
     // skill
     public static final String SKILL = "/api/skill";
 
