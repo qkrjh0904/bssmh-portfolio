@@ -22,7 +22,7 @@ public class FindCommentRs {
     private Long commentId;
 
     @Schema(description = "자식 댓글")
-    private List<FindCommentRs> replyList;
+    private List<FindCommentRs> replyList = new ArrayList<>();
 
     @Schema(description = "내용")
     private String content;
@@ -53,15 +53,10 @@ public class FindCommentRs {
         rs.bookmarks = getBookmarks(comment);
         rs.bookmarkYn = getBookmarkYn(comment, bookmarkedCommentIdSet);
 
-        // 자식 댓글이 없는 경우 프로퍼티 null 처리
-        if (!comment.getChildren().isEmpty()) {
-            rs.replyList = new ArrayList<>();
-
-            // 모든 자식 댓글에 대해 rs 생성
-            for (Comment childComment: comment.getChildren()) {
-                FindCommentRs childCommentRs = create(childComment, member, bookmarkedCommentIdSet);
-                rs.replyList.add(childCommentRs);
-            }
+        // 모든 자식 댓글에 대해 rs 생성
+        for (Comment childComment : comment.getChildren()) {
+            FindCommentRs childCommentRs = create(childComment, member, bookmarkedCommentIdSet);
+            rs.replyList.add(childCommentRs);
         }
 
         return rs;
