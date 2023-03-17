@@ -18,6 +18,7 @@ import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpsertPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.repository.PortfolioRepository;
 import com.bssmh.portfolio.web.exception.AccessDeniedException;
 import com.bssmh.portfolio.web.exception.DoNotHavePermissionToModifyPortfolioException;
+import com.bssmh.portfolio.web.exception.NoSuchVideoFileException;
 import com.bssmh.portfolio.web.exception.PortfolioEmptyException;
 import com.bssmh.portfolio.web.exception.PortfolioSequenceException;
 import com.bssmh.portfolio.web.exception.TeacherCannotCreatePortfolio;
@@ -35,7 +36,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.bssmh.portfolio.db.enums.MemberRoleType.ROLE_ADMIN;
-import static com.bssmh.portfolio.db.enums.PortfolioType.URL;
+import static com.bssmh.portfolio.db.enums.PortfolioType.*;
 
 @Service
 @RequiredArgsConstructor
@@ -60,6 +61,8 @@ public class PortfolioService {
         int sequence = Objects.isNull(myLastSequencePortfolio) ? 1 : myLastSequencePortfolio.getSequence() + 1;
 
         AttachFile video = attachFileService.findByFileUidOrElseNull(rq.getVideoFileUid());
+        videoValidationCheck(rq.getPortfolioType(), video);
+
         AttachFile thumbnail = attachFileService.findByFileUidOrElseThrow(rq.getThumbnailFileUid());
 
         Portfolio portfolio = Portfolio.create(
@@ -77,6 +80,12 @@ public class PortfolioService {
         portfolioRepository.save(portfolio);
 
         upsertRelationShip(rq, portfolio);
+    }
+
+    private void videoValidationCheck(PortfolioType portfolioType, AttachFile video) {
+        if ((portfolioType == ALL || portfolioType == VIDEO) && Objects.isNull(video)) {
+            throw new NoSuchVideoFileException();
+        }
     }
 
     private void validationCheck(Member member, UpsertPortfolioRq rq) {
@@ -110,7 +119,9 @@ public class PortfolioService {
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(portfolioId);
         portfolioPermissionCheck(portfolio, member);
 
-        AttachFile video = attachFileService.findByFileUidOrElseThrow(rq.getVideoFileUid());
+        AttachFile video = attachFileService.findByFileUidOrElseNull(rq.getVideoFileUid());
+        videoValidationCheck(rq.getPortfolioType(), video);
+
         AttachFile thumbnail = attachFileService.findByFileUidOrElseThrow(rq.getThumbnailFileUid());
 
         portfolio.update(
