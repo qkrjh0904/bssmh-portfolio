@@ -122,8 +122,6 @@ public class PortfolioService {
 
         portfolio.update(
                 rq.getTitle(),
-        private void portfolioPermissionCheck(Portfolio portfolio, Member member) {
-            if (ROLE_ADMIN.equals(member.ge
                 rq.getDescription(),
                 video,
                 thumbnail,
@@ -135,7 +133,9 @@ public class PortfolioService {
 
         upsertRelationShip(rq, portfolio);
     }
-tMemberRoleType())) {
+
+    private void portfolioPermissionCheck(Portfolio portfolio, Member member) {
+        if (ROLE_ADMIN.equals(member.getMemberRoleType())) {
             return;
         }
 
