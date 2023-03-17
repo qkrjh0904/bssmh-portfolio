@@ -204,10 +204,13 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
             case THEME:
                 PortfolioTheme theme = PortfolioTheme.valueOf(search);
                 return portfolio.portfolioTheme.eq(theme);
+            case CREATOR:
+                return portfolio.member.name.contains(search);
             case CONTRIBUTOR:
                 return portfolio.contributorList.any().member.name.contains(search);
-            case STUDENT:
-                return portfolio.member.name.contains(search);
+            case CREATOR_AND_CONTRIBUTOR:
+                return portfolio.member.name.contains(search)
+                        .or(portfolio.contributorList.any().member.name.contains(search));
             default:
                 return null;
         }

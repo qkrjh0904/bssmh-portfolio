@@ -9,8 +9,9 @@ public enum SearchType {
 
     TITLE("제목"),
     THEME("테마"),
-    CONTRIBUTOR("제작자"),
-    STUDENT("학생");
+    CREATOR("제작자"),
+    CONTRIBUTOR("기여자"),
+    CREATOR_AND_CONTRIBUTOR("제작자+기여자");
 
 
     private final String name;
