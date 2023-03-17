@@ -18,6 +18,7 @@ import com.bssmh.portfolio.web.domain.portfolio.controller.rq.UpsertPortfolioRq;
 import com.bssmh.portfolio.web.domain.portfolio.repository.PortfolioRepository;
 import com.bssmh.portfolio.web.exception.AccessDeniedException;
 import com.bssmh.portfolio.web.exception.DoNotHavePermissionToModifyPortfolioException;
+import com.bssmh.portfolio.web.exception.NoSuchVideoFileException;
 import com.bssmh.portfolio.web.exception.PortfolioEmptyException;
 import com.bssmh.portfolio.web.exception.PortfolioSequenceException;
 import com.bssmh.portfolio.web.exception.TeacherCannotCreatePortfolio;
@@ -35,6 +36,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.bssmh.portfolio.db.enums.MemberRoleType.ROLE_ADMIN;
+import static com.bssmh.portfolio.db.enums.PortfolioType.ALL;
+import static com.bssmh.portfolio.db.enums.PortfolioType.VIDEO;
 import static com.bssmh.portfolio.db.enums.PortfolioType.URL;
 
 @Service
@@ -55,12 +58,12 @@ public class PortfolioService {
 
     public void savePortfolio(MemberContext memberContext, UpsertPortfolioRq rq) {
         Member member = findMemberService.findLoginMember(memberContext);
-        validationCheck(member, rq);
         Portfolio myLastSequencePortfolio = findPortfolioService.findMyLastSequencePortfolio(member.getId());
         int sequence = Objects.isNull(myLastSequencePortfolio) ? 1 : myLastSequencePortfolio.getSequence() + 1;
 
         AttachFile video = attachFileService.findByFileUidOrElseNull(rq.getVideoFileUid());
         AttachFile thumbnail = attachFileService.findByFileUidOrElseThrow(rq.getThumbnailFileUid());
+        validationCheck(member, video, rq);
 
         Portfolio portfolio = Portfolio.create(
                 rq.getPortfolioType(),
@@ -79,7 +82,7 @@ public class PortfolioService {
         upsertRelationShip(rq, portfolio);
     }
 
-    private void validationCheck(Member member, UpsertPortfolioRq rq) {
+    private void validationCheck(Member member, AttachFile video, UpsertPortfolioRq rq) {
         if (MemberType.TEACHER.equals(member.getMemberType())) {
             throw new TeacherCannotCreatePortfolio();
         }
@@ -87,6 +90,10 @@ public class PortfolioService {
         PortfolioType portfolioType = rq.getPortfolioType();
         if (URL.equals(portfolioType) && !StringUtils.hasText(rq.getPortfolioUrl())) {
             throw new PortfolioEmptyException("Portfolio URL");
+        }
+
+        if ((ALL.equals(portfolioType) || VIDEO.equals(portfolioType)) && Objects.isNull(video)) {
+            throw new NoSuchVideoFileException();
         }
     }
 
@@ -105,13 +112,13 @@ public class PortfolioService {
 
     public void updatePortfolio(MemberContext memberContext, UpsertPortfolioRq rq) {
         Member member = findMemberService.findLoginMember(memberContext);
-        validationCheck(member, rq);
         Long portfolioId = rq.getPortfolioId();
         Portfolio portfolio = findPortfolioService.findByIdOrElseThrow(portfolioId);
         portfolioPermissionCheck(portfolio, member);
 
-        AttachFile video = attachFileService.findByFileUidOrElseThrow(rq.getVideoFileUid());
+        AttachFile video = attachFileService.findByFileUidOrElseNull(rq.getVideoFileUid());
         AttachFile thumbnail = attachFileService.findByFileUidOrElseThrow(rq.getThumbnailFileUid());
+        validationCheck(member, video, rq);
 
         portfolio.update(
                 rq.getTitle(),
