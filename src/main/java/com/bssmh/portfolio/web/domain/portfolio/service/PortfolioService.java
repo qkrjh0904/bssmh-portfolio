@@ -63,7 +63,7 @@ public class PortfolioService {
         int sequence = Objects.isNull(myLastSequencePortfolio) ? 1 : myLastSequencePortfolio.getSequence() + 1;
 
         AttachFile video = attachFileService.findByFileUidOrElseNull(rq.getVideoFileUid());
-        videoValidationCheck(rq.getPortfolioType(), video);
+        videoValidationCheck(video, rq);
 
         AttachFile thumbnail = attachFileService.findByFileUidOrElseThrow(rq.getThumbnailFileUid());
 
@@ -84,8 +84,9 @@ public class PortfolioService {
         upsertRelationShip(rq, portfolio);
     }
 
-    private void videoValidationCheck(PortfolioType portfolioType, AttachFile video) {
-        if ((portfolioType == ALL || portfolioType == VIDEO) && Objects.isNull(video)) {
+    private void videoValidationCheck(AttachFile video, UpsertPortfolioRq rq) {
+        PortfolioType portfolioType = rq.getPortfolioType();
+        if ((ALL.equals(portfolioType) || VIDEO.equals(portfolioType)) && Objects.isNull(video)) {
             throw new NoSuchVideoFileException();
         }
     }
@@ -122,7 +123,7 @@ public class PortfolioService {
         portfolioPermissionCheck(portfolio, member);
 
         AttachFile video = attachFileService.findByFileUidOrElseNull(rq.getVideoFileUid());
-        videoValidationCheck(rq.getPortfolioType(), video);
+        videoValidationCheck(video, rq);
 
         AttachFile thumbnail = attachFileService.findByFileUidOrElseThrow(rq.getThumbnailFileUid());
 
