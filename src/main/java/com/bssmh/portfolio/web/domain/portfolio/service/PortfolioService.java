@@ -36,7 +36,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.bssmh.portfolio.db.enums.MemberRoleType.ROLE_ADMIN;
-import static com.bssmh.portfolio.db.enums.PortfolioType.*;
+import static com.bssmh.portfolio.db.enums.PortfolioType.ALL;
+import static com.bssmh.portfolio.db.enums.PortfolioType.VIDEO;
+import static com.bssmh.portfolio.db.enums.PortfolioType.URL;
 
 @Service
 @RequiredArgsConstructor
