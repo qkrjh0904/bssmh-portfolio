@@ -1,10 +1,6 @@
 package com.bssmh.portfolio.web.domain.portfolio.controller.rq;
 
-import com.bssmh.portfolio.db.enums.PortfolioRecommendStatus;
-import com.bssmh.portfolio.db.enums.PortfolioSortType;
-import com.bssmh.portfolio.db.enums.PortfolioTheme;
-import com.bssmh.portfolio.db.enums.SortDirectionType;
-import com.bssmh.portfolio.db.enums.UploadDateType;
+import com.bssmh.portfolio.db.enums.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
@@ -13,6 +9,9 @@ public class SearchPortfolioFilterRq {
 
     @Schema(description = "검색어")
     private String search;
+
+    @Schema(description = "검색 종류")
+    private SearchType searchType;
 
     @Schema(description = "업로드 날짜 필터 타입")
     private UploadDateType uploadDateType;

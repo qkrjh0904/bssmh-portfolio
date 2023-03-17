@@ -1,12 +1,7 @@
 package com.bssmh.portfolio.web.domain.portfolio.repository;
 
 import com.bssmh.portfolio.db.entity.portfolio.Portfolio;
-import com.bssmh.portfolio.db.enums.PortfolioRecommendStatus;
-import com.bssmh.portfolio.db.enums.PortfolioScope;
-import com.bssmh.portfolio.db.enums.PortfolioSortType;
-import com.bssmh.portfolio.db.enums.PortfolioTheme;
-import com.bssmh.portfolio.db.enums.SortDirectionType;
-import com.bssmh.portfolio.db.enums.UploadDateType;
+import com.bssmh.portfolio.db.enums.*;
 import com.bssmh.portfolio.web.domain.portfolio.controller.rq.SearchPortfolioFilterRq;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -41,7 +36,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
     public Page<Portfolio> findPortfolioListBySearch(SearchPortfolioFilterRq filter, Pageable pageable) {
         List<Portfolio> contents = jpaQueryFactory
                 .selectFrom(portfolio)
-                .where(searchEq(filter.getSearch()),
+                .where(searchEq(filter.getSearch(), filter.getSearchType()),
                         uploadDateEq(filter.getUploadDateType()),
                         schoolGradeEq(filter.getSchoolGrade()),
                         portfolioThemeEq(filter.getPortfolioTheme()),
@@ -54,7 +49,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
 
         JPAQuery<Portfolio> countQuery = jpaQueryFactory
                 .selectFrom(portfolio)
-                .where(searchEq(filter.getSearch()),
+                .where(searchEq(filter.getSearch(), filter.getSearchType()),
                         uploadDateEq(filter.getUploadDateType()),
                         schoolGradeEq(filter.getSchoolGrade()),
                         portfolioThemeEq(filter.getPortfolioTheme()),
@@ -199,11 +194,22 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
         return portfolio.portfolioScope.in(portfolioScopeList);
     }
 
-    private BooleanExpression searchEq(String search) {
-        if (StringUtils.hasText(search)) {
-            return portfolio.title.contains(search)
-                    .or(portfolio.member.name.contains(search));
+    private BooleanExpression searchEq(String search, SearchType searchType) {
+        if (!StringUtils.hasText(search)) {
+            return null;
         }
-        return null;
+        switch (searchType) {
+            case TITLE:
+                return portfolio.title.contains(search);
+            case THEME:
+                PortfolioTheme theme = PortfolioTheme.valueOf(search);
+                return portfolio.portfolioTheme.eq(theme);
+            case CONTRIBUTOR:
+                return portfolio.contributorList.any().member.name.contains(search);
+            case STUDENT:
+                return portfolio.member.name.contains(search);
+            default:
+                return null;
+        }
     }
 }
