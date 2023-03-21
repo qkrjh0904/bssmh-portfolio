@@ -1,5 +1,6 @@
 package com.bssmh.portfolio.web.domain.portfolio.service;
 
+import com.bssmh.portfolio.db.entity.attachfile.AttachFile;
 import com.bssmh.portfolio.db.entity.bookmark.Bookmark;
 import com.bssmh.portfolio.db.entity.contributor.Contributor;
 import com.bssmh.portfolio.db.entity.follow.Follow;
@@ -18,6 +19,7 @@ import com.bssmh.portfolio.web.endpoint.Pagination;
 import com.bssmh.portfolio.web.exception.AccessDeniedException;
 import com.bssmh.portfolio.web.exception.NoSuchPortfolioException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,13 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class FindPortfolioService {
 
+    private static final String HTTPS = "https://";
+    private static final String SLASH = "/";
+    private static final String M3U8_EXTENSION = ".m3u8";
+
+    @Value("${bssmh.cloud-front.video-domain}")
+    private String cloudFrontVideoDomain;
+
     private final PortfolioRepository portfolioRepository;
     private final FindMemberService findMemberService;
     private final FindPortfolioBookmarkService findPortfolioBookmarkService;
@@ -45,7 +54,17 @@ public class FindPortfolioService {
         validationCheck(memberContext, portfolio);
         Boolean bookmarkYn = getBookmarkYn(memberContext, portfolio);
         Boolean followYn = getFollowYn(memberContext, portfolio.getMember());
-        return FindPortfolioDetailRs.create(portfolio, bookmarkYn, followYn);
+        String videoUrl = getVideoUrl(portfolio.getVideo());
+        return FindPortfolioDetailRs.create(portfolio, bookmarkYn, followYn, videoUrl);
+    }
+
+    private String getVideoUrl(AttachFile video) {
+        String uid = removeExtension(video.getFileUid());
+        return HTTPS + cloudFrontVideoDomain + SLASH + uid + M3U8_EXTENSION;
+    }
+
+    private static String removeExtension(String fileUid) {
+        return fileUid.substring(0, fileUid.lastIndexOf("."));
     }
 
     private Boolean getBookmarkYn(MemberContext memberContext, Portfolio portfolio) {

@@ -84,7 +84,7 @@ public class FindPortfolioDetailRs {
     @Schema(description = "생성일", pattern = "yyyy-MM-ddThh:mm:ss")
     private LocalDateTime createdDate;
 
-    public static FindPortfolioDetailRs create(Portfolio portfolio, Boolean bookmarkYn, Boolean followYn) {
+    public static FindPortfolioDetailRs create(Portfolio portfolio, Boolean bookmarkYn, Boolean followYn, String video) {
         FindPortfolioDetailRs rs = new FindPortfolioDetailRs();
         rs.portfolioId = portfolio.getId();
         rs.writer = getWriter(portfolio.getMember());
@@ -92,7 +92,7 @@ public class FindPortfolioDetailRs {
         rs.portfolioTheme = portfolio.getPortfolioTheme();
         rs.title = portfolio.getTitle();
         rs.description = portfolio.getDescription();
-        rs.video = getVideo(portfolio.getVideo());
+        rs.video = video;
         rs.portfolioUrl = portfolio.getPortfolioUrl();
         rs.thumbnail = getThumbnail(portfolio.getThumbnail());
         rs.scope = portfolio.getPortfolioScope();
@@ -107,10 +107,6 @@ public class FindPortfolioDetailRs {
         rs.recommendStatus = portfolio.getRecommendStatus();
         rs.createdDate = portfolio.getCreatedDate();
         return rs;
-    }
-
-    private static String getVideo(AttachFile video) {
-        return "";
     }
 
     private static Long getComments(Portfolio portfolio) {
