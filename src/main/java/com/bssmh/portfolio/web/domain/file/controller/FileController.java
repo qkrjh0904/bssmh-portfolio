@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.bssmh.portfolio.web.domain.enums.FileType.IMAGE;
+import static com.bssmh.portfolio.web.domain.enums.FileType.VIDEO;
+
 @Tag(name = "파일")
 @RestController
 @RequiredArgsConstructor
@@ -24,15 +27,23 @@ public class FileController {
 
     private final FileService fileService;
 
-    @Operation(summary = "파일 업로드")
-    @PostMapping(ApiPath.FILE_UPLOAD)
-    public UploadFileRs uploadFile(@AuthenticationPrincipal MemberContext memberContext,
-                                   @RequestPart MultipartFile file) {
-        RoleCheckUtil.moreThanMember(memberContext);
-        return fileService.uploadFile(file);
+    @Operation(summary = "이미지 업로드")
+    @PostMapping(ApiPath.FILE_UPLOAD_IMAGE)
+    public UploadFileRs uploadImage(@AuthenticationPrincipal MemberContext memberContext,
+                                    @RequestPart MultipartFile file) {
+        RoleCheckUtil.loginCheck(memberContext);
+        return fileService.upload(file, IMAGE);
     }
 
-    @Operation(summary = "파일  다운로드")
+    @Operation(summary = "영상 업로드")
+    @PostMapping(ApiPath.FILE_UPLOAD_VIDEO)
+    public UploadFileRs uploadFile(@AuthenticationPrincipal MemberContext memberContext,
+                                   @RequestPart MultipartFile file) {
+        RoleCheckUtil.loginCheck(memberContext);
+        return fileService.upload(file, VIDEO);
+    }
+
+    @Operation(summary = "파일 다운로드 (이미지만 가능)")
     @GetMapping(ApiPath.FILE_DOWNLOAD)
     public ResponseEntity<byte[]> downloadFile(@PathVariable("file-uid") String fileUid) {
         return fileService.downloadFile(fileUid);

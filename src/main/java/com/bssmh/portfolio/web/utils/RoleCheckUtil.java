@@ -9,7 +9,7 @@ import java.util.Objects;
 @UtilityClass
 public class RoleCheckUtil {
 
-    public static void moreThanMember(MemberContext memberContext) {
+    public static void loginCheck(MemberContext memberContext) {
         if (Objects.isNull(memberContext)) {
             throw new AuthenticationException();
         }

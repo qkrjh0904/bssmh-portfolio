@@ -34,7 +34,8 @@ public class ApiPath {
     public static final String PORTFOLIO_SELF = "/api/portfolio/self";
 
     // file
-    public static final String FILE_UPLOAD = "/api/file/upload";
+    public static final String FILE_UPLOAD_IMAGE = "/api/file/upload/image";
+    public static final String FILE_UPLOAD_VIDEO = "/api/file/upload/video";
     public static final String FILE_DOWNLOAD = "/api/file/download/{file-uid}";
 
     // comment

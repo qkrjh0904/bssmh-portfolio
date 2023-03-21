@@ -15,6 +15,7 @@ import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 import com.amazonaws.services.s3.transfer.Upload;
 import com.bssmh.portfolio.db.entity.attachfile.AttachFile;
 import com.bssmh.portfolio.web.domain.dto.AttachFileDto;
+import com.bssmh.portfolio.web.domain.enums.FileType;
 import com.bssmh.portfolio.web.exception.NoSuchS3AttachFileException;
 import com.bssmh.portfolio.web.utils.FileValidateUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,8 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
+import static com.bssmh.portfolio.web.domain.enums.FileType.IMAGE;
+
 @Slf4j
 @Component
 public class AwsS3Service {
@@ -42,6 +45,8 @@ public class AwsS3Service {
     private String region;
     @Value("${bssmh.s3.bucket-name}")
     private String bucketName;
+    @Value("${bssmh.s3.video-bucket-name}")
+    private String videoBucketName;
 
     private final String TMP_DIR_PATH = System.getProperty("java.io.tmpdir");
 
@@ -59,13 +64,13 @@ public class AwsS3Service {
                 .build();
     }
 
-    public AttachFileDto upload(@NotNull MultipartFile file) throws IOException {
+    public AttachFileDto upload(@NotNull MultipartFile file, FileType fileType) throws IOException {
         String originalFilename = file.getOriginalFilename();
         Long fileSize = file.getSize();
         String extension = getExtension(originalFilename);
-        FileValidateUtils.validationCheck(extension);
+        FileValidateUtils.validationCheck(extension, fileType);
         String filePath = getFilePath();
-        String s3Path = getS3Path(bucketName, filePath);
+        String s3Path = getS3Path(fileType, filePath);
         String fileUid = getFileUid(extension);
         ObjectMetadata objectMetadata = getObjectMetadata(file);
         TransferManager tm = getTransferManger();
@@ -77,8 +82,11 @@ public class AwsS3Service {
         return AttachFileDto.create(originalFilename, filePath, fileUid, fileSize);
     }
 
-    private String getS3Path(String bucketName, String filePath) {
-        return bucketName + filePath;
+    private String getS3Path(FileType fileType, String filePath) {
+        if (IMAGE.equals(fileType)) {
+            return bucketName + filePath;
+        }
+        return videoBucketName + filePath;
     }
 
     private ObjectMetadata getObjectMetadata(MultipartFile file) {
@@ -123,7 +131,7 @@ public class AwsS3Service {
 
     public S3Object getS3Object(AttachFile attachFile) {
         String fileUid = attachFile.getFileUid();
-        String s3Path = getS3Path(bucketName, attachFile.getFilePath());
+        String s3Path = getS3Path(IMAGE, attachFile.getFilePath());
         AmazonS3 amazonS3 = getAmazonS3();
         S3Object s3Object = amazonS3.getObject(new GetObjectRequest(s3Path, fileUid));
         if (Objects.isNull(s3Object)) {

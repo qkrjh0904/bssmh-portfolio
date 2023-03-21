@@ -2,6 +2,7 @@ package com.bssmh.portfolio.web.domain.file.service;
 
 import com.bssmh.portfolio.db.entity.attachfile.AttachFile;
 import com.bssmh.portfolio.web.domain.dto.AttachFileDto;
+import com.bssmh.portfolio.web.domain.enums.FileType;
 import com.bssmh.portfolio.web.domain.file.repository.AttachFileRepository;
 import com.bssmh.portfolio.web.exception.NoSuchAttachFileException;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +36,14 @@ public class AttachFileService {
                 .orElse(null);
     }
 
-    public void save(AttachFileDto attachFileDto) {
+    public void save(AttachFileDto attachFileDto, FileType fileType) {
         AttachFile attachFile = AttachFile.create(
                 attachFileDto.getFileUid(),
                 attachFileDto.getFilePath(),
                 attachFileDto.getFileName(),
-                attachFileDto.getFileSize());
+                attachFileDto.getFileSize(),
+                fileType
+        );
 
         attachFileRepository.save(attachFile);
     }

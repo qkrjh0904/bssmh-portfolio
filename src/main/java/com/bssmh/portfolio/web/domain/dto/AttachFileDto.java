@@ -39,11 +39,4 @@ public class AttachFileDto {
         return dto;
     }
 
-    public AttachFile toEntity() {
-        return AttachFile.create(
-                this.fileUid,
-                this.filePath,
-                this.fileName,
-                this.fileSize);
-    }
 }

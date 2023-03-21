@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
 import com.bssmh.portfolio.db.entity.attachfile.AttachFile;
 import com.bssmh.portfolio.web.domain.dto.AttachFileDto;
+import com.bssmh.portfolio.web.domain.enums.FileType;
 import com.bssmh.portfolio.web.domain.file.controller.rs.UploadFileRs;
 import com.bssmh.portfolio.web.exception.AwsS3FileUploadException;
 import com.bssmh.portfolio.web.exception.FailToS3DownloadException;
@@ -29,11 +30,11 @@ public class FileService {
     private final AwsS3Service awsS3Service;
     private final AttachFileService attachFileService;
 
-    public UploadFileRs uploadFile(MultipartFile file) {
+    public UploadFileRs upload(MultipartFile file, FileType fileType) {
         AttachFileDto attachFileDto;
 
         try {
-            attachFileDto = awsS3Service.upload(file);
+            attachFileDto = awsS3Service.upload(file, fileType);
         } catch (IOException e) {
             throw new AwsS3FileUploadException();
         }
@@ -42,7 +43,7 @@ public class FileService {
             throw new AwsS3FileUploadException();
         }
 
-        attachFileService.save(attachFileDto);
+        attachFileService.save(attachFileDto, fileType);
         return UploadFileRs.create(attachFileDto.getFileUid(), attachFileDto.getFilePath());
     }
 

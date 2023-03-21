@@ -62,6 +62,7 @@ cloud:
 bssmh:
   s3:
     bucket-name: ${bssmh-portfolio.aws.s3.bucket-name}
+    video-bucket-name: ${bssmh-portfolio.aws.s3.video-bucket-name}
 
 logging:
   level:

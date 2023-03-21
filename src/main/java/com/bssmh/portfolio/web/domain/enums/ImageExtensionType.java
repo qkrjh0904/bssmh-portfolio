@@ -5,13 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum ExtensionType {
-
-    // 영상, 음성
-    AVI("avi"), M4V("m4v"), MOV("mov"),
-    MP3("mp3"), MP4("mp4"), WMV("wmv"),
-    WEBM("webm"),
-
+public enum ImageExtensionType {
     //이미지
     JPG("jpg"), JPEG("jpeg"),
     BMP("bmp"), GIF("gif"),
@@ -19,8 +13,7 @@ public enum ExtensionType {
     TIF("tif"), PNG("png"),
     RAW("raw"),
     TIFF("tiff"),
-    WEBP("webp")
-    ;
+    WEBP("webp");
 
     private final String extension;
 

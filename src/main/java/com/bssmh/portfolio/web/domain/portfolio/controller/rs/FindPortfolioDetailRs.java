@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
@@ -43,8 +42,8 @@ public class FindPortfolioDetailRs {
     @Schema(description = "설명")
     private String description;
 
-    @Schema(description = "포트폴리오 영상 파일")
-    private AttachFileDto video;
+    @Schema(description = "포트폴리오 영상 URL")
+    private String video;
 
     @Schema(description = "포트폴리오 url")
     private String portfolioUrl;
@@ -110,11 +109,8 @@ public class FindPortfolioDetailRs {
         return rs;
     }
 
-    private static AttachFileDto getVideo(AttachFile video) {
-        if (Objects.isNull(video)) {
-            return null;
-        }
-        return AttachFileDto.create(video);
+    private static String getVideo(AttachFile video) {
+        return "";
     }
 
     private static Long getComments(Portfolio portfolio) {
