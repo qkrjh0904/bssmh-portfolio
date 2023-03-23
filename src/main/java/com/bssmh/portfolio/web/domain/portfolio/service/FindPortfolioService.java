@@ -59,8 +59,11 @@ public class FindPortfolioService {
     }
 
     private String getVideoUrl(AttachFile video) {
-        String uid = removeExtension(video.getFileUid());
-        return HTTPS + cloudFrontVideoDomain + SLASH + uid + M3U8_EXTENSION;
+        if (Objects.isNull(video)) {
+            return null;
+        }
+        String uid = SLASH + removeExtension(video.getFileUid());
+        return HTTPS + cloudFrontVideoDomain + uid + uid + M3U8_EXTENSION;
     }
 
     private static String removeExtension(String fileUid) {
