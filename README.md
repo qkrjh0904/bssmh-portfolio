@@ -24,6 +24,7 @@ URL : [https://portfolio.bssm.io](https://portfolio.bssm.io)
 ```
 - SpringBoot v2.7.5
 - gradle v7.5.1
+- Java 11
 - JPA & Query DSL
 - MariaDB
 - AWS (EC2, RDS, S3, Lambda, MediaConvert, CloudFront)
